@@ -1,0 +1,30 @@
+[submodule "vim/pack/default/start/airline"]
+	path = vim/pack/default/start/airline
+	url = https://github.com/vim-airline/vim-airline.git
+[submodule "vim/pack/default/start/tabular"]
+	path = vim/pack/default/start/tabular
+	url = https://github.com/godlygeek/tabular.git
+[submodule "vim/pack/default/start/repeat"]
+	path = vim/pack/default/start/repeat
+	url = https://github.com/tpope/vim-repeat.git
+[submodule "vim/pack/default/start/unimpaired"]
+	path = vim/pack/default/start/unimpaired
+	url = https://github.com/tpope/vim-unimpaired.git
+[submodule "vim/pack/default/start/obsession"]
+	path = vim/pack/default/start/obsession
+	url = https://github.com/tpope/vim-obsession.git
+[submodule "vim/pack/default/start/surround"]
+	path = vim/pack/default/start/surround
+	url = https://github.com/tpope/vim-surround.git
+[submodule "vim/pack/default/start/tmux-navigator"]
+	path = vim/pack/default/start/tmux-navigator
+	url = https://github.com/christoomey/vim-tmux-navigator.git
+[submodule "vim/pack/default/start/vinegar"]
+	path = vim/pack/default/start/vinegar
+	url = https://github.com/tpope/vim-vinegar.git
+[submodule "vim/pack/default/start/gruvbox"]
+	path = vim/pack/default/start/gruvbox
+	url = https://github.com/morhetz/gruvbox.git
+[submodule "vim/pack/default/start/tmuxline"]
+	path = vim/pack/default/start/tmuxline
+	url = https://github.com/edkolev/tmuxline.vim.git
