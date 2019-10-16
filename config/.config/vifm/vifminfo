@@ -1,0 +1,520 @@
+# You can edit this file by hand, but it's recommended not to do that.
+
+# Marks:
+'H
+	/Users
+	cameron
+1568740149
+'P
+	/Users/cameron
+	Projects
+1568740106
+'b
+	/Users/cameron/bin/
+	..
+1568739013
+'d
+	/Users/cameron/Downloads
+	..
+1568741535
+'h
+	/Users/cameron/
+	..
+1568739013
+'p
+	/Users/cameron/Projects
+	..
+1568741535
+
+# Bookmarks:
+
+# TUI:
+al
+q0
+v1
+ov
+m-1
+l2
+r2
+
+# Left window history (oldest to newest):
+d/Users/cameron/Projects/dotfiles/Hammerspoon
+	Spoons
+1
+d/Users/cameron/Projects/dotfiles/Hammerspoon/Spoons
+	..
+0
+d/Users/cameron/Projects/dotfiles/Hammerspoon
+	lib
+2
+d/Users/cameron/Projects/dotfiles/Hammerspoon/lib
+	..
+0
+d/Users/cameron/Projects/dotfiles/Hammerspoon
+	Spoons
+1
+d/Users/cameron/Projects/dotfiles/Hammerspoon/Spoons
+	..
+0
+d/Users/cameron/Projects/dotfiles/Hammerspoon
+	Spoons
+1
+d/Users/cameron/Projects/dotfiles/Hammerspoon/Spoons
+	..
+0
+d/Users/cameron/Projects/dotfiles/Hammerspoon
+	Spoons
+1
+d/Users/cameron/Projects/dotfiles
+	Hammerspoon
+1
+d/Users/cameron/Projects/dotfiles/Hammerspoon
+	Spoons
+1
+d/Users/cameron/Projects/dotfiles/Hammerspoon/Spoons
+	browser.spoon
+1
+d/Users/cameron/Projects/dotfiles/Hammerspoon
+	lib
+2
+d/Users/cameron/Projects/dotfiles/Hammerspoon/lib
+	..
+0
+d/Users/cameron/Projects/dotfiles/Hammerspoon
+	lib
+2
+d/Users/cameron/Projects/dotfiles
+	Hammerspoon
+1
+d/Users/cameron/.hammerspoon
+	Spoons
+1
+d/Users/cameron/.hammerspoon/Spoons
+	..
+0
+d/Users/cameron/.hammerspoon
+	init.lua
+2
+d/Users/cameron/Projects/dotfiles
+	roles
+2
+d/Users/cameron/Projects/dotfiles/roles
+	setup
+1
+d/Users/cameron/Projects/dotfiles/roles/setup
+	tasks
+1
+d/Users/cameron/Projects/dotfiles/roles/setup/tasks
+	..
+0
+d/Users/cameron/Projects/dotfiles/roles/setup
+	tasks
+1
+d/Users/cameron/Projects/dotfiles/roles/setup/tasks
+	..
+0
+d/Users/cameron/Projects/dotfiles
+	.hammerspoon
+2
+d/Users/cameron/Projects/dotfiles/.hammerspoon
+	..
+0
+d/Users/cameron/Projects/dotfiles
+	dotfiles
+3
+d/Users/cameron/Projects/dotfiles/dotfiles
+	.hammerspoon
+1
+d/Users/cameron/Projects/dotfiles
+	dotfiles
+1
+d/Users/cameron/Projects/dotfiles/dotfiles
+	..
+0
+d/Users/cameron/Projects/dotfiles
+	setup.sh
+5
+d/Users/cameron/.hammerspoon
+	Spoons
+1
+d/Users/cameron/.hammerspoon/Spoons
+	browser.spoon
+1
+d/Users/cameron/.hammerspoon/Spoons/browser.spoon
+	..
+0
+d/Users/cameron/.hammerspoon/Spoons
+	browser.spoon
+1
+d/Users/cameron/.hammerspoon
+	Spoons
+1
+d/Users/cameron/.hammerspoon/Spoons
+	window.spoon
+6
+d/Users/cameron/.hammerspoon/Spoons/window.spoon
+	init.lua
+2
+d/Users/cameron/.hammerspoon
+	lib
+2
+d/Users/cameron/.hammerspoon/lib
+	history_buffer.lua
+1
+d/Users/cameron/.hammerspoon
+	lib
+2
+d/Users/cameron/.hammerspoon/lib
+	history_buffer.lua
+1
+d/Users/cameron/Projects/dotfiles/dotfiles/.hammerspoon
+	Spoons
+1
+d/Users/cameron/Projects/dotfiles/dotfiles/.hammerspoon/Spoons
+	mover.spoon
+6
+d/Users/cameron/Projects/dotfiles/dotfiles/.hammerspoon/Spoons/mover.spoon
+	..
+0
+d/Users/cameron/Projects/dotfiles
+	dotfiles
+1
+d/Users/cameron/Projects/dotfiles/dotfiles
+	..
+0
+d/Users/cameron/Projects/dotfiles
+	dotfiles
+1
+d/Users/cameron/Projects/dotfiles/dotfiles
+	.hammerspoon
+1
+d/Users/cameron/Projects/dotfiles/dotfiles/.hammerspoon
+	init.lua
+5
+d/Users/cameron/Projects/dotfiles
+	dotfiles
+2
+d/Users/cameron/Projects/dotfiles/dotfiles
+	.hammerspoon
+1
+d/Users/cameron/Projects/dotfiles/dotfiles/.hammerspoon
+	Spoons
+1
+d/Users/cameron/Projects/dotfiles/dotfiles/.hammerspoon/Spoons
+	launcher.spoon
+4
+d/Users/cameron/Projects/dotfiles/dotfiles/.hammerspoon/Spoons/launcher.spoon
+	.init.lua.un~
+1
+d/Users/cameron/Projects/dotfiles/dotfiles/.hammerspoon/Spoons
+	launcher.spoon
+4
+d/Users/cameron
+	.zshrc
+31
+d/Users/cameron/Projects/dotfiles/dotfiles/.hammerspoon
+	init.lua
+5
+d/Users/cameron/Projects
+	cheatsheets
+18
+d/Users/cameron/Projects/cheatsheets
+	..
+0
+d/Users/cameron/Projects
+	dotfiles
+20
+d/Users/cameron/Projects/dotfiles
+	dotfiles
+2
+d/Users/cameron/Projects/dotfiles/dotfiles
+	.hammerspoon
+2
+d/Users/cameron/Projects/dotfiles
+	dotfiles
+2
+d/Users/cameron/Projects
+	setupmac
+23
+d/Users/cameron/Projects/setupmac
+	..
+0
+d/Users/cameron/Projects
+	.DS_Store
+24
+d/Users/cameron
+	Downloads
+4
+d/Users/cameron/Downloads
+	..
+0
+d/Users/cameron/.config
+	xbuild
+10
+d/Users/cameron/Projects/dotfiles
+	.gitignore
+4
+d/Users/cameron
+	Downloads
+4
+d/Users/cameron/Projects/tsclua
+	hammerspoon
+1
+d/Users/cameron/Projects/tsclua/hammerspoon
+	application.d.ts
+1
+d/Users/cameron/Projects/tsclua
+	hammerspoon
+1
+d/Users/cameron/Projects/tsclua/hammerspoon
+	application.d.ts
+1
+d/Users/cameron/Projects/tsclua
+	test
+2
+d/Users/cameron/Projects/tsclua/test
+	..
+0
+d/Users/cameron/Projects/tsclua
+	..
+0
+d/Users/cameron/Projects/HammerspoonTypeDefinitions
+	typings
+3
+d/Users/cameron/Projects/HammerspoonTypeDefinitions/typings
+	..
+0
+d/Users/cameron/Projects/HammerspoonTypeDefinitions
+	typings
+3
+d/Users/cameron/Projects/HammerspoonTypeDefinitions/typings
+	index.d.ts
+2
+d/Users/cameron/Projects/HammerspoonTypeDefinitions
+	typings
+3
+d/Users/cameron/Projects/HammerspoonTypeDefinitions/typings
+	index.d.ts
+2
+d/Users/cameron/.vim/pack/default/start/unite
+	plugin
+3
+d/Users/cameron/.vim/pack/default/start/unite/plugin
+	unite.vim
+2
+d/Users/cameron/.vim/pack/default/start/unite
+	test
+6
+d/Users/cameron/Projects/hammerspoon-type-definitions/typings
+	modules
+1
+d/Users/cameron/Projects/hammerspoon-type-definitions/typings/modules
+	application.d.ts
+1
+d/Users/cameron/Projects/hammerspoon-type-definitions/typings
+	modules
+1
+d/Users/cameron/Projects/hammerspoon-type-definitions/typings/modules
+	..
+0
+d/Users/cameron/Projects/hammerspoon-type-definitions/typings
+	modules
+1
+d/Users/cameron/Projects/hammerspoon-type-definitions/typings/modules
+	application.d.ts
+1
+d/Users/cameron/Projects/hammerspoon-type-definitions/typings
+	modules
+1
+d/Users/cameron/Projects/hammerspoon-type-definitions/typings/modules
+	application.d.ts
+1
+d/Users/cameron/Projects/hammerspoon-type-definitions/typings
+	modules
+1
+d/Users/cameron/Projects/hammerspoon-type-definitions/typings/modules
+	logger.d.ts
+2
+d/Users/cameron/Projects/hammerspoon-type-definitions/typings
+	index.d.ts
+2
+d
+
+# Right window history (oldest to newest):
+D/Users/cameron
+	Libraries
+8
+D/Users/cameron/Libraries
+	..
+0
+D/Users/cameron
+	Library
+9
+D/Users/cameron/Library
+	com.amplitude.database
+22
+D/Users/cameron
+	Library
+9
+D/Users/cameron/Library
+	Mobile Documents
+4
+D/Users/cameron/Library/Mobile Documents
+	com~apple~CloudDocs
+18
+D/Users/cameron/Library/Mobile Documents/com~apple~CloudDocs
+	Videos
+16
+D/Users/cameron/Library/Mobile Documents/com~apple~CloudDocs/Videos
+	..
+0
+D/Users/cameron/.hammerspoon
+	Spoons
+1
+D/Users/cameron/.hammerspoon/Spoons
+	browser.spoon
+1
+D/Users/cameron/.hammerspoon
+	Spoons
+1
+D
+
+# Command line history (oldest to newest):
+:mkdir history.spoon
+:launcher.spoon
+:mkdir launcher.spoon
+:mkdir browser.spoon
+:grep F11
+:grep 
+:grep F12
+:mkdir godMode.spoon
+:touch init.enb
+:rename init.lua
+:reload
+:source %f
+:filtercpp
+:filter {*.d,*.build}
+:only
+:source! vifmrc
+:onl
+:source vifmrc
+:source ~/.config/vifm/vifmrc
+:onlycpp
+:filter?
+:filter
+:cpponly
+:e
+:!vim %d
+:.!vim -c "cd ".%d
+:echo %d
+:echo expand('%d')
+:.!vim -c "cd ".expand('%d')
+:echo "%d"
+:echo '%d'
+:echo expand('%"d')
+:.!vim -c "cd %d"
+:mkdir ds
+:e TODO.md
+:mkdir window.spoon
+:cd .vim
+:cd /dev
+:cd /Volumes/
+:find icloud*
+:find -iname icloud
+:help find
+:find icloud
+:!find . -iname 'icloud*'
+:!find . -ipath 'Videos' -type d
+:mkdir 
+:ls Proj
+:cd ~=
+:cd ~/Projects/dotfiles/
+:cd ~/.hammerspoon/
+:mkdir Hammerspoon
+:!mkdir Spoons
+:mkdir! roles/setup
+:mkdir {tasks,vars}
+:mkdir tasks
+:mkdir roles
+:rename vars
+:e main.yml
+:e dotfiles.yml
+:rename .hammerspoon
+:mkdir dotfiles
+:rename switcher.spoon
+:mkdir mover.spoon
+:e init.lua
+:cd ~/Projects/dotfiles/dotfiles/.config/
+:help
+:mkdir test
+:mkdir modules
+:q
+
+# Search history (oldest to newest):
+/Proj
+/Cpp
+/cpp
+/.tmux.conf
+/.vim/
+/.vimrc
+/.vim
+/vid
+/Ply
+/Mobile
+/iCloud
+/Cloud
+/Video
+/karabiner
+/goku
+/.karab
+
+# Prompt history (oldest to newest):
+pProjectsA
+pDisc1_SculptA.mp4
+pP90 - Sculpt A
+pP90 - Sweat A plus Ab Ripper
+pInsanity - Plyometric Cardio Circuit
+phammerspoon
+
+# Local filter history (oldest to newest):
+
+# Registers:
+
+# Directory stack (oldest to newest):
+
+# Trash content:
+t/Users/cameron/.local/share/vifm/Trash/000_Disc1_SculptA.mp4
+	/Users/cameron/Library/Mobile Documents/com~apple~CloudDocs/Videos/Disc1_SculptA.mp4
+t/Users/cameron/.local/share/vifm/Trash/000_Disc1_SweatAPlusAbRipper.mp4
+	/Users/cameron/Library/Mobile Documents/com~apple~CloudDocs/Videos/Disc1_SweatAPlusAbRipper.mp4
+t/Users/cameron/.local/share/vifm/Trash/000_browser.spoon
+	/Users/cameron/.hammerspoon/Spoons/browser.spoon
+t/Users/cameron/.local/share/vifm/Trash/000_godMode.spoon
+	/Users/cameron/.hammerspoon/Spoons/godMode.spoon
+t/Users/cameron/.local/share/vifm/Trash/000_history.spoon
+	/Users/cameron/.hammerspoon/Spoons/history.spoon
+t/Users/cameron/.local/share/vifm/Trash/000_launcher.spoon
+	/Users/cameron/.hammerspoon/Spoons/launcher.spoon
+t/Users/cameron/.local/share/vifm/Trash/000_launcherMode.spoon
+	/Users/cameron/.hammerspoon/Spoons/launcherMode.spoon
+t/Users/cameron/.local/share/vifm/Trash/000_window.spoon
+	/Users/cameron/.hammerspoon/Spoons/window.spoon
+t/Users/cameron/.local/share/vifm/Trash/000_lib
+	/Users/cameron/.hammerspoon/lib
+t/Users/cameron/.local/share/vifm/Trash/000_{tasks,vars}
+	/Users/cameron/Projects/dotfiles/roles/setup/{tasks,vars}
+t/Users/cameron/.local/share/vifm/Trash/000_roles
+	/Users/cameron/Projects/dotfiles/roles
+t/Users/cameron/.local/share/vifm/Trash/000_.karabiner.edn.un~
+	/Users/cameron/.config/.karabiner.edn.un~
+
+# State:
+f{*.d,*.build,*.dSYM\/}
+i1
+[.1
+[F
+F
+I1
+].1
+]F
+s1

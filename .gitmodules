@@ -40,3 +40,6 @@
 [submodule "tmux/.tmux/plugins/tpm"]
 	path = tmux/.tmux/plugins/tpm
 	url = https://github.com/tmux-plugins/tpm.git
+[submodule "config/.config/vifm/colors"]
+	path = config/.config/vifm/colors
+	url = https://github.com/vifm/vifm-colors.git
