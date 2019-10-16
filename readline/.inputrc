@@ -1,0 +1,3 @@
+# Use VI-style key bindings instead of the default Emacs one in all GNU readline
+# programs. This includes, most importantly, bash. 
+set editing-mode vi

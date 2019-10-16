@@ -1,0 +1,10 @@
+[user]
+	name = Cameron Flint
+	email = dev@caflint.fastmail.com
+
+[alias]
+    c = commit
+    cp = cherry-pick
+    l = log
+	st = status
+    amend = commit --amend
