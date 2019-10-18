@@ -38,96 +38,6 @@ l2
 r2
 
 # Left window history (oldest to newest):
-d/Users/cameron/Projects/dotfiles/Hammerspoon
-	Spoons
-1
-d/Users/cameron/Projects/dotfiles/Hammerspoon/Spoons
-	..
-0
-d/Users/cameron/Projects/dotfiles/Hammerspoon
-	lib
-2
-d/Users/cameron/Projects/dotfiles/Hammerspoon/lib
-	..
-0
-d/Users/cameron/Projects/dotfiles/Hammerspoon
-	Spoons
-1
-d/Users/cameron/Projects/dotfiles/Hammerspoon/Spoons
-	..
-0
-d/Users/cameron/Projects/dotfiles/Hammerspoon
-	Spoons
-1
-d/Users/cameron/Projects/dotfiles/Hammerspoon/Spoons
-	..
-0
-d/Users/cameron/Projects/dotfiles/Hammerspoon
-	Spoons
-1
-d/Users/cameron/Projects/dotfiles
-	Hammerspoon
-1
-d/Users/cameron/Projects/dotfiles/Hammerspoon
-	Spoons
-1
-d/Users/cameron/Projects/dotfiles/Hammerspoon/Spoons
-	browser.spoon
-1
-d/Users/cameron/Projects/dotfiles/Hammerspoon
-	lib
-2
-d/Users/cameron/Projects/dotfiles/Hammerspoon/lib
-	..
-0
-d/Users/cameron/Projects/dotfiles/Hammerspoon
-	lib
-2
-d/Users/cameron/Projects/dotfiles
-	Hammerspoon
-1
-d/Users/cameron/.hammerspoon
-	Spoons
-1
-d/Users/cameron/.hammerspoon/Spoons
-	..
-0
-d/Users/cameron/.hammerspoon
-	init.lua
-2
-d/Users/cameron/Projects/dotfiles
-	roles
-2
-d/Users/cameron/Projects/dotfiles/roles
-	setup
-1
-d/Users/cameron/Projects/dotfiles/roles/setup
-	tasks
-1
-d/Users/cameron/Projects/dotfiles/roles/setup/tasks
-	..
-0
-d/Users/cameron/Projects/dotfiles/roles/setup
-	tasks
-1
-d/Users/cameron/Projects/dotfiles/roles/setup/tasks
-	..
-0
-d/Users/cameron/Projects/dotfiles
-	.hammerspoon
-2
-d/Users/cameron/Projects/dotfiles/.hammerspoon
-	..
-0
-d/Users/cameron/Projects/dotfiles
-	dotfiles
-3
-d/Users/cameron/Projects/dotfiles/dotfiles
-	.hammerspoon
-1
-d/Users/cameron/Projects/dotfiles
-	dotfiles
-1
 d/Users/cameron/Projects/dotfiles/dotfiles
 	..
 0
@@ -336,8 +246,98 @@ d/Users/cameron/Projects/hammerspoon-type-definitions/typings/modules
 	logger.d.ts
 2
 d/Users/cameron/Projects/hammerspoon-type-definitions/typings
-	index.d.ts
+	modules
+1
+d/Users/cameron/Projects/hammerspoon-type-definitions/typings/modules/logger
+	..
+0
+d/Users/cameron/Projects/hammerspoon-type-definitions/typings/modules
+	logger
 2
+d/Users/cameron/Projects/hammerspoon-type-definitions/typings
+	modules
+1
+d/Users/cameron/Projects/hammerspoon-type-definitions
+	typings
+3
+d/Users/cameron/Projects/hammerspoon-type-definitions/typings/modules/application
+	..
+0
+d/Users/cameron
+	Downloads
+8
+d/Users/cameron/.config/karabiner
+	karabiner.json
+3
+d/Users/cameron
+	Downloads
+8
+d/Users/cameron/dotfiles
+	install_dotfiles.sh
+16
+d/Users/cameron/dotfiles/mackup/.mackup/Mackup/Library/Preferences
+	..
+0
+d/Users/cameron/dotfiles/mackup/.mackup/Mackup/Library
+	Preferences
+1
+d/Users/cameron/dotfiles/mackup/.mackup/Mackup
+	Library
+1
+d/Users/cameron/dotfiles/mackup/.mackup
+	Mackup
+1
+d/Users/cameron/dotfiles/mackup
+	..
+0
+d/Users/cameron/dotfiles
+	git
+6
+d/Users/cameron/dotfiles/git
+	..
+0
+d/Users/cameron/dotfiles
+	hammerspoon
+7
+d/Users/cameron/dotfiles/hammerspoon
+	..
+0
+d/Users/cameron/dotfiles
+	hammerspoon
+7
+d/Users/cameron
+	dotfiles
+22
+d/Users/cameron/dotfiles
+	hammerspoon
+7
+d/Users/cameron/dotfiles/vim/.vim/pack/default/start
+	airline
+1
+d/Users/cameron/dotfiles/vim/.vim/pack/default/start/airline
+	CHANGELOG.md
+5
+d/Users/cameron/dotfiles/vim/.vim/pack/default/start
+	gruvbox
+3
+d/Users/cameron/dotfiles/vim/.vim/pack/default/start/gruvbox
+	package.json
+7
+d/Users/cameron/dotfiles/vim/.vim/pack/default/start
+	gruvbox
+3
+d/Users/cameron/dotfiles/vim/.vim/pack/default
+	start
+1
+d/Users/cameron/dotfiles/vim/.vim/pack/default/start
+	gruvbox
+3
+d/Users/cameron/dotfiles/vim/.vim/pack/default/start/gruvbox
+	package.json
+7
+d/Users/cameron/dotfiles/vim/.vim/pack/default/start
+	tmux-navigator
+8
 d
 
 # Right window history (oldest to newest):
@@ -349,34 +349,10 @@ D/Users/cameron/Libraries
 0
 D/Users/cameron
 	Library
-9
+10
 D/Users/cameron/Library
-	com.amplitude.database
-22
-D/Users/cameron
-	Library
-9
-D/Users/cameron/Library
-	Mobile Documents
-4
-D/Users/cameron/Library/Mobile Documents
-	com~apple~CloudDocs
-18
-D/Users/cameron/Library/Mobile Documents/com~apple~CloudDocs
-	Videos
-16
-D/Users/cameron/Library/Mobile Documents/com~apple~CloudDocs/Videos
 	..
 0
-D/Users/cameron/.hammerspoon
-	Spoons
-1
-D/Users/cameron/.hammerspoon/Spoons
-	browser.spoon
-1
-D/Users/cameron/.hammerspoon
-	Spoons
-1
 D
 
 # Command line history (oldest to newest):
@@ -445,9 +421,14 @@ D
 :mkdir mover.spoon
 :e init.lua
 :cd ~/Projects/dotfiles/dotfiles/.config/
-:help
 :mkdir test
 :mkdir modules
+:help :term
+:e ~/.vifm
+:source $MYVIFMRC
+:help
+:help 
+:e $MYVIFMRC
 :q
 
 # Search history (oldest to newest):
@@ -467,6 +448,7 @@ D
 /karabiner
 /goku
 /.karab
+/CH
 
 # Prompt history (oldest to newest):
 pProjectsA

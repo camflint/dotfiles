@@ -43,3 +43,9 @@
 [submodule "config/.config/vifm/colors"]
 	path = config/.config/vifm/colors
 	url = https://github.com/vifm/vifm-colors.git
+[submodule "vim/.vim/pack/default/start/fzf"]
+	path = vim/.vim/pack/default/start/fzf
+	url = https://github.com/junegunn/fzf.vim.git
+[submodule "vim/.vim/pack/default/start/vifm"]
+	path = vim/.vim/pack/default/start/vifm
+	url = https://github.com/vifm/vifm.vim

@@ -30,3 +30,5 @@ bindkey '^r' history-incremental-search-backward
 # Load function-based completion system.
 autoload -U compinit
 compinit
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

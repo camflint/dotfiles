@@ -180,7 +180,7 @@ let g:ctrlp_show_hidden = 1
 "nnoremap <leader>f :CtrlP<cr>
 "nnoremap <leader>b :CtrlPBuffer<cr>
 "nnoremap <leader>m :CtrlPMRUFiles<cr>
-
+"
 " Buffer management.
 nnoremap <s-tab> :bprevious<cr>
 nnoremap <tab> :bnext<cr>
@@ -217,9 +217,6 @@ map <leader>s :NERDTreeFind<cr>
 "    autocmd VimEnter * :NERDTree
 "augroup END
 
-" vifm settings.
-"nnoremap <leader>fm :EditVifm<cr>
-
 " Unite settings.
 " NOTE: Additional settings are located in ~/.vim/after/plugin/unite.vim.
 set wildignore+=*/node_modules/*,*.swp,*.*~
@@ -255,6 +252,19 @@ set grepprg=grep\ -nri\ $*\ .
 command! -nargs=+ MyGrep execute 'silent! grep! <args>' | copen 20 | redraw!
 nnoremap <leader>/ :MyGrep 
 nnoremap K :MyGrep <cword><cr>
+
+" Fzf and fzf.vim.
+set rtp+=/usr/local/opt/fzf
+nnoremap <leader>f :Files<cr>
+nnoremap <leader>b :Buffers<cr>
+nnoremap <leader>m :Marks<cr>
+nnoremap <leader>gf :GFiles<cr>
+nnoremap <leader>gs :GFiles?<cr>
+nnoremap <leader>gc :Commits<cr>
+
+" vifm settings.
+let g:vifm_replace_netrw = 1
+nnoremap <leader>e :EditVifm<cr>
 
 " Search settings.
 augroup vimrc-incsearch-highlight

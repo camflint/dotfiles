@@ -431,3 +431,11 @@ only
 command! cpponly :filter {*.d,*.build,*.dSYM\/}
 
 nnoremap ,v :!vim -c "cd %d"<cr>
+
+command! fzfdir :execute 'cd' fnameescape(term('fd --type d --hidden --exclude .git --full-path %a | fzf 2> /dev/tty'))
+command! fzffile :execute 'goto' fnameescape(term('fd --type f --hidden --exclude .git --full-path %a | fzf 2> /dev/tty'))
+nnoremap <space>d :fzfdir %d<cr>
+nnoremap <space>f :fzffile %d<cr>
+nnoremap <space>ve :edit $MYVIFMRC<cr>
+nnoremap <space>vr :source $MYVIFMRC<cr> | :echo 'Reloaded!'<cr>
+nnoremap <esc> :quit<cr>
