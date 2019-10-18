@@ -49,3 +49,6 @@
 [submodule "vim/.vim/pack/default/start/vifm"]
 	path = vim/.vim/pack/default/start/vifm
 	url = https://github.com/vifm/vifm.vim
+[submodule "vim/.vim/pack/default/start/fugitive"]
+	path = vim/.vim/pack/default/start/fugitive
+	url = https://github.com/tpope/vim-fugitive.git

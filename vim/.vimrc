@@ -295,3 +295,17 @@ function! s:align()
   endif
 endfunction
 
+" Fugitive / git setup.
+nnoremap <leader>gd :Gvdiffsplit!<cr>
+nnoremap gdh :diffget //2<cr>
+nnoremap gdl :diffget //3<cr>
+"
+"Delete all Git conflict markers
+"Creates the command :GremoveConflictMarkers
+function! RemoveConflictMarkers() range
+  echom a:firstline.'-'.a:lastline
+  execute a:firstline.','.a:lastline . ' g/^<\{7}\|^|\{7}\|^=\{7}\|^>\{7}/d'
+endfunction
+"-range=% default is whole file
+command! -range=% GremoveConflictMarkers <line1>,<line2>call RemoveConflictMarkers()
+
