@@ -2,6 +2,9 @@
 PS1BAK=$PS1
 PS1="[\[\033[1;36m\]\w\[\033[0m\]]$ "
 
+# Default editor
+export EDITOR=vim
+
 # General aliases.
 alias r=ranger
 alias v=vim
@@ -14,6 +17,28 @@ alias d=docker
 alias la='ls -a'
 alias ll='ls -l'
 alias lla='ls -al'
+alias rg='rg --hidden --smart-case'
+
+alias gf='fzfgofile'
+alias gd='. fzfgodir'
+alias fe='fzffileedit'
+alias fv='fzffileedit'
+alias fs='fzffilegrep'
+alias hs='fzfhistory'
+alias ts='fzftmuxswitch'
+alias tk='fzftmuxkill'
+alias gitshow='fzfgitshow'
+alias gitstat='fzfgitstatus'
+
+# Personal scripts and global functions.
+if [[ -d "$HOME/.scripts" ]]; then
+    export PATH="$HOME/.scripts:$PATH"
+fi
+if [[ -d "$HOME/.funcs" ]]; then
+    for file in $HOME/.funcs/*; do
+        . $file
+    done
+fi
 
 # Locale.
 export LC_ALL=en_US.UTF-8
@@ -81,3 +106,8 @@ else
     export PIPENV_VENV_IN_PROJECT=1
 fi
 
+# FZF.
+export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
+export FZF_DEFAULT_OPTS='--bind=ctrl-j:down,ctrl-k:up'
+
+# Ripgrep / rg.

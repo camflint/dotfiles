@@ -79,7 +79,12 @@ set path+=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include
 "    let &path = &path .. "," .. gcc_prefix .. "/include/**"
 "endif
 set path+=/usr/local/opt/gcc/include/**
-set tags+=./tags;$HOME
+set tags+=./tags;$HOME,./.git/tags;$HOME
+
+" Ctags, gutentags, etc.
+"let g:easytags_async = 1
+"let g:easytags_syntax_keyword = 'always'
+let g:gutentags_ctags_tagfile='.git/tags'
 
 augroup project
   autocmd!
@@ -189,7 +194,7 @@ nnoremap <tab> :bnext<cr>
 "nnoremap <leader>b :ls<cr>:buffer<space>
 
 " CtrlP mappings.
-nnoremap <C-p> :CtrlPBuffer<cr>
+"nnoremap <C-p> :CtrlPBuffer<cr>
 
 " Tab management.
 "nnoremap <tab> :tabnext<cr>
@@ -210,8 +215,8 @@ let NERDTreeChDirMode   = 2  " Synchronize NERDTree root with Vim's cwd.
 let NERDTreeHijackNetrw = 1
 let NERDTreeMinimalUI   = 1
 let NERDTreeStatusline  = 'NERD'
-map <leader>n :NERDTreeToggle<cr>
-map <leader>s :NERDTreeFind<cr>
+"map <leader>n :NERDTreeToggle<cr>
+"map <leader>s :NERDTreeFind<cr>
 "augroup ProjectDrawer
 "    autocmd!
 "    autocmd VimEnter * :NERDTree
@@ -220,13 +225,13 @@ map <leader>s :NERDTreeFind<cr>
 " Unite settings.
 " NOTE: Additional settings are located in ~/.vim/after/plugin/unite.vim.
 set wildignore+=*/node_modules/*,*.swp,*.*~
-let g:unite_source_history_yank_enable = 1
+"let g:unite_source_history_yank_enable = 1
 "nnoremap <leader>f :<C-u>Unite -no-split -buffer-name=files   -start-insert file<cr>
-nnoremap <leader>f :<C-u>Unite -no-split -buffer-name=files   file_rec<cr>
-nnoremap <leader>r :<C-u>Unite -no-split -buffer-name=mru     file_mru<cr>
-nnoremap <leader>o :<C-u>Unite -no-split -buffer-name=outline outline<cr>
-nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank    history/yank<cr>
-nnoremap <leader>e :<C-u>Unite -no-split -buffer-name=buffer  buffer<cr>
+"nnoremap <leader>f :<C-u>Unite -no-split -buffer-name=files   file_rec<cr>
+"nnoremap <leader>r :<C-u>Unite -no-split -buffer-name=mru     file_mru<cr>
+"nnoremap <leader>o :<C-u>Unite -no-split -buffer-name=outline outline<cr>
+"nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank    history/yank<cr>
+"nnoremap <leader>e :<C-u>Unite -no-split -buffer-name=buffer  buffer<cr>
 
 " Custom mappings for the unite buffer
 autocmd FileType unite call s:unite_settings()
@@ -248,23 +253,27 @@ let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 let g:pydoc_window_lines=0.5
 
 " Grep settings.
-set grepprg=grep\ -nri\ $*\ .
-command! -nargs=+ MyGrep execute 'silent! grep! <args>' | copen 20 | redraw!
-nnoremap <leader>/ :MyGrep 
-nnoremap K :MyGrep <cword><cr>
+"set grepprg=rg\ --hidden\ --colors=always\ $*\
+"command! -nargs=+ MyGrep execute 'silent! grep! <args>' | copen 20 | redraw!
+"nnoremap <leader>/ :MyGrep 
+"nnoremap K :MyGrep <cword><cr>
 
 " Fzf and fzf.vim.
 set rtp+=/usr/local/opt/fzf
+let g:fzf_history_dir = '~/.local/share/fzf-vim-history'
 nnoremap <leader>f :Files<cr>
 nnoremap <leader>b :Buffers<cr>
 nnoremap <leader>m :Marks<cr>
+nnoremap <leader>t :Tags<cr>
+nnoremap <leader>o :BTags<cr>
+nnoremap <leader>/ :Rg 
 nnoremap <leader>gf :GFiles<cr>
 nnoremap <leader>gs :GFiles?<cr>
 nnoremap <leader>gc :Commits<cr>
 
 " vifm settings.
 let g:vifm_replace_netrw = 1
-nnoremap <leader>e :EditVifm<cr>
+nnoremap - :EditVifm<cr>
 
 " Search settings.
 augroup vimrc-incsearch-highlight

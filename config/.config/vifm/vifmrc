@@ -432,10 +432,23 @@ command! cpponly :filter {*.d,*.build,*.dSYM\/}
 
 nnoremap ,v :!vim -c "cd %d"<cr>
 
-command! fzfdir :execute 'cd' fnameescape(term('fd --type d --hidden --exclude .git --full-path %a | fzf 2> /dev/tty'))
-command! fzffile :execute 'goto' fnameescape(term('fd --type f --hidden --exclude .git --full-path %a | fzf 2> /dev/tty'))
-nnoremap <space>d :fzfdir %d<cr>
-nnoremap <space>f :fzffile %d<cr>
+command! fzfdir :execute 'cd' fnameescape(term('fd --type d --hidden --exclude .git --full-path %d | fzf 2> /dev/tty'))
+command! fzffile :execute 'goto' fnameescape(term('rg --hidden --files %d | fzf 2> /dev/tty'))
+command! fzfgrep :execute 'goto' fnameescape(term("rg --hidden --vimgrep %a %d | fzf 2> /dev/tty | awk -F: '{ print $1 }'"))
+nnoremap <space>d :fzfdir<cr>
+nnoremap <space>f :fzffile<cr>
+nnoremap <space>/ :fzfgrep<space>
 nnoremap <space>ve :edit $MYVIFMRC<cr>
 nnoremap <space>vr :source $MYVIFMRC<cr> | :echo 'Reloaded!'<cr>
-nnoremap <esc> :quit<cr>
+"nnoremap <esc> :quit<cr>
+nnoremap - :quit<cr>
+
+command! cmpinternal compare-cmd %a %S
+command! cmp : if expand('%%c') == expand('%%f')
+           \ |     echo expand('Comparing %%"c and %%"C:t ...')
+           \ |     cmpinternal %c %C
+           \ | else
+           \ |     echo expand('Comparing files: %%"f ...')
+           \ |     cmpinternal %f
+           \ | endif
+

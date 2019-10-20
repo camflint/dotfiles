@@ -52,3 +52,13 @@
 [submodule "vim/.vim/pack/default/start/fugitive"]
 	path = vim/.vim/pack/default/start/fugitive
 	url = https://github.com/tpope/vim-fugitive.git
+[submodule "vim/.vim/pack/default/start/easytags"]
+    path = vim/.vim/pack/default/start/easytags
+	url = https://github.com/camflint/vim-easytags.git
+	branch = camflint/versionfix
+[submodule "vim/.vim/pack/default/start/misc"]
+	path = vim/.vim/pack/default/start/misc
+	url = https://github.com/xolox/vim-misc.git
+[submodule "vim/.vim/pack/default/start/gutentags"]
+	path = vim/.vim/pack/default/start/gutentags
+	url = https://github.com/ludovicchabant/vim-gutentags.git

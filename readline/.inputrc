@@ -1,3 +1,22 @@
 # Use VI-style key bindings instead of the default Emacs one in all GNU readline
 # programs. This includes, most importantly, bash. 
 set editing-mode vi
+
+"\C-x\C-r": re-read-init-file
+
+$if mode=vi
+
+set keymap vi-command
+"-": "ivifm .\n"
+
+"gd": "igd\n"
+"gf": "igf\n"
+"fe": "ife\n"
+"fv": "ifv\n"
+"fs": "ifs "
+"hs": "ihs\n"
+"ts": "its\n"
+"tk": "itk\n"
+"-": "ivifm .\n"
+
+$endif

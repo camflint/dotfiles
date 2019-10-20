@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+dir=$(fd --type d --hidden --exclude .git | fzf --header="[[go-dir (pwd: $PWD)]]")
+if [[ -n $dir ]]; then
+    cd $dir
+fi
