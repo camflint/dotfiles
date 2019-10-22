@@ -7,4 +7,5 @@ Session.vim
 
 vim/.vim/.netrwhist
 config/.config/vifm/vifminfo
+tmux/.tmux/plugins
 
