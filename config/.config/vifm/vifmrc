@@ -442,6 +442,7 @@ nnoremap <space>ve :edit $MYVIFMRC<cr>
 nnoremap <space>vr :source $MYVIFMRC<cr> | :echo 'Reloaded!'<cr>
 "nnoremap <esc> :quit<cr>
 nnoremap - :quit<cr>
+nnoremap <esc> :quit<cr>
 
 command! cmpinternal compare-cmd %a %S
 command! cmp : if expand('%%c') == expand('%%f')
