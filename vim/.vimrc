@@ -84,7 +84,10 @@ set tags+=./tags;$HOME,./.git/tags;$HOME
 " Ctags, gutentags, etc.
 "let g:easytags_async = 1
 "let g:easytags_syntax_keyword = 'always'
-let g:gutentags_ctags_tagfile='.git/tags'
+let g:gutentags_modules=['ctags', 'cscope']
+"let g:gutentags_ctags_tagfile='.git/tags'
+"let g:gutentags_scopefile='.git/cscope.out'
+let g:gutentags_cache_dir=expand('$HOME/.local/share/gutentags')
 
 augroup project
   autocmd!
@@ -193,6 +196,9 @@ nnoremap <tab> :bnext<cr>
 "nnoremap <leader>b :buffer <C-z><S-Tab>
 "nnoremap <leader>b :ls<cr>:buffer<space>
 
+" Scrolling and movement.
+"imap <PageDown> <CTR
+
 " CtrlP mappings.
 "nnoremap <C-p> :CtrlPBuffer<cr>
 
@@ -267,13 +273,37 @@ nnoremap <leader>m :Marks<cr>
 nnoremap <leader>t :Tags<cr>
 nnoremap <leader>o :BTags<cr>
 nnoremap <leader>/ :Rg 
+nnoremap <leader>k :exe 'Rg ' . expand('<cword>')<cr>
 nnoremap <leader>gf :GFiles<cr>
 nnoremap <leader>gs :GFiles?<cr>
 nnoremap <leader>gc :Commits<cr>
+"
+"
+" Fzf/cscope integration.
+"   source: https://alex.dzyoba.com/blog/vim-revamp/
+function! Cscope(option, query)
+  let color = '{ x = $1; $1 = ""; z = $3; $3 = ""; printf "\033[34m%s\033[0m:\033[31m%s\033[0m\011\033[37m%s\033[0m\n", x,z,$0; }'
+  let opts = {
+  \ 'source':  "cscope -dL" . a:option . " " . a:query . " | awk '" . color . "'",
+  \ 'options': ['--ansi', '--prompt', '> ',
+  \             '--multi', '--bind', 'alt-a:select-all,alt-d:deselect-all',
+  \             '--color', 'fg:188,fg+:222,bg+:#3a3a3a,hl+:104'],
+  \ 'down': '40%'
+  \ }
+  function! opts.sink(lines) 
+    let data = split(a:lines)
+    let file = split(data[0], ":")
+    execute 'e ' . '+' . file[1] . ' ' . file[0]
+  endfunction
+  call fzf#run(opts)
+endfunction
+
+nnoremap <silent> <C-g> :call Cscope('3', expand('<cword>'))<CR>
 
 " vifm settings.
 let g:vifm_replace_netrw = 1
 nnoremap - :EditVifm<cr>
+nnoremap <leader>e :EditVifm<cr>
 
 " Search settings.
 augroup vimrc-incsearch-highlight
@@ -318,3 +348,10 @@ endfunction
 "-range=% default is whole file
 command! -range=% GremoveConflictMarkers <line1>,<line2>call RemoveConflictMarkers()
 
+" Bookmarks plugin.
+let g:bookmark_auto_save_file = '$HOME/.local/share/vim/bookmarks/bookmarks'
+let g:bookmark_manage_per_buffer = 1
+let g:bookmark_auto_clode = 1
+let g:bookmark_center = 1
+let g:bookmark_disable_ctrlp = 1
+let g:bookmark_show_warning = 1
