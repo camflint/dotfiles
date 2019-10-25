@@ -435,11 +435,11 @@ nnoremap ,v :!vim -c "cd %d"<cr>
 command! fzfdir :execute 'cd' fnameescape(term('fd --type d --hidden --exclude .git --full-path %d | fzf 2> /dev/tty'))
 command! fzffile :execute 'goto' fnameescape(term('rg --hidden --files %d | fzf 2> /dev/tty'))
 command! fzfgrep :execute 'goto' fnameescape(term("rg --hidden --vimgrep %a %d | fzf 2> /dev/tty | awk -F: '{ print $1 }'"))
-nnoremap <space>d :fzfdir<cr>
-nnoremap <space>f :fzffile<cr>
-nnoremap <space>/ :fzfgrep<space>
-nnoremap <space>ve :edit $MYVIFMRC<cr>
-nnoremap <space>vr :source $MYVIFMRC<cr> | :echo 'Reloaded!'<cr>
+nnoremap ,d :fzfdir<cr>
+nnoremap ,f :fzffile<cr>
+nnoremap ,/ :fzfgrep<space>
+nnoremap ,ve :edit $MYVIFMRC<cr>
+nnoremap ,vr :source $MYVIFMRC<cr> | :echo 'Reloaded!'<cr>
 "nnoremap <esc> :quit<cr>
 nnoremap - :quit<cr>
 nnoremap <esc> :quit<cr>

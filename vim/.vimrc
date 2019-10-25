@@ -1,6 +1,12 @@
 " Syntax highlighting.
 syntax enable
 
+" Load filetype-based plugins and indentation rules (~/.vim/ftplugin, ~/.vim/indent).
+filetype plugin indent on
+
+" Leader key.
+let mapleader = ','
+
 " So-called 'sane' defaults.
 set encoding=utf-8
 set scrolloff=3
@@ -9,7 +15,9 @@ set showmode
 set showcmd
 set hidden
 set wildmenu
-set wildmode=list:longest
+set wildmode=full
+set wildcharm=<Tab>
+set wildignore+=*/node_modules/*,*.swp,*.*~
 set visualbell
 set cursorline
 set ttyfast
@@ -21,107 +29,46 @@ set relativenumber
 set mouse=n
 set textwidth=80
 set fo=croqj
-
-" Better search defaults.
-nnoremap / /\v
-vnoremap / /\v
-set ignorecase
-set smartcase
-set gdefault
-set incsearch
-set showmatch
-set hlsearch
-
-" Map <leader> to <space>
-let mapleader = ' '
-
-" Clear search highlighting.
-nnoremap <leader>l :noh<cr>
+set breakindent
+set breakindentopt=shift:2
+set showbreak=↳
 
 " Backup settings.
 set swapfile
-set directory^=~/.vim/swap//
+set directory^=~/.local/share/vim/backup//
 set writebackup
 set nobackup
 set backupcopy=auto
 
+" Undo persistence.
+set undofile
+set undodir^=~/.local/share/vim/undo//
+
 " Indentation rules.
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
 set expandtab
 set autoindent
 
-" Undo persistence.
-set undofile
-set undodir^=~/.vim/undo//
+" Search settings.
+nnoremap / /\v
+vnoremap / /\v
+set ignorecase
+set infercase
+set gdefault
+set incsearch
+"set showmatch
+"set hlsearch
 
-" Load filetype-based plugins and indentation rules (~/.vim/ftplugin, ~/.vim/indent).
-filetype plugin indent on
-
-" Colorscheme.
-colorscheme gruvbox
-let g:gruvbox_contrast_dark='soft'
-set background=dark
-
-" Python.
-set showmatch
-"let python_highlight_all = 1
-
-" C.
-set path=.,**
-set path+=/usr/local/include
-set path+=/usr/include
-set path+=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include
-
-"silent let gcc_prefix = get(systemlist("brew --prefix gcc"), 0, "")
-"if !v:shell_error && !empty(gcc_prefix)
-"    let &path = &path .. "," .. gcc_prefix .. "/include/**"
-"endif
-set path+=/usr/local/opt/gcc/include/**
-set tags+=./tags;$HOME,./.git/tags;$HOME
-
-" Ctags, gutentags, etc.
-"let g:easytags_async = 1
-"let g:easytags_syntax_keyword = 'always'
-let g:gutentags_modules=['ctags', 'cscope']
-"let g:gutentags_ctags_tagfile='.git/tags'
-"let g:gutentags_scopefile='.git/cscope.out'
-let g:gutentags_cache_dir=expand('$HOME/.local/share/gutentags')
-
-augroup project
-  autocmd!
-  autocmd BufRead,BufNewFile *.h,*.c set filetype=c.doxygen
+" Temporarily enable 'hlsearch' only when typing the search query.
+augroup vimrc-incsearch-highlight
+    autocmd!
+    autocmd CmdlineEnter /,\? :set hlsearch
+    autocmd CmdlineLeave /,\? :set nohlsearch
 augroup END
 
-" Edit/compile/run cycle.
-nmap <silent> <F5> :make<cr><cr><cr>
-nmap <silent><expr> <F6> execute("Termdebug ". expand('%:r')) 
-
-" Debugging.
-let g:termdebug_wide = 143
-
-" Typescript.
-let g:typescript_compiler_options = '--lib es6,dom --downLevelIteration --target es5'
-
-" Keyword completion (autocomplete).
-set complete-=i  " Don't search include files for every keyword completion.
-
-" Better man pages (when viewed with K or :Man <topic>).
-runtime ftplugin/man.vim
-set keywordprg=:Man
-
-" Ranger integration.
-"let g:ranger_terminal = 'xterm -e'
-"map <leader>rr :RangerEdit<cr>
-"map <leader>rv :RangerVSplit<cr>
-"map <leader>rs :RangerSplit<cr>
-"map <leader>rt :RangerTab<cr>
-"map <leader>ri :RangerInsert<cr>
-"map <leader>ra :RangerAppend<cr>
-"map <leader>rc :set operatorfunc=RangerChangeOperator<cr>g@
-"map <leader>rd :RangerCD<cr>
-"map <leader>rld :RangerLCD<cr>
+nnoremap <leader>l :noh<cr> \| :cclose<cr>
 
 " Tmux fixups.
 if &term =~ '^screen'
@@ -135,18 +82,43 @@ if &term =~ '^screen'
     set ttymouse=xterm2
 endif
 
-" Fast split navigation with <Ctrl> + hjkl.
-"tnoremap <c-h> <c-w>h
-"tnoremap <c-j> <c-w>j
-"tnoremap <c-k> <c-w>k
-"tnoremap <c-l> <c-w>l
+" Colorscheme.
+colorscheme gruvbox
+let g:gruvbox_contrast_dark='soft'
+set background=dark
 
 " Map ':' to ';'
 nnoremap ; :
 nnoremap <leader>; ;
 nnoremap <leader>, ,
 
-" Fast split management.
+" Command-mode history shortcuts (avoid using arrow keys).
+cnoremap <c-n> <down>
+cnoremap <c-p> <up>
+
+" Fast config editing and reloading.
+nnoremap <leader>ve :e $MYVIMRC<cr>
+nnoremap <leader>vr :so $MYVIMRC<cr>
+
+" Pasting from system clipboard.
+map <leader>y "+y
+map <leader>p "+[p
+
+" Better man pages (when viewed with K or :Man <topic>).
+runtime ftplugin/man.vim
+set keywordprg=:Man
+
+" Scrolling and movement.
+map <PageDown> <C-D>
+map <PageUp> <C-U>
+map <End> <C-F>
+map <Home> <C-B>
+
+" More natural linewise movement.
+nnoremap <expr> j v:count ? (v:count > 5 ? "m'" . v:count : '') . 'j' : 'gj'
+nnoremap <expr> k v:count ? (v:count > 5 ? "m'" . v:count : '') . 'k' : 'gk'
+
+" Split (vim window) management.
 nnoremap <leader>ss <C-w>s<C-w>j
 nnoremap <leader>sv <C-w>v<C-w>l
 nnoremap <leader>sc <C-w>h
@@ -158,53 +130,92 @@ nnoremap <leader>sl <c-w>l
 nnoremap <leader>sj <c-w>j
 nnoremap <leader>sk <c-w>k
 nnoremap <leader>sf :Vifm<cr>
+autocmd VimResized * wincmd =
 
-" Rolodex windows/splits.
-"set noequalalways
-"set winminheight=0 winheight=9999 helpheight=9999
-"set winminwidth=0 winwidth=9999
+" Fuzzy file search, opening etc.
+nnoremap <c-p> :Files <c-r>=getcwd()<cr><cr>
+nnoremap <m-p> :Files <c-r>=expand('%:h')<cr><cr>
 
-" Fast tab management.
-nnoremap <leader>tn :tabnew<cr>
-nnoremap <leader>tc :tabclose<cr>
+" Grep settings.
+let g:grepper = {}
+let g:grepper.tools = ['git', 'grep', 'rg']
+let g:grepper.open = 1
+let g:grepper.switch = 1
+let g:grepper.jump = 0
+let g:grepper.dir = 'repo,cwd'
+let g:grepper.prompt_text = '$t> '
+let g:grepper.prompt_mapping_tool = '<leader>g'
+nmap gk <plug>(GrepperOperator)
+xmap gk <plug>(GrepperOperator)
+"nnoremap <leader>gg :Grepper -tool git<cr>
+"nnoremap <leader>ga :Grepper -tool rg<cr>
+"nnoremap <leader>gs :Grepper -tool rg -side<cr>
+nnoremap <c-f> :Grepper -tool rg<cr>
+nnoremap <leader>* :Grepper -tool rg -cword -noprompt<cr>
 
-" Fast help/quickfix/etc. management.
-nnoremap <leader>hc :helpclose<cr>
-nnoremap <leader>hg :helpgrep 
+"set grepprg=rg\ --hidden\ --colors=always\ $*\
+"command! -nargs=+ MyGrep execute 'silent! grep! <args>' | copen 20 | redraw!
+"nnoremap <leader>/ :MyGrep 
+"nnoremap K :MyGrep <cword><cr>
 
-nnoremap <leader>qc :cclose<cr>
+" vifm settings.
+let g:vifm_replace_netrw = 1
+nnoremap - :EditVifm<cr>
+nnoremap <leader>e :EditVifm<cr>
 
-" Fast config editing and reloading.
-nnoremap <leader>ve :e $MYVIMRC<cr>
-nnoremap <leader>vr :so $MYVIMRC<cr>
-
-" Pasting from system clipboard.
-map <leader>y "+y
-map <leader>p "+[p
-
-" File management.
-let g:ctrlp_working_path_mode = 'wra'
-let g:ctrlp_show_hidden = 1
-"nnoremap <leader>f :CtrlP<cr>
-"nnoremap <leader>b :CtrlPBuffer<cr>
-"nnoremap <leader>m :CtrlPMRUFiles<cr>
-"
 " Buffer management.
 nnoremap <s-tab> :bprevious<cr>
 nnoremap <tab> :bnext<cr>
 "set wildcharm=<C-z>
 "nnoremap <leader>b :buffer <C-z><S-Tab>
 "nnoremap <leader>b :ls<cr>:buffer<space>
-
-" Scrolling and movement.
-"imap <PageDown> <CTR
-
-" CtrlP mappings.
-"nnoremap <C-p> :CtrlPBuffer<cr>
+nnoremap <leader><tab> :buffer<space><tab>
+nnoremap <c-e> :Buffers<cr>
 
 " Tab management.
+nnoremap <leader>tn :tabnew<cr>
+nnoremap <leader>tc :tabclose<cr>
 "nnoremap <tab> :tabnext<cr>
 "nnoremap <s-tab> :tabprev<cr>
+
+" Fast help/quickfix/etc. management.
+nnoremap <leader>hc :helpclose<cr>
+nnoremap <leader>hg :helpgrep 
+nnoremap <leader>qc :cclose<cr>
+
+" Help window positioning.
+set helpheight=9999
+augroup vert_help
+  autocmd!
+  autocmd BufEnter *.txt if &buftype == 'help' | wincmd L | endif
+augroup END
+
+" Fzf and fzf.vim.
+set rtp+=/usr/local/opt/fzf
+let g:fzf_history_dir = '~/.local/share/fzf-vim-history'
+"nnoremap <leader>m :Marks<cr>
+"nnoremap <leader>ff :GFiles<cr>
+"nnoremap <leader>fa :GFiles?<cr>
+"nnoremap <leader>fc :Commits<cr>
+
+" CtrlP settings.
+"let g:ctrlp_working_path_mode = 'wra'
+"let g:ctrlp_show_hidden = 1
+"nnoremap <leader>f :CtrlP<cr>
+"nnoremap <leader>b :CtrlPBuffer<cr>
+"nnoremap <leader>m :CtrlPMRUFiles<cr>
+
+" Ranger settings.
+"let g:ranger_terminal = 'xterm -e'
+"map <leader>rr :RangerEdit<cr>
+"map <leader>rv :RangerVSplit<cr>
+"map <leader>rs :RangerSplit<cr>
+"map <leader>rt :RangerTab<cr>
+"map <leader>ri :RangerInsert<cr>
+"map <leader>ra :RangerAppend<cr>
+"map <leader>rc :set operatorfunc=RangerChangeOperator<cr>g@
+"map <leader>rd :RangerCD<cr>
+"map <leader>rld :RangerLCD<cr>
 
 " netrw settings.
 let g:netrw_preview      = 1
@@ -230,7 +241,6 @@ let NERDTreeStatusline  = 'NERD'
 
 " Unite settings.
 " NOTE: Additional settings are located in ~/.vim/after/plugin/unite.vim.
-set wildignore+=*/node_modules/*,*.swp,*.*~
 "let g:unite_source_history_yank_enable = 1
 "nnoremap <leader>f :<C-u>Unite -no-split -buffer-name=files   -start-insert file<cr>
 "nnoremap <leader>f :<C-u>Unite -no-split -buffer-name=files   file_rec<cr>
@@ -247,38 +257,6 @@ function! s:unite_settings()
   imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
 endfunction
 
-" Airline/statusline settings.
-set showtabline=2
-set ttimeoutlen=10
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
-"let g:airline_statusline_ontop = 1
-"autocmd VimEnter * set laststatus=0  " Override airline's force.
-
-" pydoc settings.
-let g:pydoc_window_lines=0.5
-
-" Grep settings.
-"set grepprg=rg\ --hidden\ --colors=always\ $*\
-"command! -nargs=+ MyGrep execute 'silent! grep! <args>' | copen 20 | redraw!
-"nnoremap <leader>/ :MyGrep 
-"nnoremap K :MyGrep <cword><cr>
-
-" Fzf and fzf.vim.
-set rtp+=/usr/local/opt/fzf
-let g:fzf_history_dir = '~/.local/share/fzf-vim-history'
-nnoremap <leader>f :Files<cr>
-nnoremap <leader>b :Buffers<cr>
-nnoremap <leader>m :Marks<cr>
-nnoremap <leader>t :Tags<cr>
-nnoremap <leader>o :BTags<cr>
-nnoremap <leader>/ :Rg 
-nnoremap <leader>k :exe 'Rg ' . expand('<cword>')<cr>
-nnoremap <leader>gf :GFiles<cr>
-nnoremap <leader>gs :GFiles?<cr>
-nnoremap <leader>gc :Commits<cr>
-"
-"
 " Fzf/cscope integration.
 "   source: https://alex.dzyoba.com/blog/vim-revamp/
 function! Cscope(option, query)
@@ -299,19 +277,77 @@ function! Cscope(option, query)
 endfunction
 
 nnoremap <silent> <C-g> :call Cscope('3', expand('<cword>'))<CR>
+nnoremap <leader>t :Tags<cr>
+nnoremap <leader>o :BTags<cr>
 
-" vifm settings.
-let g:vifm_replace_netrw = 1
-nnoremap - :EditVifm<cr>
-nnoremap <leader>e :EditVifm<cr>
+" Avoid performance issues by only highlighting first 200 columns.
+set synmaxcol=200
 
-" Search settings.
-augroup vimrc-incsearch-highlight
-    autocmd!
-    autocmd CmdlineEnter /,\? :set hlsearch
-    autocmd CmdlineLeave /,\? :set nohlsearch
+" Python.
+set showmatch
+let g:pydoc_window_lines=0.5
+"let python_highlight_all = 1
+
+" Typescript.
+let g:typescript_compiler_options = '--lib es6,dom --downLevelIteration --target es5'
+
+" C.
+set path=.,**
+set path+=/usr/local/include
+set path+=/usr/include
+set path+=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include
+
+" Keyword completion (autocomplete).
+set complete-=i  " Don't search include files for every keyword completion.
+
+"silent let gcc_prefix = get(systemlist("brew --prefix gcc"), 0, "")
+"if !v:shell_error && !empty(gcc_prefix)
+"    let &path = &path .. "," .. gcc_prefix .. "/include/**"
+"endif
+set path+=/usr/local/opt/gcc/include/**
+set tags+=./tags;$HOME,./.git/tags;$HOME
+
+" Ctags, gutentags, etc.
+"let g:easytags_async = 1
+"let g:easytags_syntax_keyword = 'always'
+let g:gutentags_modules=['ctags', 'cscope']
+"let g:gutentags_ctags_tagfile='.git/tags'
+"let g:gutentags_scopefile='.git/cscope.out'
+let g:gutentags_cache_dir=expand('$HOME/.local/share/gutentags')
+augroup project
+  autocmd!
+  autocmd BufRead,BufNewFile *.h,*.c set filetype=c.doxygen
 augroup END
-nnoremap <leader><space> :set nohlsearch<bar>:cclose<cr>
+
+" Edit/compile/run cycle.
+nmap <silent> <F5> :make<cr><cr><cr>
+nmap <silent><expr> <F6> execute("Termdebug ". expand('%:r')) 
+
+" Debugging.
+let g:termdebug_wide = 143
+
+" Fugitive / git setup.
+nnoremap <leader>fs :Git<cr>
+nnoremap <leader>fc :Gcommit<cr>
+nnoremap <leader>fp :Gpull<cr>
+nnoremap <leader>fb :Gblame<cr>
+nnoremap <leader>fg :Ggrep<space>
+nnoremap <leader>fl :Gclog<cr>
+nnoremap <leader>fm :Gmove<space>
+nnoremap <leader>fb :Gbrowse<cr>
+nnoremap <leader>fd :Gvdiffsplit!<cr>
+nnoremap dgh :diffget //2<cr>
+nnoremap dgl :diffget //3<cr>
+nnoremap do :diffoff<cr>
+
+" Delete all Git conflict markers
+" Creates the command :GremoveConflictMarkers
+function! RemoveConflictMarkers() range
+  echom a:firstline.'-'.a:lastline
+  execute a:firstline.','.a:lastline . ' g/^<\{7}\|^|\{7}\|^=\{7}\|^>\{7}/d'
+endfunction
+"-range=% default is whole file
+command! -range=% GremoveConflictMarkers <line1>,<line2>call RemoveConflictMarkers()
 
 " Tabular setup.
 if exists(":Tabularize")
@@ -334,24 +370,18 @@ function! s:align()
   endif
 endfunction
 
-" Fugitive / git setup.
-nnoremap <leader>gd :Gvdiffsplit!<cr>
-nnoremap gdh :diffget //2<cr>
-nnoremap gdl :diffget //3<cr>
-"
-"Delete all Git conflict markers
-"Creates the command :GremoveConflictMarkers
-function! RemoveConflictMarkers() range
-  echom a:firstline.'-'.a:lastline
-  execute a:firstline.','.a:lastline . ' g/^<\{7}\|^|\{7}\|^=\{7}\|^>\{7}/d'
-endfunction
-"-range=% default is whole file
-command! -range=% GremoveConflictMarkers <line1>,<line2>call RemoveConflictMarkers()
-
 " Bookmarks plugin.
-let g:bookmark_auto_save_file = '$HOME/.local/share/vim/bookmarks/bookmarks'
-let g:bookmark_manage_per_buffer = 1
+let g:bookmark_auto_save_file = expand('$HOME/.local/share/vim/bookmarks/.vim-bookmarks')
 let g:bookmark_auto_clode = 1
 let g:bookmark_center = 1
 let g:bookmark_disable_ctrlp = 1
 let g:bookmark_show_warning = 1
+
+" Airline/statusline settings.
+set showtabline=2
+set ttimeoutlen=10
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
+"let g:airline_statusline_ontop = 1
+"autocmd VimEnter * set laststatus=0  " Override airline's force.
+

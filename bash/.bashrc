@@ -107,7 +107,7 @@ else
 fi
 
 # FZF.
-export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
+export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --smart-case --glob "!.git/*"'
 export FZF_DEFAULT_OPTS='--bind=ctrl-j:down,ctrl-k:up'
 
 # Ripgrep / rg.

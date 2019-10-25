@@ -12,7 +12,7 @@
 	url = https://github.com/tpope/vim-unimpaired.git
 [submodule "vim/pack/default/start/obsession"]
 	path = vim/.vim/pack/default/start/obsession
-	url = https://github.com/tpope/vim-obsession.git
+	url = https://github.com/vphantom/vim-obsession.git
 [submodule "vim/pack/default/start/surround"]
 	path = vim/.vim/pack/default/start/surround
 	url = https://github.com/tpope/vim-surround.git
@@ -65,3 +65,6 @@
 [submodule "vim/.vim/pack/default/start/bookmarks"]
 	path = vim/.vim/pack/default/start/bookmarks
 	url = https://github.com/MattesGroeger/vim-bookmarks.git
+[submodule "vim/.vim/pack/default/start/grepper"]
+	path = vim/.vim/pack/default/start/grepper
+	url = https://github.com/mhinz/vim-grepper.git
