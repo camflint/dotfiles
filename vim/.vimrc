@@ -1,6 +1,13 @@
 " Syntax highlighting.
 syntax enable
 
+" Colorscheme (base16).
+if filereadable(expand("~/.vimrc_background"))
+  set t_Co=256
+  let base16colorspace=256
+  source ~/.vimrc_background
+endif
+
 " Load filetype-based plugins and indentation rules (~/.vim/ftplugin, ~/.vim/indent).
 filetype plugin indent on
 
@@ -81,11 +88,6 @@ if &term =~ '^screen'
     " Fix mouse.
     set ttymouse=xterm2
 endif
-
-" Colorscheme.
-colorscheme gruvbox
-let g:gruvbox_contrast_dark='soft'
-set background=dark
 
 " Map ':' to ';'
 nnoremap ; :
@@ -382,6 +384,7 @@ set showtabline=2
 set ttimeoutlen=10
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
+let g:airline_theme = 'base16'
 "let g:airline_statusline_ontop = 1
 "autocmd VimEnter * set laststatus=0  " Override airline's force.
 

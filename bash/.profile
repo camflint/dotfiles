@@ -14,6 +14,7 @@ alias la='ls -a'
 alias ll='ls -l'
 alias lla='ls -al'
 alias rg='rg --hidden --smart-case'
+alias base16="base16-universal-manager --config=\"$HOME/.config/base16/config.yaml\""
 
 # FZF aliases.
 alias gf='fzfgofile'
@@ -70,6 +71,9 @@ if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
 
+# Golang.
+export PATH=$HOME/go/bin:$PATH
+
 # Homebrew.
 export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 #export PATH=/Users/cameron/Library/Python/3.7/bin:$PATH
@@ -98,3 +102,12 @@ fi
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 export PATH="./node_modules/.bin:$PATH"
+
+# Base16 Shell
+BASE16_SHELL="$HOME/.config/base16-shell/"
+[ -n "$PS1" ] && \
+    [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
+        eval "$("$BASE16_SHELL/profile_helper.sh")"
+
+# Colorscheme selection.
+base16_nord

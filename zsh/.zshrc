@@ -1,6 +1,10 @@
 # Source common configuration.
 source $HOME/.profile
 
+# Colored prompt.
+autoload -U colors && colors
+PS1="[%{$fg[yellow]%}%(5~|%-1~/.../%3~|%4~)%{$reset_color%}] %% "
+
 # Options.
 setopt auto_cd
 setopt extended_glob
