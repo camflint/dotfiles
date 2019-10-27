@@ -8,4 +8,6 @@ Session.vim
 vim/.vim/.netrwhist
 config/.config/vifm/vifminfo
 tmux/.tmux/plugins
+local/.local/share/tridactyl
+local/.local/share/vim/bookmarks
 
