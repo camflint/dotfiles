@@ -1,12 +1,13 @@
-" Map ; to :
-bind ; fillcmdline_notrail
-
 " Sanitize all settings -- any setting not in this file will be reset to
 " its default.
 sanitize tridactyllocal tridactylsync
 
-" Use blank page for new tab.
+" Map ; to :
+bind ; fillcmdline_notrail
+
+" Use blank page for new tab and as homepage.
 set newtab about:blank
+set homepages ['about:blank']
 
 " Smooth scrolling.
 set smoothscroll true
