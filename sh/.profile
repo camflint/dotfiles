@@ -16,18 +16,6 @@ alias lla='ls -al'
 alias rg='rg --hidden --smart-case'
 alias base16="base16-universal-manager --config=\"$HOME/.config/base16/config.yaml\""
 
-# FZF aliases.
-alias gf='fzfgofile'
-alias gd='. fzfgodir'
-alias fe='fzffileedit'
-alias fv='fzffileedit'
-alias fs='fzffilegrep'
-alias hs='fzfhistory'
-alias ts='fzftmuxswitch'
-alias tk='fzftmuxkill'
-alias gitshow='fzfgitshow'
-alias gitstat='fzfgitstatus'
-
 # Locale.
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
@@ -48,7 +36,7 @@ if [[ -d "$HOME/.scripts" ]]; then
     export PATH="$HOME/.scripts:$PATH"
 fi
 if [[ -d "$HOME/.funcs" ]]; then
-    for file in $HOME/.funcs/*; do
+    for file in $HOME/.funcs/*.sh; do
         . $file
     done
 fi
