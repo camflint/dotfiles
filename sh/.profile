@@ -43,6 +43,16 @@ if [[ -d "$HOME/code" ]]; then
     done
 fi
 
+# Personal scripts and global functions.
+if [[ -d "$HOME/.scripts" ]]; then
+    export PATH="$HOME/.scripts:$PATH"
+fi
+if [[ -d "$HOME/.funcs" ]]; then
+    for file in $HOME/.funcs/*; do
+        . $file
+    done
+fi
+
 # Keybindings.
 bindkey '^P' up-history
 bindkey '^N' down-history

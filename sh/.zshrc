@@ -18,6 +18,16 @@ HISTFILE=~/.history
 bindkey -v
 export KEYTIMEOUT=1
 
+# Keybindings.
+bindkey -v '^?' backward-delete-char
+bindkey -a -s "gd" "igd\n"
+bindkey -a -s "gf" "igf\n"
+bindkey -a -s "fe" "ife\n"
+bindkey -a -s "fv" "ifv\n"
+bindkey -a -s "fs" "ifs "
+bindkey -a -s "hs" "ihs\n"
+bindkey -a -s "ts" "its\n"
+
 # Load function-based completion system.
 autoload -U compinit
 compinit
