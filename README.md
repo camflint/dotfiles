@@ -34,6 +34,7 @@ I use the following applications daily both at work and at home. I make sure the
 | Vim | editor and IDE replacement |
 | MacVim | standalone Vim handy for certain use cases, e.g. when I want a floating window |
 | Vifm | terminal-based file manager with VI-mode bindings |
+| Fzf | general-purpose fuzzy finder for terminal |
 | iStat Menus 6 | CPU, GPU, memory, etc. monitor in taskbar |
 | Moom | window and workspace manager |
 | Contexts | Cmd+Tab replacement |
