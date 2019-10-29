@@ -1,4 +1,4 @@
 --hs.logger.defaultLogLevel = 'info'
 
-require('speeddial')
+--require('speeddial')
 
