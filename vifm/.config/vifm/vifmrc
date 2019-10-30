@@ -430,19 +430,22 @@ only
 " Cpp filtering.
 command! cpponly :filter {*.d,*.build,*.dSYM\/}
 
-nnoremap ,v :!vim -c "cd %d"<cr>
+"nnoremap ,v :!vim -c "cd %d"<cr>
 
 command! fzfdir :execute 'cd' fnameescape(term('fd --type d --hidden --exclude .git --full-path %d | fzf 2> /dev/tty'))
 command! fzffile :execute 'goto' fnameescape(term('rg --hidden --files %d | fzf 2> /dev/tty'))
 command! fzfgrep :execute 'goto' fnameescape(term("rg --hidden --vimgrep %a %d | fzf 2> /dev/tty | awk -F: '{ print $1 }'"))
-nnoremap ,d :fzfdir<cr>
-nnoremap ,f :fzffile<cr>
-nnoremap ,/ :fzfgrep<space>
+nnoremap <C-d> :fzfdir<cr>
+nnoremap <C-p> :fzffile<cr>
+nnoremap <C-f> :fzfgrep<space>
 nnoremap ,ve :edit $MYVIFMRC<cr>
 nnoremap ,vr :source $MYVIFMRC<cr> | :echo 'Reloaded!'<cr>
 "nnoremap <esc> :quit<cr>
 nnoremap - :quit<cr>
 nnoremap <esc> :quit<cr>
+
+" Bookmarks.
+nnoremap ,b :bmarks<cr>
 
 command! cmpinternal compare-cmd %a %S
 command! cmp : if expand('%%c') == expand('%%f')
