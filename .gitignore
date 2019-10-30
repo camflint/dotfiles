@@ -10,4 +10,4 @@ config/.config/vifm/vifminfo
 tmux/.tmux/plugins
 local/.local/share/tridactyl
 local/.local/share/vim/bookmarks
-
+*.profile_*

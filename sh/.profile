@@ -21,6 +21,13 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
 
+# Source local-only files.
+for file in "~/.profile_work" "~/.profile_home" "~/.profile_secrets"; do
+  if [[ -f $file ]]; then
+    source $file
+  fi
+done
+
 # Path completion.
 export CDPATH=.:~:~/Projects:~/Library/Mobile\ Documents/com~apple~CloudDocs
 if [[ -d "$HOME/code" ]]; then
@@ -82,19 +89,6 @@ alias tmux="tmux -2 -u"  # Force 256 colors and UTF-8.
 # FZF.
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --smart-case --glob "!.git/*"'
 export FZF_DEFAULT_OPTS='--bind=ctrl-j:down,ctrl-k:up'
-
-# Work machine setup.
-if [[ `hostname` == 'C02Y777XJG5H' ]]; then
-    export VAULT_CAPATH=/Users/$USER/code/convoyinc/ops/credentials/convoy-vault-ca.cert.pem
-    #export VAULT_ADDR=https://mcp.greypoint.co:8200 # Does not work on OSX. See below.
-    export VAULT_ADDR=https://10.10.27.22:8200
-
-    export PGHOST=localhost
-    export PGPORT=5432
-else
-    export DIGITAL_OCEAN_TOKEN=841bf46a5f685dab3f76013f86cb8639a9350d9ea24fea39c98afc48b05bd72f
-    export PIPENV_VENV_IN_PROJECT=1
-fi
 
 # Node.js, npm, nvm, etc.
 export NVM_DIR="$HOME/.nvm"
