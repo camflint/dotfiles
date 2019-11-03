@@ -147,8 +147,8 @@ let g:grepper.jump = 0
 let g:grepper.dir = 'repo,cwd'
 let g:grepper.prompt_text = '$t> '
 let g:grepper.prompt_mapping_tool = '<leader>g'
-nmap gk <plug>(GrepperOperator)
-xmap gk <plug>(GrepperOperator)
+"nmap gk <plug>(GrepperOperator)
+"xmap gk <plug>(GrepperOperator)
 "nnoremap <leader>gg :Grepper -tool git<cr>
 "nnoremap <leader>ga :Grepper -tool rg<cr>
 "nnoremap <leader>gs :Grepper -tool rg -side<cr>
