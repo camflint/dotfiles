@@ -283,7 +283,7 @@ nnoremap <leader>t :Tags<cr>
 nnoremap <leader>o :BTags<cr>
 
 " Avoid performance issues by only highlighting first 200 columns.
-set synmaxcol=200
+"set synmaxcol=200
 
 " Python.
 set showmatch
