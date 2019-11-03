@@ -3,8 +3,29 @@
 	email = dev@caflint.fastmail.com
 
 [alias]
-    c = commit
-    cp = cherry-pick
-    l = log
-	st = status
-    amend = commit --amend
+  st = status
+  c = commit
+  amend = commit --amend
+  cp = cherry-pick
+  co = checkout
+  b = branch
+  r = remote
+  l = log --pretty=format:'%C(white dim)%h%Creset -%C(yellow bold)%d%Creset %s %C(green)(%cr) %C(blue dim)<%an>%Creset' --abbrev-commit
+
+[color]
+  ui = auto
+
+[color "status"]
+  branch = magenta bold
+  localBranch = magenta
+  remoteBranch = white dim
+
+[color "branch"]
+  current = magenta bold
+  local = white
+  remote = white dim
+
+[color "diff"]
+  frag = cyan
+  func = blue bold
+  
