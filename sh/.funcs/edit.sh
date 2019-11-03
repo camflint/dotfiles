@@ -1,5 +1,9 @@
 #!/usr/bin/env sh
 
+if [[ -n $EDITOR ]]; then
+  EDITOR=vim
+fi
+
 function my-edit() {
   if [[ $# == 0 ]]; then
     # No args; invoke vifm.
@@ -11,7 +15,10 @@ function my-edit() {
       vifm -c "cd \"$1\""
     elif [[ -f $1 ]]; then
       # Single arg; file; directly edit with vim.
-      vim $1
+      $EDITOR $1
+    else
+      # Single arg; doesn't exist; use vim to create.
+      $EDITOR $1
     fi
   else
     valid=true
@@ -20,7 +27,7 @@ function my-edit() {
     done
     if [[ $valid ]]; then
       # Multi-arg; all files; invoke vim with file arguments.
-      vim "$@"
+      $EDITOR "$@"
     fi
   fi
 }

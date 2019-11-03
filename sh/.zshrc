@@ -28,9 +28,18 @@ bindkey -a -s "fs" "ifs "
 bindkey -a -s "hs" "ihs\n"
 bindkey -a -s "ts" "its\n"
 
+# ZPlugin!
+source $HOME/.zplugin/bin/zplugin.zsh
+
+# Load plugins here....
+
+
 # Load function-based completion system.
 autoload -U compinit
 compinit
+
+# Plugin zsh-syntax-highlighting must come last.
+zplugin light zsh-users/zsh-syntax-highlighting
 
 # FZF+zsh integration.
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

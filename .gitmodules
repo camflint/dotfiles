@@ -80,3 +80,6 @@
 [submodule "vifm/.config/vifm/colors"]
 	path = vifm/.config/vifm/colors
 	url = https://github.com/vifm/vifm-colors.git
+[submodule "sh/.zplugin/bin"]
+	path = sh/.zplugin/bin
+	url = https://github.com/zdharma/zplugin.git

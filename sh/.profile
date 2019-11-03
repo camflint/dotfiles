@@ -10,11 +10,13 @@ alias f=find
 alias gt=git
 alias fm='vifm .'
 alias d=docker
+alias ls='exa --icons'
 alias la='ls -a'
 alias ll='ls -l'
 alias lla='ls -al'
 alias rg='rg --hidden --smart-case'
 alias base16="base16-universal-manager --config=\"$HOME/.config/base16/config.yaml\""
+alias nater='tmuxinator'
 
 # Locale.
 export LC_ALL=en_US.UTF-8
@@ -36,6 +38,15 @@ if [[ -d "$HOME/code" ]]; then
             export CDPATH="$d:$CDPATH"
         fi
     done
+fi
+box="$HOME/Boxcryptor/iCloud Drive (Mac & PC only)"
+if [[ -d $box ]]; then
+  export CDPATH="$box:$CDPATH"
+  for d in $box/*; do;
+    if [[ -d ${d} ]]; then
+        export CDPATH="$d:$CDPATH"
+    fi
+  done
 fi
 
 # Personal scripts and global functions.
