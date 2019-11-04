@@ -75,7 +75,7 @@ augroup vimrc-incsearch-highlight
     autocmd CmdlineLeave /,\? :set nohlsearch
 augroup END
 
-nnoremap <leader>l :noh<cr> \| :cclose<cr>
+nnoremap <leader>l :noh<cr> \| :cclose<cr> \| :lclose<cr>
 
 " Tmux fixups.
 if &term =~ '^screen'
@@ -123,7 +123,7 @@ nnoremap <expr> k v:count ? (v:count > 5 ? "m'" . v:count : '') . 'k' : 'gk'
 " Split (vim window) management.
 nnoremap <leader>ss <C-w>s<C-w>j
 nnoremap <leader>sv <C-w>v<C-w>l
-nnoremap <leader>sc <C-w>h
+nnoremap <leader>sc <C-w>q
 nnoremap <leader>so <C-w>o
 nnoremap <leader>sz <C-w>\|<C-w>_
 nnoremap <leader>s= :set equalalways<cr> \| <C-w>= \| :set noequalalways<cr>
@@ -175,8 +175,8 @@ nnoremap <leader><tab> :buffer<space><tab>
 nnoremap <c-e> :Buffers<cr>
 
 " Tab management.
-nnoremap <leader>tn :tabnew<cr>
-nnoremap <leader>tc :tabclose<cr>
+"nnoremap <leader>tn :tabnew<cr>
+"nnoremap <leader>tc :tabclose<cr>
 "nnoremap <tab> :tabnext<cr>
 "nnoremap <s-tab> :tabprev<cr>
 
@@ -290,8 +290,30 @@ set showmatch
 let g:pydoc_window_lines=0.5
 "let python_highlight_all = 1
 
+" Javascript.
+let g:javascript_plugin_jsdoc = 1
+augroup javascript
+  autocmd!
+  autocmd FileType javascript setlocal foldmethod=syntax
+augroup END
+
 " Typescript.
-let g:typescript_compiler_options = '--lib es6,dom --downLevelIteration --target es5'
+function! s:setuptypescript()
+  " makeprg
+  let l:root = findfile('tsconfig.json', expand('%:p:h').';')
+  let &makeprg = 'tsc -p ' . fnameescape(l:root)
+
+  " tsuquyomi
+  let g:tsuquyomi_completion_detail = 1
+  nmap <buffer> <leader>x : <C-u>echo tsuquyomi#hint()<cr>
+endfunction
+augroup typescript
+  autocmd!
+  "Let the tsc compiler discover and use the tsconfig.json rather than
+  "overriding here.
+  autocmd FileType typescript call s:setuptypescript()
+augroup END
+"let g:typescript_compiler_options='--lib es6,dom --downLevelIteration --target es5'
 
 " C.
 set path=.,**

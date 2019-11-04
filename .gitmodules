@@ -84,3 +84,15 @@
 [submodule "sh/.zplugin/bin"]
 	path = sh/.zplugin/bin
 	url = https://github.com/zdharma/zplugin.git
+[submodule "vim/.vim/pack/default/start/typescript"]
+	path = vim/.vim/pack/default/start/typescript
+	url = https://github.com/leafgarland/typescript-vim.git
+[submodule "vim/.vim/pack/default/start/tsuquyomi"]
+	path = vim/.vim/pack/default/start/tsuquyomi
+	url = https://github.com/Quramy/tsuquyomi.git
+[submodule "vim/.vim/pack/default/start/javascript"]
+	path = vim/.vim/pack/default/start/javascript
+	url = https://github.com/pangloss/vim-javascript.git
+[submodule "vim/.vim/pack/default/start/jsx-pretty"]
+	path = vim/.vim/pack/default/start/jsx-pretty
+	url = https://github.com/MaxMEllon/vim-jsx-pretty.git
