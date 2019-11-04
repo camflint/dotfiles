@@ -429,6 +429,7 @@ set ttimeoutlen=10
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 let g:airline_theme = 'base16'
+let g:airline_powerline_fonts = 1
 "let g:airline_statusline_ontop = 1
 "autocmd VimEnter * set laststatus=0  " Override airline's force.
 
