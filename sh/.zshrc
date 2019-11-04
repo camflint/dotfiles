@@ -3,7 +3,13 @@ source $HOME/.profile
 
 # Colored prompt.
 autoload -U colors && colors
-PS1="[%{$fg[yellow]%}%(5~|%-1~/.../%3~|%4~)%{$reset_color%}] %% "
+local lc=$'\e[' rc=m	# Standard ANSI terminal escape values
+# TODO: Remove this if zsh repo merges my PR.
+typeset -AHg fg_dim
+for k in ${(k)color[(I)fg-*]}; do
+  fg_dim[${k#fg-}]="$lc${color[faint]};${color[$k]}$rc"
+done
+PS1="[%{$fg_dim[white]%}%(5~|%-1~/.../%3~|%4~)%{$reset_color%}] %# "
 
 # Options.
 setopt auto_cd

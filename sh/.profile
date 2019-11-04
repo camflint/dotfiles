@@ -15,7 +15,6 @@ alias la='ls -a'
 alias ll='ls -l'
 alias lla='ls -al'
 alias rg='rg --hidden --smart-case'
-alias base16="base16-universal-manager --config=\"$HOME/.config/base16/config.yaml\""
 alias nater='tmuxinator'
 
 # Locale.
@@ -92,7 +91,6 @@ export PATH=$HOME/go/bin:$PATH
 
 # Homebrew.
 export PATH=/usr/local/bin:/usr/local/sbin:$PATH
-#export PATH=/Users/cameron/Library/Python/3.7/bin:$PATH
 
 # Tmux.
 alias tmux="tmux -2 -u"  # Force 256 colors and UTF-8.
