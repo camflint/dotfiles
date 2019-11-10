@@ -1,21 +1,10 @@
 # Use the vim editor by default for git, bash, etc.
 export EDITOR=vim
 
-# General aliases.
-alias r=ranger
-alias v=vim
-alias e=vim
-alias g='grep -iER'
-alias f=find
-alias gt=git
-alias fm='vifm .'
-alias d=docker
-alias ls='exa --icons'
-alias la='ls -a'
-alias ll='ls -l'
-alias lla='ls -al'
-alias rg='rg --hidden --smart-case'
-alias nater='tmuxinator'
+# Source aliases.
+if [[ -f "$HOME/.aliases" ]]; then
+  . "$HOME/.aliases"
+fi
 
 # Locale.
 export LC_ALL=en_US.UTF-8
