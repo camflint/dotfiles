@@ -41,24 +41,11 @@ source $HOME/.zplugin/bin/zplugin.zsh
 
 
 # Load function-based completion system.
-autoload -U compinit
+autoload -U compinit -d
 compinit
 
 # Plugin zsh-syntax-highlighting must come last.
-zplugin light zsh-users/zsh-syntax-highlighting
+zplugin ice wait'0'; zplugin load zsh-users/zsh-syntax-highlighting
 
 # FZF+zsh integration.
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# call nvm use automatically whenever you enter a directory that contains an .nvmrc file
-autoload -U add-zsh-hook
-load-nvmrc() {
- if ! [ -x "$(command -v nvm)" ]; then return; fi
- if [[ -f .nvmrc && -r .nvmrc ]]; then
-   nvm use >/dev/null
- elif [[ $(nvm version) != $(nvm version default)  ]]; then
-   nvm use default >/dev/null
- fi
-}
-add-zsh-hook chpwd load-nvmrc
-load-nvmrc

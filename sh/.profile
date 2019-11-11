@@ -52,6 +52,7 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
+export PYTHONPATH=/usr/local/lib/python3.7/site-packages:$PYTHONPATH
 
 # Golang.
 export PATH=$HOME/go/bin:$PATH
