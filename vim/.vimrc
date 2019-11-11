@@ -1,12 +1,21 @@
 " Syntax highlighting.
 syntax enable
 
-" Colorscheme (base16).
-if filereadable(expand("~/.vimrc_background"))
-  set t_Co=256
-  let base16colorspace=256
-  source ~/.vimrc_background
+" Colorscheme and syntax highlighting setup.
+if exists('+termguicolors')
+  let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
 endif
+
+let g:nord_italic = 1
+let g:nord_italic_comments = 1
+let g:nord_underline = 1
+
+colorscheme nord
+
+" Avoid performance issues by only highlighting first 200 columns (optional).
+set synmaxcol=200
 
 " Load filetype-based plugins and indentation rules (~/.vim/ftplugin, ~/.vim/indent).
 filetype plugin indent on
@@ -58,6 +67,9 @@ set softtabstop=2
 set expandtab
 set autoindent
 
+" Keyword completion (autocomplete).
+set complete-=i  " Don't search include files for every keyword completion.
+
 " Search settings.
 nnoremap / /\v
 vnoremap / /\v
@@ -65,8 +77,6 @@ set ignorecase
 set infercase
 set gdefault
 set incsearch
-"set showmatch
-"set hlsearch
 
 " Temporarily enable 'hlsearch' only when typing the search query.
 augroup vimrc-incsearch-highlight
@@ -121,8 +131,8 @@ nnoremap <expr> j v:count ? (v:count > 5 ? "m'" . v:count : '') . 'j' : 'gj'
 nnoremap <expr> k v:count ? (v:count > 5 ? "m'" . v:count : '') . 'k' : 'gk'
 
 " Split (vim window) management.
-nnoremap <leader>ss <C-w>s<C-w>j
-nnoremap <leader>sv <C-w>v<C-w>l
+nnoremap <leader>s- <C-w>s<C-w>j
+nnoremap <leader>s\| <C-w>v<C-w>l
 nnoremap <leader>sc <C-w>q
 nnoremap <leader>so <C-w>o
 nnoremap <leader>sz <C-w>\|<C-w>_
@@ -147,14 +157,10 @@ let g:grepper.jump = 0
 let g:grepper.dir = 'repo,cwd'
 let g:grepper.prompt_text = '$t> '
 let g:grepper.prompt_mapping_tool = '<leader>g'
-"nmap gk <plug>(GrepperOperator)
-"xmap gk <plug>(GrepperOperator)
-"nnoremap <leader>gg :Grepper -tool git<cr>
-"nnoremap <leader>ga :Grepper -tool rg<cr>
-"nnoremap <leader>gs :Grepper -tool rg -side<cr>
 nnoremap <c-f> :Grepper -tool rg<cr>
 nnoremap <leader>* :Grepper -tool rg -cword -noprompt<cr>
 
+" Pure vim grepping.
 "set grepprg=rg\ --hidden\ --colors=always\ $*\
 "command! -nargs=+ MyGrep execute 'silent! grep! <args>' | copen 20 | redraw!
 "nnoremap <leader>/ :MyGrep 
@@ -168,11 +174,12 @@ nnoremap <leader>e :EditVifm<cr>
 " Buffer management.
 nnoremap <s-tab> :bprevious<cr>
 nnoremap <tab> :bnext<cr>
+nnoremap <leader><tab> :buffer<space><tab>
+nnoremap <c-e> :Buffers<cr>
+" Pure vim buffer switching (instead of FZF).
 "set wildcharm=<C-z>
 "nnoremap <leader>b :buffer <C-z><S-Tab>
 "nnoremap <leader>b :ls<cr>:buffer<space>
-nnoremap <leader><tab> :buffer<space><tab>
-nnoremap <c-e> :Buffers<cr>
 
 " Tab management.
 "nnoremap <leader>tn :tabnew<cr>
@@ -195,61 +202,6 @@ augroup END
 " Fzf and fzf.vim.
 set rtp+=/usr/local/opt/fzf
 let g:fzf_history_dir = '~/.local/share/fzf-vim-history'
-"nnoremap <leader>m :Marks<cr>
-"nnoremap <leader>ff :GFiles<cr>
-"nnoremap <leader>fa :GFiles?<cr>
-"nnoremap <leader>fc :Commits<cr>
-
-" CtrlP settings.
-"let g:ctrlp_working_path_mode = 'wra'
-"let g:ctrlp_show_hidden = 1
-"nnoremap <leader>f :CtrlP<cr>
-"nnoremap <leader>b :CtrlPBuffer<cr>
-"nnoremap <leader>m :CtrlPMRUFiles<cr>
-
-" Ranger settings.
-"let g:ranger_terminal = 'xterm -e'
-"map <leader>rr :RangerEdit<cr>
-"map <leader>rv :RangerVSplit<cr>
-"map <leader>rs :RangerSplit<cr>
-"map <leader>rt :RangerTab<cr>
-"map <leader>ri :RangerInsert<cr>
-"map <leader>ra :RangerAppend<cr>
-"map <leader>rc :set operatorfunc=RangerChangeOperator<cr>g@
-"map <leader>rd :RangerCD<cr>
-"map <leader>rld :RangerLCD<cr>
-
-" netrw settings.
-let g:netrw_preview      = 1
-let g:netrw_liststyle    = 0
-let g:netrw_keepdir      = 0
-let g:netrw_browse_split = 1
-let g:netrw_altv         = 1
-let g:netrw_winsize      = 25
-let g:netrw_list_hide    = netrw_gitignore#Hide() . '\(^\|\s\s\)\zs\.\S+'
-"augroup ProjectDrawer autocmd!  autocmd VimEnter * :Vexplore augroup END
-
-" Nerdtree settings.
-let NERDTreeChDirMode   = 2  " Synchronize NERDTree root with Vim's cwd.
-let NERDTreeHijackNetrw = 1
-let NERDTreeMinimalUI   = 1
-let NERDTreeStatusline  = 'NERD'
-"map <leader>n :NERDTreeToggle<cr>
-"map <leader>s :NERDTreeFind<cr>
-"augroup ProjectDrawer
-"    autocmd!
-"    autocmd VimEnter * :NERDTree
-"augroup END
-
-" Unite settings.
-" NOTE: Additional settings are located in ~/.vim/after/plugin/unite.vim.
-"let g:unite_source_history_yank_enable = 1
-"nnoremap <leader>f :<C-u>Unite -no-split -buffer-name=files   -start-insert file<cr>
-"nnoremap <leader>f :<C-u>Unite -no-split -buffer-name=files   file_rec<cr>
-"nnoremap <leader>r :<C-u>Unite -no-split -buffer-name=mru     file_mru<cr>
-"nnoremap <leader>o :<C-u>Unite -no-split -buffer-name=outline outline<cr>
-"nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank    history/yank<cr>
-"nnoremap <leader>e :<C-u>Unite -no-split -buffer-name=buffer  buffer<cr>
 
 " Custom mappings for the unite buffer
 autocmd FileType unite call s:unite_settings()
@@ -282,74 +234,6 @@ nnoremap <silent> <C-g> :call Cscope('3', expand('<cword>'))<CR>
 nnoremap <leader>t :Tags<cr>
 nnoremap <leader>o :BTags<cr>
 
-" Avoid performance issues by only highlighting first 200 columns.
-"set synmaxcol=200
-
-" Python.
-set showmatch
-let g:pydoc_window_lines=0.5
-"let python_highlight_all = 1
-
-" Javascript.
-let g:javascript_plugin_jsdoc = 1
-augroup javascript
-  autocmd!
-  autocmd FileType javascript setlocal foldmethod=syntax
-augroup END
-
-" Typescript.
-function! s:setuptypescript()
-  " makeprg
-  let l:root = findfile('tsconfig.json', expand('%:p:h').';')
-  let &makeprg = 'tsc -p ' . fnameescape(l:root)
-
-  " tsuquyomi
-  let g:tsuquyomi_completion_detail = 1
-  nmap <buffer> <leader>x : <C-u>echo tsuquyomi#hint()<cr>
-endfunction
-augroup typescript
-  autocmd!
-  "Let the tsc compiler discover and use the tsconfig.json rather than
-  "overriding here.
-  autocmd FileType typescript call s:setuptypescript()
-augroup END
-"let g:typescript_compiler_options='--lib es6,dom --downLevelIteration --target es5'
-
-" C.
-set path=.,**
-set path+=/usr/local/include
-set path+=/usr/include
-set path+=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include
-
-" Keyword completion (autocomplete).
-set complete-=i  " Don't search include files for every keyword completion.
-
-"silent let gcc_prefix = get(systemlist("brew --prefix gcc"), 0, "")
-"if !v:shell_error && !empty(gcc_prefix)
-"    let &path = &path .. "," .. gcc_prefix .. "/include/**"
-"endif
-set path+=/usr/local/opt/gcc/include/**
-set tags+=./tags;$HOME,./.git/tags;$HOME
-
-" Ctags, gutentags, etc.
-"let g:easytags_async = 1
-"let g:easytags_syntax_keyword = 'always'
-let g:gutentags_modules=['ctags', 'cscope']
-"let g:gutentags_ctags_tagfile='.git/tags'
-"let g:gutentags_scopefile='.git/cscope.out'
-let g:gutentags_cache_dir=expand('$HOME/.local/share/gutentags')
-augroup project
-  autocmd!
-  autocmd BufRead,BufNewFile *.h,*.c set filetype=c.doxygen
-augroup END
-
-" Edit/compile/run cycle.
-nmap <silent> <F5> :make<cr><cr><cr>
-nmap <silent><expr> <F6> execute("Termdebug ". expand('%:r')) 
-
-" Debugging.
-let g:termdebug_wide = 143
-
 " Fugitive / git setup.
 nnoremap <leader>fs :Git<cr>
 nnoremap <leader>fc :Gcommit<cr>
@@ -372,6 +256,69 @@ function! RemoveConflictMarkers() range
 endfunction
 "-range=% default is whole file
 command! -range=% GremoveConflictMarkers <line1>,<line2>call RemoveConflictMarkers()
+
+" Python.
+set showmatch
+let g:pydoc_window_lines=0.5
+"let python_highlight_all = 1
+
+" Javascript.
+let g:javascript_plugin_jsdoc = 1
+augroup javascript
+  autocmd!
+  autocmd FileType javascript setlocal foldmethod=syntax
+augroup END
+
+" Typescript.
+function! s:setuptypescript()
+  " makeprg
+  let l:root = findfile('tsconfig.json', expand('%:p:h').';')
+  let &makeprg = 'tsc -p ' . fnameescape(l:root)
+
+  " tsuquyomi
+  "let g:tsuquyomi_completion_detail = 1
+  "nmap <buffer> <leader>x : <C-u>echo tsuquyomi#hint()<cr>
+endfunction
+augroup typescript
+  autocmd!
+  "Let the tsc compiler discover and use the tsconfig.json rather than
+  "overriding here.
+  autocmd FileType typescript call s:setuptypescript()
+augroup END
+"let g:typescript_compiler_options='--lib es6,dom --downLevelIteration --target es5'
+
+" C.
+set path=.,**
+set path+=/usr/local/include
+set path+=/usr/include
+set path+=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include
+
+augroup project
+  autocmd!
+  autocmd BufRead,BufNewFile *.h,*.c set filetype=c.doxygen
+augroup END
+
+" Just hardcode gcc include directory in tags, since `brew --prefix` callout
+" takes a long time.
+"silent let gcc_prefix = get(systemlist("brew --prefix gcc"), 0, "")
+"if !v:shell_error && !empty(gcc_prefix)
+"    let &path = &path .. "," .. gcc_prefix .. "/include/**"
+"endif
+set path+=/usr/local/opt/gcc/include/**
+set tags+=./tags;$HOME,./.git/tags;$HOME
+
+" Ctags, gutentags, etc.
+let g:gutentags_modules=['ctags']
+"let g:gutentags_ctags_tagfile='.git/tags'
+"let g:gutentags_scopefile='.git/cscope.out'
+let g:gutentags_cache_dir=expand('$HOME/.local/share/gutentags')
+
+" Edit/compile/run cycle.
+nmap <silent> <F5> :make<cr><cr><cr>
+nmap <silent><expr> <F6> execute("Termdebug ". expand('%:r')) 
+
+" Debugging.
+let g:termdebug_wide = 143
 
 " Tabular setup.
 if exists(":Tabularize")
@@ -428,8 +375,64 @@ set showtabline=2
 set ttimeoutlen=10
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
-let g:airline_theme = 'base16'
+let g:airline#extensions#tmuxline#enabled = 0  " Disable tmuxline/airline integration since we use tmux-nord.
+let g:airline_theme = 'nord'
 let g:airline_powerline_fonts = 1
 "let g:airline_statusline_ontop = 1
 "autocmd VimEnter * set laststatus=0  " Override airline's force.
+
+"
+" SECTION: settings for plugins I don't use anymore.
+"
+
+" CtrlP settings.
+"let g:ctrlp_working_path_mode = 'wra'
+"let g:ctrlp_show_hidden = 1
+"nnoremap <leader>f :CtrlP<cr>
+"nnoremap <leader>b :CtrlPBuffer<cr>
+"nnoremap <leader>m :CtrlPMRUFiles<cr>
+
+" Ranger settings.
+"let g:ranger_terminal = 'xterm -e'
+"map <leader>rr :RangerEdit<cr>
+"map <leader>rv :RangerVSplit<cr>
+"map <leader>rs :RangerSplit<cr>
+"map <leader>rt :RangerTab<cr>
+"map <leader>ri :RangerInsert<cr>
+"map <leader>ra :RangerAppend<cr>
+"map <leader>rc :set operatorfunc=RangerChangeOperator<cr>g@
+"map <leader>rd :RangerCD<cr>
+"map <leader>rld :RangerLCD<cr>
+
+" netrw settings.
+"let g:netrw_preview      = 1
+"let g:netrw_liststyle    = 0
+"let g:netrw_keepdir      = 0
+"let g:netrw_browse_split = 1
+"let g:netrw_altv         = 1
+"let g:netrw_winsize      = 25
+"let g:netrw_list_hide    = netrw_gitignore#Hide() . '\(^\|\s\s\)\zs\.\S+'
+"augroup ProjectDrawer autocmd!  autocmd VimEnter * :Vexplore augroup END
+
+" Nerdtree settings.
+"let NERDTreeChDirMode   = 2  " Synchronize NERDTree root with Vim's cwd.
+"let NERDTreeHijackNetrw = 1
+"let NERDTreeMinimalUI   = 1
+"let NERDTreeStatusline  = 'NERD'
+"map <leader>n :NERDTreeToggle<cr>
+"map <leader>s :NERDTreeFind<cr>
+"augroup ProjectDrawer
+"    autocmd!
+"    autocmd VimEnter * :NERDTree
+"augroup END
+
+" Unite settings.
+" NOTE: Additional settings are located in ~/.vim/after/plugin/unite.vim.
+"let g:unite_source_history_yank_enable = 1
+"nnoremap <leader>f :<C-u>Unite -no-split -buffer-name=files   -start-insert file<cr>
+"nnoremap <leader>f :<C-u>Unite -no-split -buffer-name=files   file_rec<cr>
+"nnoremap <leader>r :<C-u>Unite -no-split -buffer-name=mru     file_mru<cr>
+"nnoremap <leader>o :<C-u>Unite -no-split -buffer-name=outline outline<cr>
+"nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank    history/yank<cr>
+"nnoremap <leader>e :<C-u>Unite -no-split -buffer-name=buffer  buffer<cr>
 

@@ -96,3 +96,12 @@
 [submodule "vim/.vim/pack/default/start/jsx-pretty"]
 	path = vim/.vim/pack/default/start/jsx-pretty
 	url = https://github.com/MaxMEllon/vim-jsx-pretty.git
+[submodule "vim/.vim/pack/default/start/nord"]
+	path = vim/.vim/pack/default/start/nord
+	url = https://github.com/arcticicestudio/nord-vim.git
+[submodule "vim/.vim/pack/default/start/Colorizer"]
+	path = vim/.vim/pack/default/start/Colorizer
+	url = https://github.com/chrisbra/Colorizer.git
+[submodule "vim/.vim/pack/default/start/markdown"]
+	path = vim/.vim/pack/default/start/markdown
+	url = https://github.com/plasticboy/vim-markdown.git
