@@ -49,6 +49,13 @@ set breakindent
 set breakindentopt=shift:2
 set showbreak=↳
 
+" Folding.
+set foldmethod=indent
+set foldnestmax=10
+set foldlevelstart=2
+set nofoldenable
+set foldlevel=2
+
 " Backup settings.
 set swapfile
 set directory^=~/.local/share/vim/backup//
@@ -257,6 +264,11 @@ endfunction
 "-range=% default is whole file
 command! -range=% GremoveConflictMarkers <line1>,<line2>call RemoveConflictMarkers()
 
+" Diffing.
+nnoremap dgh :diffget //2<cr>
+nnoremap dgl :diffget //3<cr>
+nnoremap <leader>do :diffoff<cr>
+
 " Python.
 set showmatch
 let g:pydoc_window_lines=0.5
@@ -308,8 +320,8 @@ set path+=/usr/local/opt/gcc/include/**
 set tags+=./tags;$HOME,./.git/tags;$HOME
 
 " Ctags, gutentags, etc.
+" 10/31/19: Disabled cscope module due to high CPU usage and little benefit
 let g:gutentags_modules=['ctags']
-"let g:gutentags_ctags_tagfile='.git/tags'
 "let g:gutentags_scopefile='.git/cscope.out'
 let g:gutentags_cache_dir=expand('$HOME/.local/share/gutentags')
 
