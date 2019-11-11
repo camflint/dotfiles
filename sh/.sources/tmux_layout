@@ -1,0 +1,144 @@
+#!/usr/bin/env zsh
+
+local left=
+local right=
+local bottom=
+
+function ide() {
+  (
+    #
+    # Helper functions.
+    #
+    
+    function getSessionFilename() {
+      id=$(tmux display-message -p -F '#S' | base64)
+      file="/tmp/tmux-ide-$id"
+      echo $file
+    }
+
+    function load() {
+      file=$(getSessionFilename)
+      if [[ -f "$file" ]]; then
+        . "$file"
+      fi
+    }
+
+    function store() {
+      file=$(getSessionFilename)
+      echo "left=$left" > $file
+      echo "right=$right" >> $file
+      echo "bottom=$bottom" >> $file
+    }
+
+    function init() {
+      load
+    }
+
+    function renamePane() {
+      printf '\033]2;%s\033\\' $1
+    }
+
+    function getNumPanes() {
+      echo $(tmux list-panes | wc | awk '{print $1}')
+    }
+
+    function getNumWindows() {
+      echo $(tmux list-windows | wc | awk '{print $1}')
+    }
+
+    function getActiveWindowId() {
+      echo $(tmux display-message -p -F '#{window_id}')
+    }
+    
+    function breakPane() {
+      echo $(tmux break-pane -s $1 -d -P -F '#{window_index}.#{pane_id}')
+    }
+
+    function inferSessionName() {
+      name=$1
+      if [[ -z "$name" ]]; then
+        name=$(basename $(pwd))
+      fi
+      if [[ -z "$name" ]]; then
+        name = 'ide'
+      fi
+      echo $name
+    }
+
+    #
+    # Layouts.
+    #
+    
+    function prepareLayout() {
+      name=$(inferSessionName)
+      if [[ -v TMUX ]]; then
+        if [[ "$(getNumPanes)" == "1" ]]; then
+          # Inside tmux: apply layout to current window if it's empty.
+          tmux rename-window "$name"
+        else
+          tmux new-window -n "$name"
+        fi
+      fi
+      echo $name
+    }
+
+    function applyLayoutIde() {
+      name=$(prepareLayout)
+      tmux select-window -t "$name"
+      main=$(tmux display-message -p -F '#{pane_id}')
+      bottom=$(tmux split-window -v -p 20 -P -F '#{pane_id}')
+      tmux select-pane -t "$main"
+      right=$(tmux split-window -h -p 37 -P -F '#{pane_id}')
+      tmux select-pane -t "$main"
+      tmux send-keys -t $main "$EDITOR" 'Enter'
+      #store
+    }
+
+    #
+    # Layout variations.
+    #
+
+    function wide() {
+      leftid=$(breakPane 'main.{left}')
+      rightid=$(breakPane 'main.{right}')
+      store
+    }
+
+    function unwide() {
+      load
+      if [[ -n "$leftid" && -n "$rightid" ]]; then
+        tmux select-pane -t 'main.{left}'
+        tmux join-pane -s "$leftid" -h -p 20 -b
+        tmux select-pane -R
+        tmux join-pane -s "$rightid" -h -p 25
+        tmux select-pane -L
+        leftid=
+        rightid=
+        store
+      fi
+    }
+
+    function tall() {
+      bottomleftid=$(breakPane 'main.{bottom-left}')
+      bottomrightid=$(breakPane 'main.{bottom-right}')
+      store
+    }
+
+    function untall() {
+      load
+      if [[ -n "$bottomleftid" && -n "$bottomrightid" ]]; then
+        wide
+        tmux join-pane -s "$bottomleftid" -v -p 20
+        tmux join-pane -s "$bottomrightid" -h -p 50
+        tmux select-pane -U
+        bottomleftid=
+        bottomrightid=
+        store
+        unwide
+      fi
+    }
+
+    applyLayoutIde
+  )
+}
+

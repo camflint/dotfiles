@@ -1,22 +1,10 @@
 # Use the vim editor by default for git, bash, etc.
 export EDITOR=vim
 
-# Source aliases.
-if [[ -f "$HOME/.aliases" ]]; then
-  . "$HOME/.aliases"
-fi
-
 # Locale.
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
-
-# Source local-only files.
-for file in "~/.profile_work" "~/.profile_home" "~/.profile_secrets"; do
-  if [[ -f $file ]]; then
-    source $file
-  fi
-done
 
 # Path completion.
 export CDPATH=.:~:~/Projects:~/Library/Mobile\ Documents/com~apple~CloudDocs
@@ -35,16 +23,6 @@ if [[ -d $box ]]; then
         export CDPATH="$d:$CDPATH"
     fi
   done
-fi
-
-# Personal scripts and global functions.
-if [[ -d "$HOME/.scripts" ]]; then
-    export PATH="$HOME/.scripts:$PATH"
-fi
-if [[ -d "$HOME/.funcs" ]]; then
-    for file in $HOME/.funcs/*.sh; do
-        . $file
-    done
 fi
 
 # Keybindings.
@@ -81,9 +59,6 @@ export PATH=$HOME/go/bin:$PATH
 # Homebrew.
 export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 
-# Tmux.
-alias tmux="tmux -2 -u"  # Force 256 colors and UTF-8.
-
 # FZF.
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --smart-case --glob "!.git/*"'
 export FZF_DEFAULT_OPTS='--bind=ctrl-j:down,ctrl-k:up'
@@ -93,6 +68,17 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 export PATH="./node_modules/.bin:$PATH"
 
-# Base16 colorscheme & customizations.
-[[ -s "./base16.sh" ]] && \
-  . "./base16.sh"
+# External sources.
+for name in ".sources" ".sources_local"; do
+  if [[ -d "$HOME/$name" ]]; then
+    for src in $HOME/$name/*; do
+      . $src
+    done
+  fi
+done
+
+# Externals scripts to be made available on the PATH.
+if [[ -d "$HOME/.scripts" ]]; then
+    export PATH="$HOME/.scripts:$PATH"
+fi
+

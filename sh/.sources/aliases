@@ -20,6 +20,6 @@ alias gd='git diff'
 alias d=docker
 alias dc='docker container'
 
-# Tmux (deprecated).
+# Tmux.
 alias nater='tmuxinator'
 

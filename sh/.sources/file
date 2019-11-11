@@ -14,13 +14,9 @@ fzffileedit() {
 fzffilegrep() {
     file=$(rg --hidden --follow --glob '!.git/*'  --color=always $1 | fzf --ansi --header="[[file-grep (term='$1')]]" | awk -F: '{ print $1 }')
     if [[ -f $file ]]; then
-        vifm --select $file
+        $EDITOR $file
     fi
 }
 
-fzfgofile() {
-    file=$(fzf --header="[[go-file (pwd: $PWD)]]")
-    if [[ -f $file ]]; then
-        vifm --select $file
-    fi
-}
+alias /e=fzffileedit
+alias /s=fzffilegrep

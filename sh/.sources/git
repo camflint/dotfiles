@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# fshow - git commit browser
+# fzfgitlog - git commit browser
 #   source: https://github.com/junegunn/fzf/issues/150
-fzfgitshow() {
+fzfgitlog() {
   local out sha q
   while out=$(
       git log --graph --color=always \
@@ -28,9 +28,14 @@ fzfgitstatus() {
 
   local cmd="${FZF_CTRL_T_COMMAND:-"command git status -s"}"
 
-  eval "$cmd" | FZF_DEFAULT_OPTS="--reverse $FZF_CTRL_T_OPTS" fzf -m "$@" --header="[[git status]]" | while read -r item; do
-    echo "$item" | awk '{print $2}'
-  done
+  eval "$cmd" \
+    | FZF_DEFAULT_OPTS="--reverse $FZF_CTRL_T_OPTS" fzf -m "$@" --header="[[git status]]" \
+    | awk '{print $2}' \
+    | while read -r item; do
+        [ -n "$item" ] && git diff --color=always $item | less -R
+      done
   echo
 }
 
+alias fgs=fzfgitstatus
+alias fgl=fzfgitlog

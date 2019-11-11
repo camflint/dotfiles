@@ -1,10 +1,4 @@
-# Base16 Shell
-BASE16_SHELL="$HOME/.config/base16-shell/"
-[ -s "$BASE16_SHELL/profile_helper.sh" ] && \
-    eval "$("$BASE16_SHELL/profile_helper.sh")"
-
-# Colorscheme selection.
-base16_nord
+#!/usr/bin/env sh
 
 # Exa-nord theme, for file listings.
 #   Basis: https://github.com/arcticicestudio/nord-dircolors/blob/develop/src/dir_colors
