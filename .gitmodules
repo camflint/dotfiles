@@ -1,27 +1,3 @@
-[submodule "vim/pack/default/start/airline"]
-	path = vim/.vim/pack/default/start/airline
-	url = https://github.com/vim-airline/vim-airline.git
-[submodule "vim/pack/default/start/tabular"]
-	path = vim/.vim/pack/default/start/tabular
-	url = https://github.com/godlygeek/tabular.git
-[submodule "vim/pack/default/start/repeat"]
-	path = vim/.vim/pack/default/start/repeat
-	url = https://github.com/tpope/vim-repeat.git
-[submodule "vim/pack/default/start/unimpaired"]
-	path = vim/.vim/pack/default/start/unimpaired
-	url = https://github.com/tpope/vim-unimpaired.git
-[submodule "vim/pack/default/start/obsession"]
-	path = vim/.vim/pack/default/start/obsession
-	url = https://github.com/vphantom/vim-obsession.git
-[submodule "vim/pack/default/start/surround"]
-	path = vim/.vim/pack/default/start/surround
-	url = https://github.com/tpope/vim-surround.git
-[submodule "vim/pack/default/start/tmux-navigator"]
-	path = vim/.vim/pack/default/start/tmux-navigator
-	url = https://github.com/christoomey/vim-tmux-navigator.git
-[submodule "vim/pack/default/start/vinegar"]
-	path = vim/.vim/pack/default/start/vinegar
-	url = https://github.com/tpope/vim-vinegar.git
 [submodule "vim/pack/default/start/gruvbox"]
 	path = vim/.vim/pack/default/start/gruvbox
 	url = https://github.com/morhetz/gruvbox.git
@@ -40,41 +16,16 @@
 [submodule "tmux/.tmux/plugins/tpm"]
 	path = tmux/.tmux/plugins/tpm
 	url = https://github.com/tmux-plugins/tpm.git
-[submodule "vim/.vim/pack/default/start/fzf"]
-	path = vim/.vim/pack/default/start/fzf
-	url = https://github.com/junegunn/fzf.vim.git
-[submodule "vim/.vim/pack/default/start/vifm"]
-	path = vim/.vim/pack/default/start/vifm
-	url = https://github.com/vifm/vifm.vim
-[submodule "vim/.vim/pack/default/start/fugitive"]
-	path = vim/.vim/pack/default/start/fugitive
-	url = https://github.com/tpope/vim-fugitive.git
 [submodule "vim/.vim/pack/default/start/easytags"]
     path = vim/.vim/pack/default/start/easytags
 	url = https://github.com/camflint/vim-easytags.git
 	branch = camflint/versionfix
-[submodule "vim/.vim/pack/default/start/misc"]
-	path = vim/.vim/pack/default/start/misc
-	url = https://github.com/xolox/vim-misc.git
-[submodule "vim/.vim/pack/default/start/gutentags"]
-	path = vim/.vim/pack/default/start/gutentags
-	url = https://github.com/ludovicchabant/vim-gutentags.git
-[submodule "vim/.vim/pack/default/start/bookmarks"]
-	path = vim/.vim/pack/default/start/bookmarks
-	url = https://github.com/MattesGroeger/vim-bookmarks.git
-[submodule "vim/.vim/pack/default/start/grepper"]
-	path = vim/.vim/pack/default/start/grepper
-	url = https://github.com/mhinz/vim-grepper.git
 [submodule "vim/.vim/colors/base16"]
 	path = vim/.vim/colors/base16
 	url = https://github.com/chriskempson/base16-vim.git
 [submodule "vim/.vim/pack/default/start/base16"]
 	path = vim/.vim/pack/default/start/base16
 	url = https://github.com/chriskempson/base16-vim.git
-[submodule "base16/.config/base16-shell"]
-	path = base16/.config/base16-shell
-	url = https://github.com/camflint/base16-shell.git
-  branch = camflint/fixnord
 [submodule "vim/.vim/pack/default/start/airline-themes"]
 	path = vim/.vim/pack/default/start/airline-themes
 	url = https://github.com/vim-airline/vim-airline-themes
@@ -84,24 +35,6 @@
 [submodule "sh/.zplugin/bin"]
 	path = sh/.zplugin/bin
 	url = https://github.com/zdharma/zplugin.git
-[submodule "vim/.vim/pack/default/start/typescript"]
-	path = vim/.vim/pack/default/start/typescript
-	url = https://github.com/leafgarland/typescript-vim.git
 [submodule "vim/.vim/pack/default/start/tsuquyomi"]
 	path = vim/.vim/pack/default/start/tsuquyomi
 	url = https://github.com/Quramy/tsuquyomi.git
-[submodule "vim/.vim/pack/default/start/javascript"]
-	path = vim/.vim/pack/default/start/javascript
-	url = https://github.com/pangloss/vim-javascript.git
-[submodule "vim/.vim/pack/default/start/jsx-pretty"]
-	path = vim/.vim/pack/default/start/jsx-pretty
-	url = https://github.com/MaxMEllon/vim-jsx-pretty.git
-[submodule "vim/.vim/pack/default/start/nord"]
-	path = vim/.vim/pack/default/start/nord
-	url = https://github.com/arcticicestudio/nord-vim.git
-[submodule "vim/.vim/pack/default/start/Colorizer"]
-	path = vim/.vim/pack/default/start/Colorizer
-	url = https://github.com/chrisbra/Colorizer.git
-[submodule "vim/.vim/pack/default/start/markdown"]
-	path = vim/.vim/pack/default/start/markdown
-	url = https://github.com/plasticboy/vim-markdown.git

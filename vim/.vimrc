@@ -1,25 +1,3 @@
-" Syntax highlighting.
-syntax enable
-
-" Colorscheme and syntax highlighting setup.
-if exists('+termguicolors')
-  let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
-  let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
-  set termguicolors
-endif
-
-let g:nord_italic = 1
-let g:nord_italic_comments = 1
-let g:nord_underline = 1
-
-colorscheme nord
-
-" Avoid performance issues by only highlighting first 200 columns (optional).
-set synmaxcol=200
-
-" Load filetype-based plugins and indentation rules (~/.vim/ftplugin, ~/.vim/indent).
-filetype plugin indent on
-
 " Leader key.
 let mapleader = ','
 
@@ -137,6 +115,20 @@ map <Home> <C-B>
 nnoremap <expr> j v:count ? (v:count > 5 ? "m'" . v:count : '') . 'j' : 'gj'
 nnoremap <expr> k v:count ? (v:count > 5 ? "m'" . v:count : '') . 'k' : 'gk'
 
+" Colorscheme and syntax highlighting setup.
+if exists('+termguicolors')
+  let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
+
+if !has('gui_running')
+  set t_Co=256
+endif
+
+" Avoid performance issues by only highlighting first 200 columns (optional).
+set synmaxcol=200
+
 " Split (vim window) management.
 nnoremap <leader>s- <C-w>s<C-w>j
 nnoremap <leader>s\| <C-w>v<C-w>l
@@ -167,12 +159,6 @@ let g:grepper.prompt_mapping_tool = '<leader>g'
 nnoremap <c-f> :Grepper -tool rg<cr>
 nnoremap <leader>* :Grepper -tool rg -cword -noprompt<cr>
 
-" Pure vim grepping.
-"set grepprg=rg\ --hidden\ --colors=always\ $*\
-"command! -nargs=+ MyGrep execute 'silent! grep! <args>' | copen 20 | redraw!
-"nnoremap <leader>/ :MyGrep 
-"nnoremap K :MyGrep <cword><cr>
-
 " vifm settings.
 let g:vifm_replace_netrw = 1
 nnoremap - :EditVifm<cr>
@@ -183,10 +169,9 @@ nnoremap <s-tab> :bprevious<cr>
 nnoremap <tab> :bnext<cr>
 nnoremap <leader><tab> :buffer<space><tab>
 nnoremap <c-e> :Buffers<cr>
-" Pure vim buffer switching (instead of FZF).
-"set wildcharm=<C-z>
-"nnoremap <leader>b :buffer <C-z><S-Tab>
-"nnoremap <leader>b :ls<cr>:buffer<space>
+
+" MRU.
+"nnoremap <c-r> :History<cr>
 
 " Tab management.
 "nnoremap <leader>tn :tabnew<cr>
@@ -195,8 +180,6 @@ nnoremap <c-e> :Buffers<cr>
 "nnoremap <s-tab> :tabprev<cr>
 
 " Fast help/quickfix/etc. management.
-nnoremap <leader>hc :helpclose<cr>
-nnoremap <leader>hg :helpgrep 
 nnoremap <leader>qc :cclose<cr>
 
 " Help window positioning.
@@ -209,14 +192,6 @@ augroup END
 " Fzf and fzf.vim.
 set rtp+=/usr/local/opt/fzf
 let g:fzf_history_dir = '~/.local/share/fzf-vim-history'
-
-" Custom mappings for the unite buffer
-autocmd FileType unite call s:unite_settings()
-function! s:unite_settings()
-  " Enable navigation with control-j and control-k in insert mode
-  imap <buffer> <C-j>   <Plug>(unite_select_next_line)
-  imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
-endfunction
 
 " Fzf/cscope integration.
 "   source: https://alex.dzyoba.com/blog/vim-revamp/
@@ -269,6 +244,83 @@ nnoremap dgh :diffget //2<cr>
 nnoremap dgl :diffget //3<cr>
 nnoremap <leader>do :diffoff<cr>
 
+" COC linting and type-ahead for multiple languages.
+let g:coc_start_at_startup = 1
+set updatetime=300
+set shortmess+=c
+set signcolumn=yes
+
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" Use `[g` and `]g` to navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Highlight symbol under cursor on CursorHold
+"autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Remap for format selected region
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
+
+" Use `:Format` to format current buffer
+command! -nargs=0 Format :call CocAction('format')
+
+" Use `:Fold` to fold current buffer
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" use `:OR` for organize import of current buffer
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+
+" JSON.
+autocmd FileType json syntax match Comment +\/\/.\+$+
+
 " Python.
 set showmatch
 let g:pydoc_window_lines=0.5
@@ -286,10 +338,16 @@ function! s:setuptypescript()
   " makeprg
   let l:root = findfile('tsconfig.json', expand('%:p:h').';')
   let &makeprg = 'tsc -p ' . fnameescape(l:root)
+  
+  " vimspector
+  let g:vimspector_enable_mappings = 'HUMAN'
+  packadd vimspector
 
-  " tsuquyomi
-  "let g:tsuquyomi_completion_detail = 1
-  "nmap <buffer> <leader>x : <C-u>echo tsuquyomi#hint()<cr>
+  " YATS
+  let g:yats_host_keyword = 1
+
+  " Begin COC configuration.
+  set cmdheight=2  " easier to read messages
 endfunction
 augroup typescript
   autocmd!
@@ -382,69 +440,197 @@ function! g:BMWorkDirFileLocation()
 endfunction
 
 
-" Airline/statusline settings.
+" Tabline and statusline settings.
+set laststatus=2
 set showtabline=2
-set ttimeoutlen=10
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
-let g:airline#extensions#tmuxline#enabled = 0  " Disable tmuxline/airline integration since we use tmux-nord.
-let g:airline_theme = 'nord'
-let g:airline_powerline_fonts = 1
-"let g:airline_statusline_ontop = 1
-"autocmd VimEnter * set laststatus=0  " Override airline's force.
 
-"
-" SECTION: settings for plugins I don't use anymore.
-"
+let g:lightline = {
+  \ 'colorscheme': 'iceberg',
+  \ 'subseparator': { 'left': '|', 'right': '|' },
+  \ 'active': {
+  \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ], [ 'cocstatus', 'currentfunction' ] ],
+  \   'right': [ [ 'percent' ], [ 'fileformat', 'fileencoding', 'filetype' ] ]
+  \ },
+  \ 'component_function': {
+  \   'mode': 'LightlineMode',
+  \   'fugitive': 'LightlineFugitive',
+  \   'filename': 'LightlineFilename',
+  \   'cocstatus': 'coc#status',
+  \   'currentfunction': 'CocCurrentFunction',
+  \   'fileformat': 'LightlineFileformat',
+  \   'fileencoing': 'LightlineFileencoding',
+  \   'filetype': 'LightlineFiletype'
+  \ },
+  \ 'tabline': {
+  \   'left': [],
+  \   'right': [ [ 'close' ], [ 'buffers' ] ]
+  \ },
+  \ 'component_expand': {
+  \   'buffers': 'lightline#bufferline#buffers'
+  \ },
+  \ 'component_type': {
+  \   'buffers': 'tabsel'
+  \ },
+  \ 'enable': {
+  \   'statusline': 1,
+  \   'tabline': 1
+  \ }
+  \}
 
-" CtrlP settings.
-"let g:ctrlp_working_path_mode = 'wra'
-"let g:ctrlp_show_hidden = 1
-"nnoremap <leader>f :CtrlP<cr>
-"nnoremap <leader>b :CtrlPBuffer<cr>
-"nnoremap <leader>m :CtrlPMRUFiles<cr>
+function! CocCurrentFunction()
+    return get(b:, 'coc_current_function', '')
+endfunction
+function! LightlineModified()
+  return &ft =~ 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+endfunction
+function! LightlineReadonly()
+  return &ft !~? 'help' && &readonly ? 'RO' : ''
+endfunction
+function! LightlineFilename()
+  let fname = expand('%:t')
+  return fname == 'ControlP' && has_key(g:lightline, 'ctrlp_item') ? g:lightline.ctrlp_item :
+        \ fname == '__Tagbar__' ? g:lightline.fname :
+        \ fname =~ '__Gundo\|NERD_tree' ? '' :
+        \ &ft == 'vimfiler' ? vimfiler#get_status_string() :
+        \ &ft == 'unite' ? unite#get_status_string() :
+        \ &ft == 'vimshell' ? vimshell#get_status_string() :
+        \ ('' != LightlineReadonly() ? LightlineReadonly() . ' ' : '') .
+        \ ('' != fname ? fname : '[No Name]') .
+        \ ('' != LightlineModified() ? ' ' . LightlineModified() : '')
+endfunction
+function! LightlineFugitive()
+  try
+    if expand('%:t') !~? 'Tagbar\|Gundo\|NERD' && &ft !~? 'vimfiler' && exists('*fugitive#head')
+      let mark = ''  " edit here for cool mark
+      let branch = fugitive#head()
+      return branch !=# '' ? mark.branch : ''
+    endif
+  catch
+  endtry
+  return ''
+endfunction
+function! LightlineFileformat()
+  return winwidth(0) > 70 ? &fileformat : ''
+endfunction
+function! LightlineFiletype()
+  return winwidth(0) > 70 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
+endfunction
+function! LightlineFileencoding()
+  return winwidth(0) > 70 ? (&fenc !=# '' ? &fenc : &enc) : ''
+endfunction
+function! LightlineMode()
+  let fname = expand('%:t')
+  return fname == '__Tagbar__' ? 'Tagbar' :
+        \ fname == 'ControlP' ? 'CtrlP' :
+        \ fname == '__Gundo__' ? 'Gundo' :
+        \ fname == '__Gundo_Preview__' ? 'Gundo Preview' :
+        \ fname =~ 'NERD_tree' ? 'NERDTree' :
+        \ &ft == 'unite' ? 'Unite' :
+        \ &ft == 'vimfiler' ? 'VimFiler' :
+        \ &ft == 'vimshell' ? 'VimShell' :
+        \ winwidth(0) > 60 ? lightline#mode() : ''
+endfunction
+autocmd BufWritePost,TextChanged,TextChangedI * call lightline#update()
 
-" Ranger settings.
-"let g:ranger_terminal = 'xterm -e'
-"map <leader>rr :RangerEdit<cr>
-"map <leader>rv :RangerVSplit<cr>
-"map <leader>rs :RangerSplit<cr>
-"map <leader>rt :RangerTab<cr>
-"map <leader>ri :RangerInsert<cr>
-"map <leader>ra :RangerAppend<cr>
-"map <leader>rc :set operatorfunc=RangerChangeOperator<cr>g@
-"map <leader>rd :RangerCD<cr>
-"map <leader>rld :RangerLCD<cr>
+let g:lightline#bufferline#unicode_symbols = 1
+let g:lightline#bufferline#filename_modifier = ':t'
+let g:lightline#bufferline#right_aligned = 1
+let g:lightline#bufferline#show_number = 2
+let g:lightline#bufferline#number_map = {
+  \ 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴',
+  \ 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹'
+\}
 
-" netrw settings.
-"let g:netrw_preview      = 1
-"let g:netrw_liststyle    = 0
-"let g:netrw_keepdir      = 0
-"let g:netrw_browse_split = 1
-"let g:netrw_altv         = 1
-"let g:netrw_winsize      = 25
-"let g:netrw_list_hide    = netrw_gitignore#Hide() . '\(^\|\s\s\)\zs\.\S+'
-"augroup ProjectDrawer autocmd!  autocmd VimEnter * :Vexplore augroup END
+nmap <Leader>1 <Plug>lightline#bufferline#go(1)
+nmap <Leader>2 <Plug>lightline#bufferline#go(2)
+nmap <Leader>3 <Plug>lightline#bufferline#go(3)
+nmap <Leader>4 <Plug>lightline#bufferline#go(4)
+nmap <Leader>5 <Plug>lightline#bufferline#go(5)
+nmap <Leader>6 <Plug>lightline#bufferline#go(6)
+nmap <Leader>7 <Plug>lightline#bufferline#go(7)
+nmap <Leader>8 <Plug>lightline#bufferline#go(8)
+nmap <Leader>9 <Plug>lightline#bufferline#go(9)
+nmap <Leader>0 <Plug>lightline#bufferline#go(10)
 
-" Nerdtree settings.
-"let NERDTreeChDirMode   = 2  " Synchronize NERDTree root with Vim's cwd.
-"let NERDTreeHijackNetrw = 1
-"let NERDTreeMinimalUI   = 1
-"let NERDTreeStatusline  = 'NERD'
-"map <leader>n :NERDTreeToggle<cr>
-"map <leader>s :NERDTreeFind<cr>
-"augroup ProjectDrawer
-"    autocmd!
-"    autocmd VimEnter * :NERDTree
-"augroup END
+let g:tmuxline_theme = 'lightline'
+let g:tmuxline_powerline_separators = 0
 
-" Unite settings.
-" NOTE: Additional settings are located in ~/.vim/after/plugin/unite.vim.
-"let g:unite_source_history_yank_enable = 1
-"nnoremap <leader>f :<C-u>Unite -no-split -buffer-name=files   -start-insert file<cr>
-"nnoremap <leader>f :<C-u>Unite -no-split -buffer-name=files   file_rec<cr>
-"nnoremap <leader>r :<C-u>Unite -no-split -buffer-name=mru     file_mru<cr>
-"nnoremap <leader>o :<C-u>Unite -no-split -buffer-name=outline outline<cr>
-"nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank    history/yank<cr>
-"nnoremap <leader>e :<C-u>Unite -no-split -buffer-name=buffer  buffer<cr>
+" Kwbd - a better 'bd': close buffer without closing window.
+cabbrev bd <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'Kwbd' : 'bd')<cr>
+
+
+" COC extension - explorer.
+nnoremap <leader>n :CocCommand explorer --toggle<cr>
+augroup cocexplorer
+    autocmd!
+    autocmd VimEnter * :CocCommand explorer
+    autocmd BufEnter * if (winnr('$') == 1 && exists('b:coc_explorer_inited')) | q | endif
+augroup END
+
+" Startify.
+nnoremap <leader>h :Startify<cr>
+let g:startify_lists = [
+      \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
+      \ { 'type': 'files',     'header': ['   MRU']            },
+      \ { 'type': 'sessions',  'header': ['   Sessions']       },
+      \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+      \ { 'type': 'commands',  'header': ['   Commands']       },
+      \ ]
+
+" Plug. 
+"   execute :PlugInstall to install the following list for the first time.
+call plug#begin('~/.local/share/vim/plugged')
+
+" Essential plugins.
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'cocopon/iceberg.vim'
+Plug 'edkolev/tmuxline.vim'
+Plug 'godlygeek/tabular'
+Plug 'itchyny/lightline.vim'
+Plug 'jparise/vim-graphql'
+Plug 'junegunn/fzf.vim'
+Plug 'lilydjwg/colorizer'
+Plug 'mattesgroeger/vim-bookmarks'
+Plug 'maxmellon/vim-jsx-pretty'
+Plug 'mengelbrecht/lightline-bufferline'
+Plug 'mhinz/vim-grepper'
+Plug 'mhinz/vim-startify'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'plasticboy/vim-markdown'
+Plug 'puremourning/vimspector', {'for': ['typescript', 'javascript']}
+Plug 'rgarver/kwbd.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-obsession'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
+Plug 'vifm/vifm'
+Plug 'xolox/vim-misc'
+Plug 'yonchu/accelerated-smooth-scroll'
+
+" COC plugins.
+let g:coc_global_extensions = [
+\  'coc-css',
+\  'coc-docker',
+\  'coc-eslint',
+\  'coc-explorer',
+\  'coc-git',
+\  'coc-gitignore',
+\  'coc-html',
+\  'coc-jest',
+\  'coc-json',
+\  'coc-lua',
+\  'coc-markdownlint',
+\  'coc-marketplace',
+\  'coc-prettier',
+\  'coc-python',
+\  'coc-sql',
+\  'coc-todolist',
+\  'coc-tsserver',
+\  'coc-yaml'
+\ ]
+
+call plug#end()
+
+colorscheme iceberg
 
