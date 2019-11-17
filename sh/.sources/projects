@@ -1,0 +1,90 @@
+#!/usr/bin/env sh
+
+# Build or attach a tmux session for project Convoy Connect.
+
+declare -A LAYOUT_FUNCS=([ide1]=layout_ide1 [ide2]=layout_ide2)
+
+# ide1
+function layout_ide1() {
+  local -r WINDOW="$1"
+  local -r CWD="$2"
+  cmd="RUN='cd $CWD; clear' /usr/bin/env zsh -i"
+  tmux split-window -t "$WINDOW.1" -v -p 13 $cmd
+  tmux send-keys -t "$WINDOW.1" "vim" "Enter"
+  tmux select-pane -t "$WINDOW.1"
+}
+
+# ide2
+function layout_ide2() {
+}
+
+# $1 - project name
+# $2 - layout name
+function make_project() {
+  [[ -n "$1" ]] && local -r SESSION="$1" || local -r SESSION='sxp/connect'
+  [[ -n "$2" ]] && local -r LAYOUT="$1" || local -r LAYOUT='ide1'
+
+  local CHANGE_COMMAND
+  if [[ -n "$TMUX" ]]; then CHANGE_COMMAND='switch-client'; else CHANGE_COMMAND='attach-session'; fi
+
+  tmux has-session -t "$SESSION" &> /dev/null
+  if [[ "$?" == "0" ]]; then
+    # Attach to existing session.
+    echo "Attaching to existing session..."; sleep 0.5
+    tmux $CHANGE_COMMAND -t $SESSION
+
+    exit 0
+  fi
+
+  #
+  # Build new session.
+  #
+
+  local ROOT
+  local REPOS
+  case $SESSION in
+    'sxp/connect') 
+      ROOT="$HOME/code/convoyinc"
+      REPOS=(connect-web shipper-tms-service nacho-dashboard shipotle-api global-search-service)
+      ;;
+    'dotfiles')
+      ROOT="$HOME/code/camflint"
+      REPOS=(dotfiles)
+      ;;
+    *)
+      echo 'Unknown project definition: ' $SESSION
+      exit 1
+      ;;
+  esac
+
+  local x
+  local y
+  if [[ -n "$TERM" ]]; then
+    x=$(tmux display-message -p -F '#{client_width}')
+    y=$(tmux display-message -p -F '#{client_height}')
+  else
+    x=$(tput cols)
+    y=$(tput rows)
+  fi
+
+  tmux new-session -c "$ROOT" -n main -s "$SESSION" -d -x $x -y $y
+  tmux set-option -g -t "$SESSION" base-index 1
+  tmux set-option -g -t "$SESSION" pane-base-index 1
+  tmux set-option -g -t "$SESSION" renumber-windows on
+
+  local REPO_WIN
+  local REPO_ROOT
+  for name in "${REPOS[@]}"; do
+    REPO_WIN="$SESSION:$name"
+    REPO_ROOT="$ROOT/$name"
+    tmux new-window -d -t "$SESSION" -c "$REPO_ROOT" -n "$name"
+    ${LAYOUT_FUNCS[$LAYOUT]} "$REPO_WIN" "$REPO_ROOT"
+  done
+  tmux kill-window -t "$SESSION:main"
+  tmux select-window -t "$SESSION:1"
+
+  tmux $CHANGE_COMMAND -t $SESSION
+}
+
+alias dotfiles='make_project dotfiles'
+alias connect='make_project "sxp/connect"'

@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 # tmux-switch: quickly create or switch to a session, inside or outside of Tmux.
-tmux-switch() {
+function tmux-switch-session() {
   sid=$1
   if [[ -z "$sid" ]]; then
     local -r fmt='#{session_id}:|#S|(#{session_attached} attached)'
@@ -11,9 +11,23 @@ tmux-switch() {
       | fzf -q '$' --reverse --prompt 'switch session: ' -1 \
       | cut -d':' -f1)
   fi
+  if [[ -z "$sid" ]]; then
+    return 1
+  fi
   local change
   [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
   tmux $change -t "$sid" 2>/dev/null || { tmux new-session -d -s $sid && tmux attach-session -t "$sid"; }
 }
 
-alias t='tmux-switch'
+function tmux-switch-window() {
+  if [[ -z "$TMUX" ]]; then return 1; fi
+  local -r fmt='#{window_id}:|#W|(#{?window_active,active,})'
+  wid=$(tmux list-windows -F "$fmt" \
+    | column -t -s'|' \
+    | fzf -q '@' --reverse --prompt 'switch window: ' -1 \
+    | cut -d':' -f1)
+  [[ ! -z "$wid" ]] && tmux select-window -t "$wid"
+}
+
+alias ts='tmux-switch-session'
+alias tw='tmux-switch-window'

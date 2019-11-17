@@ -49,3 +49,9 @@ zplugin ice wait'0'; zplugin load zsh-users/zsh-syntax-highlighting
 
 # FZF+zsh integration.
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Run a command and then enter interactive mode, e.g.
+#   RUN=ls zsh
+if [[ -v RUN ]]; then
+  eval $RUN
+fi

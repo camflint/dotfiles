@@ -4,6 +4,35 @@ local left=
 local right=
 local bottom=
 
+# Splits the current tmux pane into $1 equal-sized panes.
+#   $1 - number of panes after split
+#   $2 - direction, h or v
+function split() {
+  if [[ -z "$TMUX" ]]; then echo 'Not running from tmux'; return 1; fi
+  if [[ -n "$1" ]]; then local num="$1"; else local num=2; fi
+  case $2 in
+    (v) local dir='-v' ;;
+    (h|*) local dir='-h' ;;
+  esac
+  if (( $num < 2 )); then echo 'Invalid split count'; return 1; fi
+
+  saved_pane=$(tmux display-message -p -F '#{pane_id}')
+
+  while (( $num > 1 )); do  # exclude current window
+    width_perc=$((100 / $num))
+    tmux split-window $dir -p $width_perc -d
+    ((num -= 1))
+  done
+
+  tmux select-pane -t "$saved_pane"
+}
+
+alias vsplit='split 2 v'
+for d in $(seq 2 10); do
+  alias split$d="split $d"
+  alias vsplit$d="split $d v"
+done
+
 function ide() {
   (
     #

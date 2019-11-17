@@ -15,6 +15,7 @@ alias gc='git commit -m'
 alias gs='git status'
 alias ga='git add'
 alias gd='git diff'
+alias gl='git l'
 
 # Docker.
 alias d=docker

@@ -52,7 +52,6 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
-export PYTHONPATH=/usr/local/lib/python3.7/site-packages:$PYTHONPATH
 
 # Golang.
 export PATH=$HOME/go/bin:$PATH
@@ -65,8 +64,8 @@ export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --smart-case --glob "!.
 export FZF_DEFAULT_OPTS='--bind=ctrl-j:down,ctrl-k:up'
 
 # Node.js, npm, nvm, etc.
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+#export NVM_DIR="$HOME/.nvm"
+#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 export PATH="./node_modules/.bin:$PATH"
 
 # External sources.
