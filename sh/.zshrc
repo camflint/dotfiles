@@ -9,7 +9,17 @@ typeset -AHg fg_dim
 for k in ${(k)color[(I)fg-*]}; do
   fg_dim[${k#fg-}]="$lc${color[faint]};${color[$k]}$rc"
 done
-PS1="[%{$fg_dim[white]%}%(5~|%-1~/.../%3~|%4~)%{$reset_color%}] %# "
+PS1="%{$fg_bold[white]%}%{$reset_color%} "
+
+# Prefix each new prompt with a newline, except right after the shell is
+# spawned.
+function precmd() {
+  if [[ -z "$NEWLINE_BEFORE_PROMPT" ]]; then
+    NEWLINE_BEFORE_PROMPT=1
+  elif [[ "$NEWLINE_BEFORE_PROMPT" == "1" ]]; then
+    echo -n $'\n'
+  fi
+}
 
 # Options.
 setopt auto_cd
@@ -45,7 +55,7 @@ autoload -U compinit -d
 compinit
 
 # Plugin zsh-syntax-highlighting must come last.
-zplugin ice wait'0'; zplugin load zsh-users/zsh-syntax-highlighting
+zplugin ice wait silent; zplugin load zsh-users/zsh-syntax-highlighting
 
 # FZF+zsh integration.
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
