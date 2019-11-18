@@ -1,4 +1,5 @@
 {
+  "coc.preferences.jumpCommand": "edit",
   "coc.preferences.currentFunctionSymbolAutoUpdate": true,
   "explorer.file.showHiddenFiles": true,
   "explorer.file.autoReveal": true,

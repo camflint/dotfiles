@@ -156,7 +156,7 @@ let g:grepper.jump = 0
 let g:grepper.dir = 'repo,cwd'
 let g:grepper.prompt_text = '$t> '
 let g:grepper.prompt_mapping_tool = '<leader>g'
-nnoremap <c-f> :Grepper -tool rg<cr>
+nnoremap <c-s> :Grepper -tool rg<cr>
 nnoremap <leader>* :Grepper -tool rg -cword -noprompt<cr>
 
 " vifm settings.
@@ -338,10 +338,6 @@ function! s:setuptypescript()
   " makeprg
   let l:root = findfile('tsconfig.json', expand('%:p:h').';')
   let &makeprg = 'tsc -p ' . fnameescape(l:root)
-  
-  " vimspector
-  let g:vimspector_enable_mappings = 'HUMAN'
-  packadd vimspector
 
   " YATS
   let g:yats_host_keyword = 1
@@ -389,6 +385,7 @@ nmap <silent><expr> <F6> execute("Termdebug ". expand('%:r'))
 
 " Debugging.
 let g:termdebug_wide = 143
+let g:vimspector_enable_mappings = 'HUMAN'
 
 " Tabular setup.
 if exists(":Tabularize")
@@ -563,7 +560,7 @@ cabbrev bd <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'Kwbd' : 'bd')<cr>
 nnoremap <leader>n :CocCommand explorer --toggle<cr>
 augroup cocexplorer
     autocmd!
-    autocmd VimEnter * :CocCommand explorer
+    autocmd VimEnter * if (argc() == 0) | :CocCommand explorer | endif
     autocmd BufEnter * if (winnr('$') == 1 && exists('b:coc_explorer_inited')) | q | endif
 augroup END
 
@@ -576,6 +573,12 @@ let g:startify_lists = [
       \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
       \ { 'type': 'commands',  'header': ['   Commands']       },
       \ ]
+
+" Close-buffers.
+nnoremap <leader>bo :Bdelete other<cr>
+nnoremap <leader>bc :Bdelete this<cr>
+nnoremap <leader>bx :Bdelete all<cr>
+nnoremap <leader>bi :Bdelete select<cr>
 
 " Plug. 
 "   execute :PlugInstall to install the following list for the first time.
@@ -607,6 +610,7 @@ Plug 'tpope/vim-unimpaired'
 Plug 'vifm/vifm'
 Plug 'xolox/vim-misc'
 Plug 'yonchu/accelerated-smooth-scroll'
+Plug 'asheq/close-buffers.vim'
 
 " COC plugins.
 let g:coc_global_extensions = [
