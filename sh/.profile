@@ -6,6 +6,10 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
 
+# Disable XON/XOFF to let through <C-S> key events.
+bindkey -r '\C-s'
+stty -ixon
+
 # Path completion.
 export CDPATH=.:~:~/Projects:~/Library/Mobile\ Documents/com~apple~CloudDocs
 if [[ -d "$HOME/code" ]]; then
