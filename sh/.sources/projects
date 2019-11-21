@@ -21,19 +21,28 @@ function layout_ide2() {
 # $1 - project name
 # $2 - layout name
 function make_project() {
-  [[ -n "$1" ]] && local -r SESSION="$1" || local -r SESSION='sxp/connect'
-  [[ -n "$2" ]] && local -r LAYOUT="$1" || local -r LAYOUT='ide1'
+  local SESSION ; local LAYOUT
+  [[ -n "$1" ]] && SESSION="$1"
+  [[ -n "$2" ]] && LAYOUT="$1" || LAYOUT='ide1'
+
+  tmux start-server &> /dev/null
 
   local CHANGE_COMMAND
   if [[ -n "$TMUX" ]]; then CHANGE_COMMAND='switch-client'; else CHANGE_COMMAND='attach-session'; fi
 
-  tmux has-session -t "$SESSION" &> /dev/null
-  if [[ "$?" == "0" ]]; then
-    # Attach to existing session.
-    echo "Attaching to existing session..."; sleep 0.5
-    tmux $CHANGE_COMMAND -t $SESSION
+  #
+  # Switch to existing session.
+  #
+  
+  if [[ -n "$SESSION" ]]; then
+    tmux has-session -t "$SESSION" &> /dev/null
+    if [[ "$?" == "0" ]]; then
+      # Attach to existing session.
+      echo "Attaching to existing session..."; sleep 0.5
+      tmux $CHANGE_COMMAND -t "$SESSION"
 
-    exit 0
+      exit 0
+    fi
   fi
 
   #
@@ -43,6 +52,10 @@ function make_project() {
   local ROOT
   local REPOS
   case $SESSION in
+    'marketplace/automated_brokering')
+      ROOT="$HOME/code/convoyinc"
+      REPOS=(nacho-dashboard shipotle-api global-search-service)
+      ;;
     'sxp/connect') 
       ROOT="$HOME/code/convoyinc"
       REPOS=(connect-web shipper-tms-service nacho-dashboard shipotle-api global-search-service)
@@ -52,19 +65,20 @@ function make_project() {
       REPOS=(dotfiles)
       ;;
     *)
-      echo 'Unknown project definition: ' $SESSION
-      exit 1
+      ROOT="$(dirname $(pwd))"
+      SESSION="$(basename $(pwd))"
+      REPOS=($SESSION)
       ;;
   esac
 
   local x
   local y
-  if [[ -n "$TERM" ]]; then
+  if [[ -n "$TMUX" ]]; then
     x=$(tmux display-message -p -F '#{client_width}')
     y=$(tmux display-message -p -F '#{client_height}')
   else
     x=$(tput cols)
-    y=$(tput rows)
+    y=$(tput lines)
   fi
 
   tmux new-session -c "$ROOT" -n main -s "$SESSION" -d -x $x -y $y
@@ -83,8 +97,9 @@ function make_project() {
   tmux kill-window -t "$SESSION:main"
   tmux select-window -t "$SESSION:1"
 
-  tmux $CHANGE_COMMAND -t $SESSION
+  tmux $CHANGE_COMMAND -t "$SESSION"
 }
 
-alias dotfiles='make_project dotfiles'
-alias connect='make_project "sxp/connect"'
+alias proj=make_project
+alias dotfiles='proj dotfiles'
+alias connect='proj "sxp/connect"'
