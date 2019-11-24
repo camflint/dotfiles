@@ -81,7 +81,9 @@ if &term =~ '^screen'
     execute "set <xLeft>=\e[1;*D"
 
     " Fix mouse.
-    set ttymouse=xterm2
+    if !has('nvim')
+      set ttymouse=xterm2
+    endif
 endif
 
 " Map ':' to ';'

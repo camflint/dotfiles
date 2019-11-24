@@ -1,4 +1,5 @@
 # Editing.
+alias vim=nvim
 alias v=vim
 alias fm='vifm .'
 

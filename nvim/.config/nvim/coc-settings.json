@@ -1,0 +1,28 @@
+{
+  "coc.preferences.jumpCommand": "edit",
+  "coc.preferences.currentFunctionSymbolAutoUpdate": true,
+  "explorer.file.showHiddenFiles": true,
+  "explorer.file.autoReveal": true,
+  "explorer.icon.enableNerdfont": true,
+  "explorer.sources":[
+    {
+      "name": "file",
+      "expand": true
+    }
+  ],
+  "explorer.file.columns":[
+    "git",
+    "selection",
+    "clip",
+    "diagnosticError",
+    "indent",
+    "icon",
+    "filename",
+    "size",
+    "modified",
+    "readonly"
+  ],
+  "explorer.keyMappings": {
+    "u": "gotoParent"
+  }
+}
