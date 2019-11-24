@@ -12,7 +12,7 @@ alias ll='ls -l'
 alias lla='ls -al'
 
 # Git.
-alias gc='git commit -m'
+alias gc='git commit'
 alias gs='git status'
 alias ga='git add'
 alias gd='git diff'
