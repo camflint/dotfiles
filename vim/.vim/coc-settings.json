@@ -24,5 +24,6 @@
   ],
   "explorer.keyMappings": {
     "u": "gotoParent"
-  }
+  },
+  "explorer.width": 56
 }

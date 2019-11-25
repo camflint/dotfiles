@@ -560,13 +560,27 @@ cabbrev bd <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'Kwbd' : 'bd')<cr>
 
 " COC extension - explorer.
 nnoremap <leader>n :CocCommand explorer --toggle<cr>
+function! s:coc_explorer_on_vim_enter()
+  " Hook to open and reveal explorer automatically.
+  if (argc() == 0)
+    execute 'CocCommand explorer --reveal ' . getcwd()
+  endif
+endfunction
+function! s:coc_explorer_on_buffer_unload()
+  " Hook to quit if explorer is last buffer.
+  if ((winnr('$') == 1) && exists('b:coc_explorer_inited'))
+    normal quit
+    return
+  endif
+endfunction
 augroup cocexplorer
     autocmd!
-    autocmd VimEnter * if (argc() == 0) | :CocCommand explorer | endif
-    autocmd BufEnter * if (winnr('$') == 1 && exists('b:coc_explorer_inited')) | q | endif
+    autocmd VimEnter * call s:coc_explorer_on_vim_enter()
+    autocmd BufUnload * call s:coc_explorer_on_buffer_unload()
 augroup END
 
 " Startify.
+let g:startify_change_to_dir = 0
 nnoremap <leader>h :Startify<cr>
 let g:startify_lists = [
       \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
