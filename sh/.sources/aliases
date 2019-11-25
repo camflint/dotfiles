@@ -25,3 +25,5 @@ alias dc='docker container'
 # Tmux.
 alias nater='tmuxinator'
 
+# Misc.
+alias nativefier='nativefier --fast-quit --hide-window-frame --maximize --single-instance'
