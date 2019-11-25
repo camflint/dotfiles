@@ -5,6 +5,7 @@
 [alias]
   st = status
   c = commit
+  cm = commit -m
   amend = commit --amend
   cp = cherry-pick
   co = checkout

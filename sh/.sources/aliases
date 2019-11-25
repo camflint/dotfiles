@@ -13,9 +13,14 @@ alias lla='ls -al'
 
 # Git.
 alias gc='git commit'
+alias gcm='git commit -m'
+alias go='git checkout'
+alias gop='git checkout -p'
 alias gs='git status'
 alias ga='git add'
+alias gap='git add -p'
 alias gd='git diff'
+alias gds='git diff --staged'
 alias gl='git l'
 
 # Docker.
