@@ -129,7 +129,7 @@ if !has('gui_running')
 endif
 
 " Avoid performance issues by only highlighting first 200 columns (optional).
-set synmaxcol=200
+"set synmaxcol=200
 
 " Split (vim window) management.
 nnoremap <leader>s- <C-w>s<C-w>j
@@ -155,7 +155,7 @@ let g:grepper.tools = ['git', 'grep', 'rg']
 let g:grepper.open = 1
 let g:grepper.switch = 1
 let g:grepper.jump = 0
-let g:grepper.dir = 'repo,cwd'
+let g:grepper.dir = 'cwd'
 let g:grepper.prompt_text = '$t> '
 let g:grepper.prompt_mapping_tool = '<leader>g'
 nnoremap <c-s> :Grepper -tool rg<cr>
@@ -171,6 +171,21 @@ nnoremap <s-tab> :bprevious<cr>
 nnoremap <tab> :bnext<cr>
 nnoremap <leader><tab> :buffer<space><tab>
 nnoremap <c-e> :Buffers<cr>
+
+function! WinBufSwap()
+  let thiswin = winnr()
+  let thisbuf = bufnr("%")
+  let lastwin = winnr("#")
+  let lastbuf = winbufnr(lastwin)
+
+  exec  lastwin . " wincmd w" ."|".
+      \ "buffer ". thisbuf ."|".
+      \ thiswin ." wincmd w" ."|".
+      \ "buffer ". lastbuf
+endfunction
+
+command! Wswap :call WinBufSwap()
+map <Leader>sr <C-c>:call WinBufSwap()<CR>
 
 " MRU.
 "nnoremap <c-r> :History<cr>
@@ -419,6 +434,14 @@ let g:bookmark_show_warning = 0
 let g:bookmark_show_toggle_warning = 0
 let g:bookmark_save_per_working_dir = 1
 let g:bookmark_auto_save = 1
+nmap <Leader>mm <Plug>BookmarkToggle
+nmap <Leader>mi  <Plug>BookmarkAnnotate
+nmap <Leader>ma <Plug>BookmarkShowAll
+nmap <Leader>mj <Plug>BookmarkNext
+nmap <Leader>mk <Plug>BookmarkPrev
+nmap <Leader>mc <Plug>BookmarkClear
+nmap <Leader>mx <Plug>BookmarkClearAll
+
 
 " Finds the Git super-project directory.
 function! g:BMWorkDirFileLocation()
@@ -626,6 +649,9 @@ Plug 'vifm/vifm'
 Plug 'xolox/vim-misc'
 Plug 'yonchu/accelerated-smooth-scroll'
 Plug 'asheq/close-buffers.vim'
+Plug 'inkarkat/vim-ingo-library'
+Plug 'inkarkat/vim-PatternsOnText'
+Plug 'romainl/vim-qf'
 
 " COC plugins.
 let g:coc_global_extensions = [
