@@ -367,6 +367,10 @@ augroup typescript
   "Let the tsc compiler discover and use the tsconfig.json rather than
   "overriding here.
   autocmd FileType typescript call s:setuptypescript()
+
+  " Map TSX/JSX filetypes so that coc-tsserver works.
+  autocmd FileType typescriptreact set filetype=typescript.tsx
+  autocmd FileType javascriptreact set filetype=javascript.jsx
 augroup END
 "let g:typescript_compiler_options='--lib es6,dom --downLevelIteration --target es5'
 
