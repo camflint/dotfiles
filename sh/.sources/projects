@@ -6,8 +6,9 @@ declare -A LAYOUT_FUNCS=([ide1]=layout_ide1 [ide2]=layout_ide2)
 
 # ide1
 function layout_ide1() {
-  local -r WINDOW="$1"
-  local -r CWD="$2"
+  [[ -z "$TMUX" ]] && { echo "Not running in tmux" >&2 ; exit 1 ; }
+  [[ -n "$1" ]] && local -r WINDOW="$1" || local -r WINDOW="$(tmux display-message -p -F '#{window_id}')"
+  [[ -n "$2" ]] && local -r CWD="$2" || local -r CWD="$(pwd)"
   cmd="RUN='cd $CWD; clear' /usr/bin/env zsh -i"
   tmux split-window -t "$WINDOW.1" -v -p 13 $cmd
   tmux send-keys -t "$WINDOW.1" "vim" "Enter"
@@ -52,11 +53,11 @@ function make_project() {
   local ROOT
   local REPOS
   case $SESSION in
-    'marketplace/automated_brokering')
+    'nacho')
       ROOT="$HOME/code/convoyinc"
-      REPOS=(nacho-dashboard shipotle-api global-search-service)
+      REPOS=(nacho-dashboard shipotle-api global-search-service shipment-search-service)
       ;;
-    'sxp/connect') 
+    'connect') 
       ROOT="$HOME/code/convoyinc"
       REPOS=(connect-web shipper-tms-service nacho-dashboard shipotle-api global-search-service)
       ;;
@@ -100,6 +101,9 @@ function make_project() {
   tmux $CHANGE_COMMAND -t "$SESSION"
 }
 
+alias ide=ide1
+alias ide1=layout_ide1
+alias ide2=layout_ide2
 alias proj=make_project
 alias dotfiles='proj dotfiles'
 alias connect='proj "sxp/connect"'
