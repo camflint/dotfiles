@@ -18,8 +18,6 @@ set ttyfast
 set ruler
 set backspace=indent,eol,start
 set laststatus=2
-set number
-set relativenumber
 set mouse=n
 set textwidth=80
 set fo=croqj
@@ -27,12 +25,31 @@ set breakindent
 set breakindentopt=shift:2
 set showbreak=↳
 
+" More natural split opening.
+set splitright
+set splitbelow
+
+" Line numbers.
+set number relativenumber
+augroup numbertoggle
+  autocmd!
+  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
+  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
+augroup END
+
 " Folding.
 set foldmethod=indent
 set foldnestmax=10
 set foldlevelstart=2
 set nofoldenable
 set foldlevel=2
+nnoremap n nzzzv
+nnoremap N Nzzzv
+nnoremap <space> za
+nnoremap <leader>z zMzvzz
+
+" Selection.
+nnoremap vv 0v$
 
 " Backup settings.
 set swapfile
@@ -52,14 +69,17 @@ set softtabstop=2
 set expandtab
 set autoindent
 
+" Show certain invisibles.
+set list
+set listchars=tab:
+
 " Keyword completion (autocomplete).
 set complete-=i  " Don't search include files for every keyword completion.
 
 " Search settings.
 nnoremap / /\v
 vnoremap / /\v
-set ignorecase
-set infercase
+set smartcase
 set gdefault
 set incsearch
 
