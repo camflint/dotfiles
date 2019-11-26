@@ -79,7 +79,7 @@ set complete-=i  " Don't search include files for every keyword completion.
 " Search settings.
 nnoremap / /\v
 vnoremap / /\v
-set smartcase
+set ignorecase smartcase
 set gdefault
 set incsearch
 
