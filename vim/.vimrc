@@ -441,7 +441,6 @@ nmap <Leader>mk <Plug>BookmarkPrev
 nmap <Leader>mc <Plug>BookmarkClear
 nmap <Leader>mx <Plug>BookmarkClearAll
 
-
 " Finds the Git super-project directory.
 function! g:BMWorkDirFileLocation()
     let filename = 'bookmarks'
@@ -459,7 +458,6 @@ function! g:BMWorkDirFileLocation()
         return getcwd().'/.'.filename
     endif
 endfunction
-
 
 " Tabline and statusline settings.
 set laststatus=2
@@ -626,7 +624,6 @@ let g:tmuxline_powerline_separators = 0
 " Kwbd - a better 'bd': close buffer without closing window.
 cabbrev bd <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'Kwbd' : 'bd')<cr>
 
-
 " COC extension - explorer.
 nnoremap <leader>n :CocCommand explorer --toggle<cr>
 function! s:coc_explorer_on_vim_enter()
@@ -694,7 +691,6 @@ Plug 'itchyny/lightline.vim'
 Plug 'jparise/vim-graphql'
 Plug 'junegunn/fzf.vim'
 Plug 'mattesgroeger/vim-bookmarks'
-Plug 'maxmellon/vim-jsx-pretty'
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'mhinz/vim-grepper'
 Plug 'mhinz/vim-startify'
@@ -704,6 +700,7 @@ Plug 'plasticboy/vim-markdown'
 Plug 'puremourning/vimspector', {'for': ['typescript', 'javascript']}
 Plug 'rgarver/kwbd.vim'
 Plug 'romainl/vim-qf'
+Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-fugitive'
