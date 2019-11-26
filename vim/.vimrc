@@ -187,15 +187,6 @@ endfunction
 command! Wswap :call WinBufSwap()
 map <Leader>sr <C-c>:call WinBufSwap()<CR>
 
-" MRU.
-"nnoremap <c-r> :History<cr>
-
-" Tab management.
-"nnoremap <leader>tn :tabnew<cr>
-"nnoremap <leader>tc :tabclose<cr>
-"nnoremap <tab> :tabnext<cr>
-"nnoremap <s-tab> :tabprev<cr>
-
 " Fast help/quickfix/etc. management.
 nnoremap <leader>qc :cclose<cr>
 
@@ -627,9 +618,9 @@ nnoremap <leader>bi :Bdelete select<cr>
 let g:cursorcross_no_map_CR=1
 
 " Diminactive.
-let g:diminactive_use_colorcolumn=0
-let g:diminactive_use_syntax=1
-let g:diminactive_enable_focus=1
+" let g:diminactive_use_colorcolumn=0
+" let g:diminactive_use_syntax=1
+" let g:diminactive_enable_focus=1
 
 "augroup diminactive_focus
 "  au! FocusGained * DimInactiveOn
