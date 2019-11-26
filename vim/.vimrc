@@ -242,7 +242,9 @@ endfunction
 
 nnoremap <silent> <C-g> :call Cscope('3', expand('<cword>'))<CR>
 nnoremap <leader>t :Tags<cr>
-nnoremap <leader>o :BTags<cr>
+"nnoremap <leader>o :BTags<cr>
+nnoremap <leader>o :CocList outline<cr>
+nnoremap <leader>O :CocList symbols<cr>
 
 " Fugitive / git setup.
 nnoremap <leader>fs :Git<cr>
