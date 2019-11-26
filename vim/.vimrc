@@ -623,15 +623,31 @@ nnoremap <leader>bc :Bdelete this<cr>
 nnoremap <leader>bx :Bdelete all<cr>
 nnoremap <leader>bi :Bdelete select<cr>
 
+" Cursorcross.
+let g:cursorcross_no_map_CR=1
+
+" Diminactive.
+let g:diminactive_use_colorcolumn=0
+let g:diminactive_use_syntax=1
+let g:diminactive_enable_focus=1
+
+"augroup diminactive_focus
+"  au! FocusGained * DimInactiveOn
+"  au! FocusLost * DimInactiveOff
+"augroup END
+
 " Plug. 
 "   execute :PlugInstall to install the following list for the first time.
 call plug#begin('~/.local/share/vim/plugged')
 
 " Essential plugins.
+Plug 'asheq/close-buffers.vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'cocopon/iceberg.vim'
 Plug 'edkolev/tmuxline.vim'
 Plug 'godlygeek/tabular'
+Plug 'inkarkat/vim-PatternsOnText'
+Plug 'inkarkat/vim-ingo-library'
 Plug 'itchyny/lightline.vim'
 Plug 'jparise/vim-graphql'
 Plug 'junegunn/fzf.vim'
@@ -640,10 +656,13 @@ Plug 'maxmellon/vim-jsx-pretty'
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'mhinz/vim-grepper'
 Plug 'mhinz/vim-startify'
+Plug 'mtth/cursorcross.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'plasticboy/vim-markdown'
 Plug 'puremourning/vimspector', {'for': ['typescript', 'javascript']}
 Plug 'rgarver/kwbd.vim'
+Plug 'romainl/vim-qf'
+Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-repeat'
@@ -652,10 +671,6 @@ Plug 'tpope/vim-unimpaired'
 Plug 'vifm/vifm'
 Plug 'xolox/vim-misc'
 Plug 'yonchu/accelerated-smooth-scroll'
-Plug 'asheq/close-buffers.vim'
-Plug 'inkarkat/vim-ingo-library'
-Plug 'inkarkat/vim-PatternsOnText'
-Plug 'romainl/vim-qf'
 
 " COC plugins.
 let g:coc_global_extensions = [
@@ -682,4 +697,6 @@ let g:coc_global_extensions = [
 call plug#end()
 
 colorscheme iceberg
+hi! CursorLine cterm=NONE ctermbg=238 guibg=#3e445e
+hi! Visual ctermbg=238 guibg=#3e445e
 
