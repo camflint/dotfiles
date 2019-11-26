@@ -24,5 +24,9 @@
   ],
   "explorer.keyMappings": {
     "u": "gotoParent"
-  }
+  },
+  "diagnostic.warningSign": "◆",
+  "diagnostic.errorSign": "✗",
+  "diagnostic.infoSign": "כֿ",
+  "diagnostic.hintSign": ""
 }
