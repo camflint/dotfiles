@@ -654,6 +654,7 @@ Plug 'puremourning/vimspector', {'for': ['typescript', 'javascript']}
 Plug 'rgarver/kwbd.vim'
 Plug 'romainl/vim-qf'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-repeat'
