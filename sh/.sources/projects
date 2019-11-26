@@ -6,7 +6,7 @@ declare -A LAYOUT_FUNCS=([ide1]=layout_ide1 [ide2]=layout_ide2)
 
 # ide1
 function layout_ide1() {
-  [[ -z "$TMUX" ]] && { echo "Not running in tmux" >&2 ; exit 1 ; }
+  [[ -z "$TMUX" ]] && { echo "Not running in tmux" >&2 ; return 1 ; }
   [[ -n "$1" ]] && local -r WINDOW="$1" || local -r WINDOW="$(tmux display-message -p -F '#{window_id}')"
   [[ -n "$2" ]] && local -r CWD="$2" || local -r CWD="$(pwd)"
   cmd="RUN='cd $CWD; clear' /usr/bin/env zsh -i"
@@ -42,7 +42,7 @@ function make_project() {
       echo "Attaching to existing session..."; sleep 0.5
       tmux $CHANGE_COMMAND -t "$SESSION"
 
-      exit 0
+      return 0
     fi
   fi
 
