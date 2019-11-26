@@ -254,6 +254,10 @@ nnoremap <leader>do :diffoff<cr>
 
 " COC linting and type-ahead for multiple languages.
 let g:coc_start_at_startup = 1
+let g:coc_status_error_sign = '✗'
+let g:coc_status_warning_sign = '◆'
+let g:coc_status_info_sign = 'כֿ'
+let g:coc_status_hint_sign = ''
 set updatetime=300
 set shortmess+=c
 set signcolumn=yes
@@ -465,8 +469,8 @@ let g:lightline = {
   \ 'colorscheme': 'iceberg',
   \ 'subseparator': { 'left': '|', 'right': '|' },
   \ 'active': {
-  \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ], [ 'cocstatus', 'currentfunction' ] ],
-  \   'right': [ [ 'percent' ], [ 'fileformat', 'fileencoding', 'filetype' ] ]
+  \   'left': [ [ 'mode', 'paste' ], [ 'currentfunction' ] ],
+  \   'right': [ [ 'lineinfo' ], [ 'percent' ], [ 'readonly', 'linter_warnings', 'linter_errors', 'linter_hints', 'linter_infos' ] ]
   \ },
   \ 'component_function': {
   \   'mode': 'LightlineMode',
@@ -478,14 +482,23 @@ let g:lightline = {
   \   'fileencoing': 'LightlineFileencoding',
   \   'filetype': 'LightlineFiletype'
   \ },
+  \ 'component_expand': {
+  \   'buffers': 'lightline#bufferline#buffers',
+  \   'linter_warnings': 'LightlineCocWarnings',
+  \   'linter_errors': 'LightlineCocErrors',
+  \   'linter_infos': 'LightlineCocInfos',
+  \   'linter_hints': 'LightlineCocHints'
+  \ },
   \ 'tabline': {
   \   'left': [],
   \   'right': [ [ 'close' ], [ 'buffers' ] ]
   \ },
-  \ 'component_expand': {
-  \   'buffers': 'lightline#bufferline#buffers'
-  \ },
   \ 'component_type': {
+  \   'readonly': 'error',
+  \   'linter_warnings': 'warning',
+  \   'linter_errors': 'error',
+  \   'linter_infos': 'tabsel',
+  \   'linter_hints': 'middle',
   \   'buffers': 'tabsel'
   \ },
   \ 'enable': {
@@ -547,8 +560,46 @@ function! LightlineMode()
         \ &ft == 'vimshell' ? 'VimShell' :
         \ winwidth(0) > 60 ? lightline#mode() : ''
 endfunction
-autocmd BufWritePost,TextChanged,TextChangedI * call lightline#update()
+function! s:lightline_coc_diagnostic(kind, sign) abort
+  let info = get(b:, 'coc_diagnostic_info', 0)
+  if empty(info) || get(info, a:kind, 0) == 0
+    return ''
+  endif
+  if a:sign == 'error'
+    let s = g:coc_status_error_sign
+  elseif a:sign == 'warning'
+    let s = g:coc_status_warning_sign
+  elseif a:sign == 'info'
+    let s = g:coc_status_info_sign
+  elseif a:sign == 'hint'
+    let s = g:coc_status_hint_sign
+  else
+    let s = ''
+  endif
+  return printf('%s %d', s, info[a:kind])
+endfunction
 
+" Update and show lightline but only if it's visible (e.g., not in Goyo)
+function! s:MaybeUpdateLightline()
+  if exists('#lightline')
+    call lightline#update()
+  end
+endfunction
+function! LightlineCocErrors() abort
+  return s:lightline_coc_diagnostic('error', 'error')
+endfunction
+function! LightlineCocWarnings() abort
+  return s:lightline_coc_diagnostic('warning', 'warning')
+endfunction
+function! LightlineCocInfos() abort
+  return s:lightline_coc_diagnostic('information', 'info')
+endfunction
+function! LightlineCocHints() abort
+  return s:lightline_coc_diagnostic('hints', 'hint')
+endfunction
+autocmd BufWritePost,TextChanged,TextChangedI * call s:MaybeUpdateLightline()
+autocmd User CocDiagnosticChange call lightline#update()
+  
 let g:lightline#bufferline#unicode_symbols = 1
 let g:lightline#bufferline#filename_modifier = ':t'
 let g:lightline#bufferline#right_aligned = 1
