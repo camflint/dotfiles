@@ -12,6 +12,18 @@
   b = branch
   r = remote
   l = log --pretty=format:'%C(white dim)%h%Creset -%C(yellow bold)%d%Creset %s %C(green)(%cr) %C(blue dim)<%an>%Creset' --abbrev-commit
+  mt = merge-tool
+  dt = diff-tool
+
+[merge]
+  tool = diffconflicts
+
+[mergetool]
+  keepBackup = false
+
+[mergetool.diffconflicts]
+	cmd = vim -c DiffConflicts \"$MERGED\" \"$BASE\" \"$LOCAL\" \"$REMOTE\"
+  trustExitCode = true
 
 [color]
   ui = auto

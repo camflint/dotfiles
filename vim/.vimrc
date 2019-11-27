@@ -733,6 +733,7 @@ Plug 'tpope/vim-unimpaired'
 Plug 'vifm/vifm'
 Plug 'xolox/vim-misc'
 Plug 'yonchu/accelerated-smooth-scroll'
+Plug 'whiteinge/diffconflicts'
 
 " COC plugins.
 let g:coc_global_extensions = [
