@@ -39,6 +39,7 @@ augroup numbertoggle
   "autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
   "autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
 augroup END
+set colorcolumn=120
 
 " Folding.
 set foldmethod=indent
@@ -148,6 +149,9 @@ nnoremap <expr> j v:count ? (v:count > 5 ? "m'" . v:count : '') . 'j' : 'gj'
 nnoremap <expr> k v:count ? (v:count > 5 ? "m'" . v:count : '') . 'k' : 'gk'
 
 " Colorscheme and syntax highlighting setup.
+" 'termguicolors' works in consoles with 24-bit (RGB) color support only.
+" When set, 'termguicolors' instructs vim to issue RGB color escape codes with
+" the colors from gui, guifg, guibg etc. (see :help :highlight).
 if exists('+termguicolors')
   let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
   let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
@@ -504,7 +508,7 @@ set laststatus=2
 set showtabline=2
 
 let g:lightline = {
-  \ 'colorscheme': 'iceberg',
+  \ 'colorscheme': 'base16',
   \ 'subseparator': { 'left': '|', 'right': '|' },
   \ 'active': {
   \   'left': [ [ 'mode', 'paste' ], [ 'nearestfunction' ] ],
@@ -651,6 +655,12 @@ let g:lightline#bufferline#number_map = {
   \ 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹'
 \}
 
+function! LightlineReload()
+  call lightline#init()
+  call lightline#colorscheme()
+  call lightline#update()
+endfunction
+
 nmap <Leader>1 <Plug>lightline#bufferline#go(1)
 nmap <Leader>2 <Plug>lightline#bufferline#go(2)
 nmap <Leader>3 <Plug>lightline#bufferline#go(3)
@@ -662,8 +672,8 @@ nmap <Leader>8 <Plug>lightline#bufferline#go(8)
 nmap <Leader>9 <Plug>lightline#bufferline#go(9)
 nmap <Leader>0 <Plug>lightline#bufferline#go(10)
 
-let g:tmuxline_theme = 'lightline'
-let g:tmuxline_powerline_separators = 0
+" let g:tmuxline_theme = 'lightline'
+" let g:tmuxline_powerline_separators = 0
 
 " Kwbd - a better 'bd': close buffer without closing window.
 cabbrev bd <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'Kwbd' : 'bd')<cr>
@@ -762,12 +772,12 @@ nnoremap \g :Goyo<cr>
 call plug#begin('~/.local/share/vim/plugged')
 
 " Essential plugins.
-"Plug 'yonchu/accelerated-smooth-scroll'
+"Plug 'cocopon/iceberg.vim'
+"Plug 'edkolev/tmuxline.vim'
 Plug 'asheq/close-buffers.vim'
 Plug 'camflint/vim-superman'
+Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'cocopon/iceberg.vim'
-Plug 'edkolev/tmuxline.vim'
 Plug 'godlygeek/tabular'
 Plug 'hiphish/info.vim'
 Plug 'inkarkat/vim-PatternsOnText'
@@ -776,6 +786,7 @@ Plug 'itchyny/lightline.vim'
 Plug 'jparise/vim-graphql'
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
+Plug 'liuchengxu/vista.vim'
 Plug 'mattesgroeger/vim-bookmarks'
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'mhinz/vim-grepper'
@@ -798,7 +809,6 @@ Plug 'vifm/vifm.vim'
 Plug 'vimwiki/vimwiki'
 Plug 'whiteinge/diffconflicts'
 Plug 'xolox/vim-misc'
-Plug 'liuchengxu/vista.vim'
 
 " COC plugins.
 let g:coc_global_extensions = [
@@ -824,7 +834,67 @@ let g:coc_global_extensions = [
 
 call plug#end()
 
-colorscheme iceberg
-hi! CursorLine cterm=NONE ctermbg=238 guibg=#3e445e
-hi! Visual ctermbg=238 guibg=#3e445e
+" Base16 colorscheme.
+function! s:base16_customize() abort
+  call Base16hi("ColorColumn", "", "1c1c1c", "", "234")
+
+  let s:base00 = [ "#".g:base16_gui00, g:base16_cterm00 ] " black
+  let s:base01 = [ "#".g:base16_gui01, g:base16_cterm01 ]
+  let s:base02 = [ "#".g:base16_gui02, g:base16_cterm02 ]
+  let s:base03 = [ "#".g:base16_gui03, g:base16_cterm03 ]
+  let s:base04 = [ "#".g:base16_gui04, g:base16_cterm04 ]
+  let s:base05 = [ "#".g:base16_gui05, g:base16_cterm05 ]
+  let s:base06 = [ "#".g:base16_gui06, g:base16_cterm06 ]
+  let s:base07 = [ "#".g:base16_gui07, g:base16_cterm07 ] " white
+
+  let s:base08 = [ "#".g:base16_gui08, g:base16_cterm08 ] " red
+  let s:base09 = [ "#".g:base16_gui09, g:base16_cterm09 ] " orange
+  let s:base0A = [ "#".g:base16_gui0A, g:base16_cterm0A ] " yellow
+  let s:base0B = [ "#".g:base16_gui0B, g:base16_cterm0B ] " green
+  let s:base0C = [ "#".g:base16_gui0C, g:base16_cterm0C ] " teal
+  let s:base0D = [ "#".g:base16_gui0D, g:base16_cterm0D ] " blue
+  let s:base0E = [ "#".g:base16_gui0E, g:base16_cterm0E ] " pink
+  let s:base0F = [ "#".g:base16_gui0F, g:base16_cterm0F ] " brown
+
+  let s:p = {'normal': {}, 'inactive': {}, 'insert': {}, 'replace': {}, 'visual': {}, 'tabline': {}}
+
+  let s:p.normal.left     = [ [ s:base01, s:base03 ], [ s:base05, s:base02 ] ]
+  let s:p.insert.left     = [ [ s:base00, s:base0D ], [ s:base05, s:base02 ] ]
+  let s:p.visual.left     = [ [ s:base00, s:base09 ], [ s:base05, s:base02 ] ]
+  let s:p.replace.left    = [ [ s:base00, s:base08 ], [ s:base05, s:base02 ] ]
+  let s:p.inactive.left   = [ [ s:base02, s:base00 ] ]
+
+  let s:p.normal.middle   = [ [ s:base07, s:base01 ] ]
+  let s:p.inactive.middle = [ [ s:base01, s:base00 ] ]
+
+  let s:p.normal.right    = [ [ s:base01, s:base03 ], [ s:base01, s:base02 ] ]
+  let s:p.inactive.right  = [ [ s:base01, s:base00 ] ]
+
+  let s:p.normal.error    = [ [ s:base07, s:base08 ] ]
+  let s:p.normal.warning  = [ [ s:base07, s:base09 ] ]
+
+  let s:p.tabline.left    = [ [ s:base05, s:base02 ] ]
+  let s:p.tabline.middle  = [ [ s:base05, s:base01 ] ]
+  let s:p.tabline.right   = [ [ s:base05, s:base02 ] ]
+  let s:p.tabline.tabsel  = [ [ s:base01, s:base0A ] ]
+
+  let g:lightline#colorscheme#base16#palette = lightline#colorscheme#flatten(s:p)
+
+  call LightlineReload()
+endfunction
+
+augroup on_change_colorschema
+  autocmd!
+  autocmd ColorScheme * call s:base16_customize()
+augroup END
+
+if filereadable(expand('~/.vimrc_background'))
+  let base16colorspace=256
+  source ~/.vimrc_background
+endif
+
+
+" Iceberg theme customizations.
+"hi! CursorLine cterm=NONE ctermbg=238 guibg=#3e445e
+"hi! Visual ctermbg=238 guibg=#3e445e
 

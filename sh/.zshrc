@@ -1,14 +1,16 @@
+# Uncomment me and run 'zprof' in a new interactive shell to profile startup.
+#zmodload zsh/zprof
+
 # Source common configuration.
 source $HOME/.profile
 
 # Colored prompt.
 autoload -U colors && colors
 local lc=$'\e[' rc=m	# Standard ANSI terminal escape values
-# TODO: Remove this if zsh repo merges my PR.
-typeset -AHg fg_dim
-for k in ${(k)color[(I)fg-*]}; do
-  fg_dim[${k#fg-}]="$lc${color[faint]};${color[$k]}$rc"
-done
+# typeset -AHg fg_dim
+# for k in ${(k)color[(I)fg-*]}; do
+#   fg_dim[${k#fg-}]="$lc${color[faint]};${color[$k]}$rc"
+# done
 PS1="%{$fg_bold[white]%}%{$reset_color%} "
 
 # Prefix each new prompt with a newline, except right after the shell is
@@ -49,9 +51,19 @@ source $HOME/.zplugin/bin/zplugin.zsh
 
 # Load plugins here....
 
+zplugin light zsh-users/zsh-autosuggestions
+#zplugin ice wait'' atinit'zpcompinit' silent; zplugin light zdharma/fast-syntax-highlighting
+zplugin light zdharma/fast-syntax-highlighting
+
+# Plugin options.
+export FAST_HIGHLIGHT[whatis_chroma_type]=0
+export ZSH_AUTOSUGGEST_USE_ASYNC=1
+
+# Tab key accepts typeahead suggestions.
+#bindkey '\t' autosuggest-accept
 
 # Load function-based completion system.
-autoload -U compinit -d
+autoload -U compinit
 compinit
 
 # Add'l completion definitions.

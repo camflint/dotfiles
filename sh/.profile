@@ -69,7 +69,7 @@ export PATH=$HOME/go/bin:$PATH
 export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 
 # FZF.
-export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --smart-case --glob "!.git/*"'
+export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --ignore-case --glob "!.git/*"'
 export FZF_DEFAULT_OPTS='--bind=ctrl-j:down,ctrl-k:up'
 
 # Node.js, npm, nvm, etc.
@@ -91,3 +91,8 @@ if [[ -d "$HOME/.scripts" ]]; then
     export PATH="$HOME/.scripts:$PATH"
 fi
 
+# Base16 colorscheme.
+BASE16_SHELL="$HOME/.local/share/base16-shell"
+[ -n "$PS1" ] && \
+  [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
+    eval "$("$BASE16_SHELL/profile_helper.sh")"
