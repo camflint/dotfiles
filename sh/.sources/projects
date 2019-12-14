@@ -2,7 +2,16 @@
 
 # Build or attach a tmux session for project Convoy Connect.
 
-declare -A LAYOUT_FUNCS=([ide1]=layout_ide1 [ide2]=layout_ide2)
+declare -A LAYOUT_FUNCS=([default]=layout_default [basic]=layout_basic [ide1]=layout_ide1 [ide2]=layout_ide2)
+
+function layout_default() {
+}
+
+function layout_basic() {
+  [[ -z "$TMUX" ]] && { echo "Not running in tmux" >&2 ; return 1 ; }
+  [[ -n "$1" ]] && local -r WINDOW="$1" || local -r WINDOW="$(tmux display-message -p -F '#{window_id}')"
+  tmux send-keys -t "$WINDOW" "$EDITOR" "Enter"
+}
 
 # ide1
 function layout_ide1() {
@@ -11,7 +20,7 @@ function layout_ide1() {
   [[ -n "$2" ]] && local -r CWD="$2" || local -r CWD="$(pwd)"
   cmd="RUN='cd $CWD; clear' /usr/bin/env zsh -i"
   tmux split-window -t "$WINDOW.1" -v -p 13 $cmd
-  tmux send-keys -t "$WINDOW.1" "vim" "Enter"
+  tmux send-keys -t "$WINDOW.1" "$EDITOR" "Enter"
   tmux select-pane -t "$WINDOW.1"
 }
 
@@ -65,6 +74,11 @@ function make_project() {
       ROOT="$HOME/code/camflint"
       REPOS=(dotfiles)
       ;;
+    'wiki')
+      ROOT="$HOME/notes"
+      REPOS=(convoyinc)
+      LAYOUT=basic
+      ;;
     *)
       ROOT="$(dirname $(pwd))"
       SESSION="$(basename $(pwd))"
@@ -104,6 +118,7 @@ function make_project() {
 alias ide=ide1
 alias ide1=layout_ide1
 alias ide2=layout_ide2
+alias basic=layout_basic
 alias proj=make_project
 alias dotfiles='proj dotfiles'
 alias connect='proj "sxp/connect"'

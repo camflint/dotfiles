@@ -12,8 +12,8 @@
   b = branch
   r = remote
   l = log --pretty=format:'%C(white dim)%h%Creset -%C(yellow bold)%d%Creset %s %C(green)(%cr) %C(blue dim)<%an>%Creset' --abbrev-commit
-  mt = merge-tool
-  dt = diff-tool
+  mt = mergetool
+  dt = difftool
 
 [merge]
   tool = diffconflicts

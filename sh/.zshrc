@@ -54,6 +54,9 @@ source $HOME/.zplugin/bin/zplugin.zsh
 autoload -U compinit -d
 compinit
 
+# Add'l completion definitions.
+compdef vman="man"
+
 # Plugin zsh-syntax-highlighting must come last.
 zplugin ice wait silent; zplugin load zsh-users/zsh-syntax-highlighting
 

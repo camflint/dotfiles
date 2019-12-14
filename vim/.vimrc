@@ -25,6 +25,8 @@ set breakindent
 set breakindentopt=shift:2
 set showbreak=↳
 
+set nocompatible
+
 " More natural split opening.
 set splitright
 set splitbelow
@@ -33,8 +35,9 @@ set splitbelow
 set number relativenumber
 augroup numbertoggle
   autocmd!
-  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
-  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
+  " Need to fix Goyo.
+  "autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
+  "autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
 augroup END
 
 " Folding.
@@ -45,8 +48,12 @@ set nofoldenable
 set foldlevel=2
 nnoremap n nzzzv
 nnoremap N Nzzzv
-nnoremap <space> za
+nnoremap <space> zA
 nnoremap <leader>z zMzvzz
+" Workaround to prevent folds from changing when switching buffers / typing in
+" insert mode.
+"autocmd InsertLeave,WinEnter,BufWinEnter * let &l:foldmethod=g:oldfoldmethod
+"autocmd InsertEnter,WinLeave,BufWinLeave * let g:oldfoldmethod=&l:foldmethod | setlocal foldmethod=manual
 
 " Selection.
 nnoremap vv 0v$
@@ -120,8 +127,11 @@ nnoremap <leader>ve :e $MYVIMRC<cr>
 nnoremap <leader>vr :so $MYVIMRC<cr>
 
 " Pasting from system clipboard.
-map <leader>y "+y
+map <leader>yy "+y
+" Put current buffer path onto system clipboard.
+map <leader>yb :let @+=expand('%:p')<CR>
 map <leader>p "+[p
+
 
 " Better man pages (when viewed with K or :Man <topic>).
 runtime ftplugin/man.vim
@@ -172,6 +182,11 @@ nnoremap <m-p> :Files <c-r>=expand('%:h')<cr><cr>
 " Grep settings.
 let g:grepper = {}
 let g:grepper.tools = ['git', 'grep', 'rg']
+let g:grepper.rg = {
+  \ 'grepprg': 'rg --no-heading --with-filename --vimgrep --hidden --ignore-case',
+  \ 'grepformat': '%f:%l:%c:%m',
+  \ 'escape': '\^$.*+?()[]{}|',
+  \ }
 let g:grepper.open = 1
 let g:grepper.switch = 1
 let g:grepper.jump = 0
@@ -190,7 +205,7 @@ nnoremap <leader>e :EditVifm<cr>
 nnoremap <s-tab> :bprevious<cr>
 nnoremap <tab> :bnext<cr>
 nnoremap <leader><tab> :buffer<space><tab>
-nnoremap <c-e> :Buffers<cr>
+nnoremap <m-tab> :Buffers<cr>
 
 function! WinBufSwap()
   let thiswin = winnr()
@@ -220,6 +235,9 @@ augroup END
 " Fzf and fzf.vim.
 set rtp+=/usr/local/opt/fzf
 let g:fzf_history_dir = '~/.local/share/fzf-vim-history'
+
+" Universal snippets.
+imap <C-d> <C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR>
 
 " Fzf/cscope integration.
 "   source: https://alex.dzyoba.com/blog/vim-revamp/
@@ -489,7 +507,7 @@ let g:lightline = {
   \ 'colorscheme': 'iceberg',
   \ 'subseparator': { 'left': '|', 'right': '|' },
   \ 'active': {
-  \   'left': [ [ 'mode', 'paste' ], [ 'currentfunction' ] ],
+  \   'left': [ [ 'mode', 'paste' ], [ 'nearestfunction' ] ],
   \   'right': [ [ 'lineinfo' ], [ 'percent' ], [ 'readonly', 'linter_warnings', 'linter_errors', 'linter_hints', 'linter_infos' ] ]
   \ },
   \ 'component_function': {
@@ -498,6 +516,7 @@ let g:lightline = {
   \   'filename': 'LightlineFilename',
   \   'cocstatus': 'coc#status',
   \   'currentfunction': 'CocCurrentFunction',
+  \   'nearestfunction': 'CocNearestFunction',
   \   'fileformat': 'LightlineFileformat',
   \   'fileencoing': 'LightlineFileencoding',
   \   'filetype': 'LightlineFiletype'
@@ -528,7 +547,10 @@ let g:lightline = {
   \}
 
 function! CocCurrentFunction()
-    return get(b:, 'coc_current_function', '')
+  return get(b:, 'coc_current_function', '')
+endfunction
+function! CocNearestFunction()
+  return get(b:, 'vista_nearest_method_or_function', '')
 endfunction
 function! LightlineModified()
   return &ft =~ 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
@@ -663,9 +685,22 @@ function! s:coc_explorer_on_buffer_unload()
 endfunction
 augroup cocexplorer
     autocmd!
-    autocmd VimEnter * call s:coc_explorer_on_vim_enter()
+    "autocmd VimEnter * call s:coc_explorer_on_vim_enter()
     autocmd BufUnload * call s:coc_explorer_on_buffer_unload()
 augroup END
+
+" Vista - symbol viewer.
+let g:vista_default_executive = 'coc'
+let g:vista_finder_alternative_executives = ['ctags']
+let g:vista_fzf_preview = ['right:50%']
+let g:vista_sidebar_width= 47
+let g:vista_echo_cursor_strategy = 'scroll'
+let g:vista#renderer#enable_icon = 1
+
+autocmd FileType vista,vista_kind nnoremap <buffer><silent> / :<c-u>call vista#finder#fzf#Run(g:vista_default_executive)<cr>
+
+nnoremap \o :Vista coc<cr>
+
 
 " Startify.
 let g:startify_change_to_dir = 0
@@ -697,21 +732,50 @@ let g:cursorcross_no_map_CR=1
 "  au! FocusLost * DimInactiveOff
 "augroup END
 
+" Vimwiki.
+let g:vimwiki_list = [{
+  \ 'path': '$HOME/notes',
+  \ 'path_html': '$HOME/notes/dist'
+  \ }]
+let g:vimwiki_listsym_rejected = '✗'
+let g:vimwiki_use_mouse = 1
+let g:vimwiki_folding = 'syntax'
+
+" Goyo.
+function! s:goyo_enter()
+  setlocal nonumber norelativenumber
+  CocCommand git.toggleGutters
+endfunction
+
+function! s:goyo_leave()
+  setlocal number relativenumber
+  CocCommand git.toggleGutters
+endfunction
+
+autocmd! User GoyoEnter nested call <SID>goyo_enter()
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
+
+nnoremap \g :Goyo<cr>
+
 " Plug. 
 "   execute :PlugInstall to install the following list for the first time.
 call plug#begin('~/.local/share/vim/plugged')
 
 " Essential plugins.
+"Plug 'yonchu/accelerated-smooth-scroll'
 Plug 'asheq/close-buffers.vim'
+Plug 'camflint/vim-superman'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'cocopon/iceberg.vim'
 Plug 'edkolev/tmuxline.vim'
 Plug 'godlygeek/tabular'
+Plug 'hiphish/info.vim'
 Plug 'inkarkat/vim-PatternsOnText'
 Plug 'inkarkat/vim-ingo-library'
 Plug 'itchyny/lightline.vim'
 Plug 'jparise/vim-graphql'
 Plug 'junegunn/fzf.vim'
+Plug 'junegunn/goyo.vim'
 Plug 'mattesgroeger/vim-bookmarks'
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'mhinz/vim-grepper'
@@ -730,10 +794,11 @@ Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
-Plug 'vifm/vifm'
-Plug 'xolox/vim-misc'
-Plug 'yonchu/accelerated-smooth-scroll'
+Plug 'vifm/vifm.vim'
+Plug 'vimwiki/vimwiki'
 Plug 'whiteinge/diffconflicts'
+Plug 'xolox/vim-misc'
+Plug 'liuchengxu/vista.vim'
 
 " COC plugins.
 let g:coc_global_extensions = [

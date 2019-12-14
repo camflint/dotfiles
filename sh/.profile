@@ -1,6 +1,8 @@
 # Use the vim editor by default for git, bash, etc.
 export EDITOR=vim
 
+export PATH="$HOME/.local/share/vim/plugged/vim-superman/bin:$PATH"
+
 # Locale.
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
@@ -41,12 +43,15 @@ bindkey '^r' history-incremental-search-backward
 GNU_PATH=/usr/local/opt/coreutils/libexec/gnubin
 GNU_PATH=$GNU_PATH:/usr/local/opt/gnu-sed/libexec/gnubin
 GNU_PATH=$GNU_PATH:/usr/local/opt/gnu-tar/libexec/gnubin
-export PATH="$GNU_PATH:$PATH"
+[[ -d "$GNU_PATH" ]] && export PATH="$GNU_PATH:$PATH"
 
 GNU_MANPATH=/usr/local/opt/coreutils/libexec/gnuman
 GNU_MANPATH=$GNU_MANPATH:/usr/local/opt/gnu-sed/libexec/gnuman
 GNU_MANPATH=$GNU_MANPATH:/usr/local/opt/gnu-tar/libexec/gnuman
-export MANPATH="$GNU_MANPATH:$MANPATH"
+[[ -d "$GNU_MANPATH" ]] && export MANPATH="$GNU_MANPATH:$MANPATH"
+
+TEXINFO_PATH=/usr/local/opt/texinfo/bin
+[[ -d "$TEXINFO_PATH" ]] && export PATH="$TEXINFO_PATH:$PATH"
 
 # Python.
 alias python="python3"

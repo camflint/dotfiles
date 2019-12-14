@@ -25,5 +25,6 @@
   "explorer.keyMappings": {
     "u": "gotoParent"
   },
-  "explorer.width": 56
+  "explorer.width": 56,
+  "git.enableGutters": true
 }
