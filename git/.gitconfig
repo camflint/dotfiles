@@ -42,3 +42,5 @@
   frag = cyan
   func = blue bold
   
+[credential]
+	helper = store
