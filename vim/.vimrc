@@ -152,7 +152,7 @@ nnoremap <expr> k v:count ? (v:count > 5 ? "m'" . v:count : '') . 'k' : 'gk'
 " 'termguicolors' works in consoles with 24-bit (RGB) color support only.
 " When set, 'termguicolors' instructs vim to issue RGB color escape codes with
 " the colors from gui, guifg, guibg etc. (see :help :highlight).
-if exists('+termguicolors')
+if exists('+termguicolors') && $COLORTERM !~ 'rxvt'
   let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
   let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
   set termguicolors
