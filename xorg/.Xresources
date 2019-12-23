@@ -1,0 +1,18 @@
+Xft.dpi: 220
+Xft.autohint: 0
+Xft.lcdfilter: lcddefault
+Xft.hintstyle: hintfull
+Xft.hinting: 1
+Xft.antialias: 1
+Xft.rgba: rgb
+
+URxvt.font: xft:PragmataProMono Nerd Font Mono:style=Regular:size=7
+URxvt.scrollBar: false
+URxvt.letterSpace: -1
+URxvt.secondaryScreen: 1
+URxvt.secondaryScroll: 0
+URxvt*scrollWithBuffer: true
+URxvt*scrollTtyKeypress: true
+
+XTerm*termName: xterm-256color
+*customization: -color
