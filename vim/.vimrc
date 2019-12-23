@@ -237,7 +237,13 @@ augroup vert_help
 augroup END
 
 " Fzf and fzf.vim.
-set rtp+=/usr/local/opt/fzf
+"   slightly different configuration depending on OS.
+if !empty(glob('/usr/local/opt/fzf'))
+  set rtp+=/usr/local/opt/fzf
+elseif !empty(glob('/usr/share/doc/fzf'))
+  set rtp+=/usr/share/doc/fzf
+  source /usr/share/doc/fzf/examples/fzf.vim
+endif
 let g:fzf_history_dir = '~/.local/share/fzf-vim-history'
 
 " Universal snippets.

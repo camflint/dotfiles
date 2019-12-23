@@ -72,8 +72,10 @@ compdef vman="man"
 # Plugin zsh-syntax-highlighting must come last.
 zplugin ice wait silent; zplugin load zsh-users/zsh-syntax-highlighting
 
-# FZF+zsh integration.
+# FZF+zsh integration (diff. locations depending on OS).
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f /usr/share/doc/fzf/examples/key-bindings.zsh ] && \
+  source /usr/share/doc/fzf/examples/key-bindings.zsh
 
 # Run a command and then enter interactive mode, e.g.
 #   RUN=ls zsh
