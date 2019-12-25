@@ -778,8 +778,6 @@ nnoremap \g :Goyo<cr>
 call plug#begin('~/.local/share/vim/plugged')
 
 " Essential plugins.
-"Plug 'cocopon/iceberg.vim'
-"Plug 'edkolev/tmuxline.vim'
 Plug 'asheq/close-buffers.vim'
 Plug 'camflint/vim-superman'
 Plug 'chriskempson/base16-vim'
@@ -811,10 +809,16 @@ Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-vinegar'
 Plug 'vifm/vifm.vim'
 Plug 'vimwiki/vimwiki'
 Plug 'whiteinge/diffconflicts'
 Plug 'xolox/vim-misc'
+
+" nvim-only plugins.
+if has('nvim')
+  Plug 'shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
+endif
 
 " COC plugins.
 let g:coc_global_extensions = [
@@ -842,8 +846,9 @@ call plug#end()
 
 " Base16 colorscheme.
 function! s:base16_customize() abort
-  call Base16hi("ColorColumn", "", "1c1c1c", "", "234")
+  "hi! ColorColumn ctermbg=18 guibg=#2a3448
 
+  " Lightline customizations.
   let s:base00 = [ "#".g:base16_gui00, g:base16_cterm00 ] " black
   let s:base01 = [ "#".g:base16_gui01, g:base16_cterm01 ]
   let s:base02 = [ "#".g:base16_gui02, g:base16_cterm02 ]
