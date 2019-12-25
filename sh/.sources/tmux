@@ -29,5 +29,39 @@ function tmux-switch-window() {
   [[ ! -z "$wid" ]] && tmux select-window -t "$wid"
 }
 
+function tmux-distribute-top() {
+  if [[ -z "$TMUX" ]]; then return 1; fi
+
+  # determine target & exclusions
+  while [[ $# > 0 ]]; do
+    case "$1" in
+      t|--target) target="$2" ; shift ;;
+      e|--exclude) exclude="$2" ; shift ;;
+      *) echo "Option not supported: $1" >&2; return 1 ;;
+    esac
+    shift
+  done
+
+  # default fallbacks
+  [[ -z "$target" ]] && target="$(tmux display-message -p -F '#{session_id}:#{window_id}')"
+  
+  # get pane id's at top
+  ids=$(tmux list-panes -t "$target" -F '#{pane_id} #{pane_at_top}' | rg ' 1$' | awk '{ print $1 }')
+  [[ -n "$exclude" ]] && \
+    ids=$(echo $ids | rg -v "$exclude")
+  ids=($(echo $ids | tr '\n' ' '))
+  
+  # get total width available
+  total=$(tmux display-message -t "$target" -p -F '#{client_width}')
+
+  # calculate width per pane - even distribution
+  width=$(($total / ${#ids}))
+  
+  # resize each of the panes
+  for id in "${ids[@]}"; do
+    echo "tmux resize-pane -t "$target.$id" -x $width"
+  done
+}
+
 alias ts='tmux-switch-session'
 alias tw='tmux-switch-window'
