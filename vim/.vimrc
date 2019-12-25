@@ -899,6 +899,8 @@ if filereadable(expand('~/.vimrc_background'))
   source ~/.vimrc_background
 endif
 
+" Use italic for comments.
+hi! Comment cterm=italic gui=italic
 
 " Iceberg theme customizations.
 "hi! CursorLine cterm=NONE ctermbg=238 guibg=#3e445e
