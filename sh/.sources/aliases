@@ -5,6 +5,7 @@ alias fm='vifm .'
 
 # Files.
 alias f=find
+alias fd='fd --hidden --no-ignore'
 alias rg='rg --hidden --smart-case'
 alias ls='exa'
 alias la='ls -a'
