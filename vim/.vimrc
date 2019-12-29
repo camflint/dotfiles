@@ -772,6 +772,9 @@ autocmd! User GoyoEnter nested call <SID>goyo_enter()
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
 nnoremap \g :Goyo<cr>
+ 
+" Easymotion.
+map \ <Plug>(easymotion-prefix)
 
 " Plug. 
 "   execute :PlugInstall to install the following list for the first time.
@@ -782,6 +785,7 @@ Plug 'asheq/close-buffers.vim'
 Plug 'camflint/vim-superman'
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'easymotion/vim-easymotion'
 Plug 'godlygeek/tabular'
 Plug 'hiphish/info.vim'
 Plug 'inkarkat/vim-PatternsOnText'
