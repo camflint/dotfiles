@@ -758,6 +758,7 @@ let g:vimwiki_use_mouse = 1
 let g:vimwiki_folding = 'syntax'
 
 " Goyo.
+let g:goyo_width = 150
 function! s:goyo_enter()
   setlocal nonumber norelativenumber
   CocCommand git.toggleGutters
