@@ -48,10 +48,12 @@ alias mochaf='mocha -f'
 alias isodate='date +%Y-%m-%dT%H:%M:%S%z'
 alias isodateutc='date -u +"%Y-%m-%dT%H:%M:%SZ"'
 
-# Misc.
+# Misc...
 alias nativefier='nativefier --fast-quit --hide-window-frame --maximize --single-instance'
+alias notes="$(which notes)"
+alias ptpython="ptpython --config-dir='${HOME}/.config/ptpython'"
 
 viminfo () { vim -R -M -c "Info $1 $2" +only }
 alias info=viminfo
 
-alias notes="$(which notes)"
+
