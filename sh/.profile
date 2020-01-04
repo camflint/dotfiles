@@ -53,6 +53,9 @@ GNU_MANPATH=$GNU_MANPATH:/usr/local/opt/gnu-tar/libexec/gnuman
 TEXINFO_PATH=/usr/local/opt/texinfo/bin
 [[ -d "$TEXINFO_PATH" ]] && export PATH="$TEXINFO_PATH:$PATH"
 
+# Homebrew.
+export PATH=/usr/local/bin:/usr/local/sbin:$PATH
+
 # Python.
 alias python="python3"
 alias pip="pip3"
@@ -64,9 +67,6 @@ fi
 
 # Golang.
 export PATH=$HOME/go/bin:$PATH
-
-# Homebrew.
-export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 
 # FZF.
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --ignore-case --glob "!.git/*"'
