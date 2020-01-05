@@ -1,0 +1,15 @@
+- exa
+- fd
+- fontforge
+- fzf
+- htop
+- mackup
+- macvim
+- neovim
+- pango
+- pyenv
+- reattach-to-user-namespace
+- sqlite
+- tmux
+- tree
+- up
