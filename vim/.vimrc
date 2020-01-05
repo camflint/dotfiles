@@ -98,6 +98,7 @@ augroup vimrc-incsearch-highlight
     autocmd CmdlineLeave /,\? :set nohlsearch
 augroup END
 
+" Shortcut to close all temporary windows and turn off highlighting.
 nnoremap <leader>l :noh<cr> \| :cclose<cr> \| :lclose<cr>
 
 " Tmux fixups.
@@ -131,7 +132,7 @@ nnoremap <leader>vr :so $MYVIMRC<cr>
 map <leader>yy "+y
 " Put current buffer path onto system clipboard.
 map <leader>yb :let @+=expand('%:p')<CR>
-map <leader>p "+[p
+map <leader>pp "+[p
 
 
 " Better man pages (when viewed with K or :Man <topic>).
@@ -165,18 +166,19 @@ endif
 " Avoid performance issues by only highlighting first 200 columns (optional).
 "set synmaxcol=200
 
-" Split (vim window) management.
-nnoremap <leader>s- <C-w>s<C-w>j
-nnoremap <leader>s\| <C-w>v<C-w>l
-nnoremap <leader>sc <C-w>q
-nnoremap <leader>so <C-w>o
-nnoremap <leader>sz <C-w>\|<C-w>_
-nnoremap <leader>s= :set equalalways<cr> \| <C-w>= \| :set noequalalways<cr>
-nnoremap <leader>sh <c-w>h
-nnoremap <leader>sl <c-w>l
-nnoremap <leader>sj <c-w>j
-nnoremap <leader>sk <c-w>k
-nnoremap <leader>sf :Vifm<cr>
+" Window management.
+nnoremap <leader>w- <C-w>s<C-w>j
+nnoremap <leader>w\| <C-w>v<C-w>l
+nnoremap <leader>wx <C-w>q
+nnoremap <leader>wo <C-w>o
+nnoremap <leader>wz <C-w>\|<C-w>_
+nnoremap <leader>w= :set equalalways<cr> \| <C-w>= \| :set noequalalways<cr>
+nnoremap <leader>wh <c-w>h
+nnoremap <leader>wl <c-w>l
+nnoremap <leader>wj <c-w>j
+nnoremap <leader>wk <c-w>k
+nnoremap <leader>wf :Vifm<cr>
+" Redistribute windows when the client is resized.
 autocmd VimResized * wincmd =
 
 " Fuzzy file search, opening etc.
@@ -203,13 +205,11 @@ nnoremap <leader>* :Grepper -tool rg -cword -noprompt<cr>
 " vifm settings.
 let g:vifm_replace_netrw = 1
 nnoremap - :EditVifm<cr>
-nnoremap <leader>e :EditVifm<cr>
+nnoremap \e :EditVifm<cr>
 
 " Buffer management.
-nnoremap <s-tab> :bprevious<cr>
-nnoremap <tab> :bnext<cr>
-nnoremap <leader><tab> :buffer<space><tab>
-nnoremap <m-tab> :Buffers<cr>
+nnoremap <leader><tab> :bnext<cr>
+nnoremap <leader><leader><tab> :Buffers<cr>
 
 function! WinBufSwap()
   let thiswin = winnr()
@@ -685,7 +685,7 @@ nmap <Leader>0 <Plug>lightline#bufferline#go(10)
 cabbrev bd <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'Kwbd' : 'bd')<cr>
 
 " COC extension - explorer.
-nnoremap <leader>n :CocCommand explorer --toggle<cr>
+nnoremap \n :CocCommand explorer --toggle<cr>
 function! s:coc_explorer_on_vim_enter()
   " Hook to open and reveal explorer automatically.
   if (argc() == 0)
@@ -775,7 +775,10 @@ autocmd! User GoyoLeave nested call <SID>goyo_leave()
 nnoremap \g :Goyo<cr>
  
 " Easymotion.
-map \ <Plug>(easymotion-prefix)
+map <space> <Plug>(easymotion-prefix)
+
+" Navmode.
+map <leader>n :call Navmode()<cr>
 
 " Plug. 
 "   execute :PlugInstall to install the following list for the first time.
@@ -787,6 +790,7 @@ Plug 'camflint/vim-superman'
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'easymotion/vim-easymotion'
+Plug 'fcpg/vim-navmode'
 Plug 'godlygeek/tabular'
 Plug 'hiphish/info.vim'
 Plug 'inkarkat/vim-PatternsOnText'
