@@ -76,6 +76,9 @@ zplugin ice wait silent; zplugin load zsh-users/zsh-syntax-highlighting
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ] && \
   source /usr/share/doc/fzf/examples/key-bindings.zsh
+setopt IGNORE_EOF  # disable default CTRL+D behavior
+bindkey '^f' fzf-file-widget
+bindkey '^d' fzf-cd-widget
 
 # Run a command and then enter interactive mode, e.g.
 #   RUN=ls zsh

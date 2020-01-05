@@ -74,6 +74,12 @@ export PATH=$HOME/go/bin:$PATH
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --ignore-case --glob "!.git/*"'
 export FZF_DEFAULT_OPTS='--bind=ctrl-j:down,ctrl-k:up'
 
+export FZF_CTRL_T_COMMAND='"$(command which fd)" --type f --type d --type l --hidden --no-ignore --follow --color never . 2> /dev/null'
+export FZF_CTRL_T_OPTS="--preview 'bat --color=always --line-range :500 {}' --preview-window=right:67% --height=80%"
+
+export FZF_ALT_C_COMMAND='"$(command which fd)" --type d --hidden --no-ignore --follow --color never . 2> /dev/null'
+export FZF_ALT_C_OPTS="--preview 'tree -a -C -L 1 {} | head -100' --preview-window=right:67% --height=80%"
+
 # Node.js, npm, nvm, etc.
 #export NVM_DIR="$HOME/.nvm"
 #[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
