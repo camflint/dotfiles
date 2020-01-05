@@ -1,5 +1,7 @@
 # Use the vim editor by default for git, bash, etc.
 export EDITOR=vim
+export GREP=rg
+export FIND=fd
 
 export PATH="$HOME/.local/share/vim/plugged/vim-superman/bin:$PATH"
 
