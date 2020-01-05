@@ -54,3 +54,5 @@ function colortest256() {
       fi
   done
 }
+
+alias theme=cyclethemes
