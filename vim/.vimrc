@@ -284,6 +284,7 @@ nnoremap <leader>fl :Gclog<cr>
 nnoremap <leader>fm :Gmove<space>
 nnoremap <leader>fb :Gbrowse<cr>
 nnoremap <leader>fd :Gvdiffsplit!<cr>
+nnoremap <leader>fy :.,.Gbrowse!<cr>
 nnoremap dgh :diffget //2<cr>
 nnoremap dgl :diffget //3<cr>
 nnoremap do :diffoff<cr>
@@ -780,11 +781,17 @@ map <space> <Plug>(easymotion-prefix)
 " Navmode.
 map <leader>n :call Navmode()<cr>
 
+" vim-markdown-preview.
+let vim_markdown_preview_hotkey = '<C-m>'
+let vim_markdown_preview_browser = 'Firefox'
+let vim_markdown_preview_github = 1
+
 " Plug. 
 "   execute :PlugInstall to install the following list for the first time.
 call plug#begin('~/.local/share/vim/plugged')
 
 " Essential plugins.
+Plug 'JamshedVesuna/vim-markdown-preview'
 Plug 'asheq/close-buffers.vim'
 Plug 'camflint/vim-superman'
 Plug 'chriskempson/base16-vim'
@@ -816,6 +823,7 @@ Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-vinegar'
