@@ -83,5 +83,21 @@ bindkey '^d' fzf-cd-widget
 # Run a command and then enter interactive mode, e.g.
 #   RUN=ls zsh
 if [[ -v RUN ]]; then
-  eval $RUN
+  exec $RUN  # this joins the child shell
+fi
+
+# Otherwise, start a new session in tmux - provided this is a top-level
+# interactive shell session.
+if [ -z "$TMUX" ]; then
+  # Connect to the main tmux session group with a new session. Creates the session
+  # group if necessary.
+  TMUX_MAIN_SESSION_GROUP_NAME=main
+  if tmux list-sessions -F '#{session_name}' | grep -q -w "$TMUX_MAIN_SESSION_GROUP_NAME"; then
+    # subsequent session destroy when no clients attached (prevents zombie session
+    # buildup)
+    $(which tmux) new-session -t "$TMUX_MAIN_SESSION_GROUP_NAME" \; set-option destroy-unattached on
+  else
+    # first session keepalive
+    $(which tmux) new-session -t "$TMUX_MAIN_SESSION_GROUP_NAME"
+  fi
 fi
