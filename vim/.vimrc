@@ -19,7 +19,7 @@ set ruler
 set backspace=indent,eol,start
 set laststatus=2
 set mouse=n
-set textwidth=80
+set textwidth=120
 set fo=croqj
 set breakindent
 set breakindentopt=shift:2
