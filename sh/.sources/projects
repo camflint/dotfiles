@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env zsh
 
 # Build or attach a tmux session for project Convoy Connect.
 
@@ -18,8 +18,10 @@ function layout_ide1() {
   [[ -z "$TMUX" ]] && { echo "Not running in tmux" >&2 ; return 1 ; }
   [[ -n "$1" ]] && local -r WINDOW="$1" || local -r WINDOW="$(tmux display-message -p -F '#{window_id}')"
   [[ -n "$2" ]] && local -r CWD="$2" || local -r CWD="$(pwd)"
-  cmd="RUN='cd $CWD; clear' /usr/bin/env zsh -i"
-  tmux split-window -t "$WINDOW.1" -v -p 13 $cmd
+  tmux split-window -d -t "$WINDOW.1" -h -c "$CWD"
+  tmux split-window -d -t "$WINDOW.2" -v -c "$CWD"
+  tmux split-window -d -t "$WINDOW.3" -v -c "$CWD"
+  tmux select-layout -t "$WINDOW.1" main-vertical \; run-shell -t "$WINDOW.1" '~/.scripts/tx-update-main-pane-dims.sh -w 65 -h 65'
   tmux send-keys -t "$WINDOW.1" "$EDITOR" "Enter"
   tmux select-pane -t "$WINDOW.1"
 }
@@ -97,9 +99,6 @@ function make_project() {
   fi
 
   tmux new-session -c "$ROOT" -n main -s "$SESSION" -d -x $x -y $y
-  tmux set-option -g -t "$SESSION" base-index 1
-  tmux set-option -g -t "$SESSION" pane-base-index 1
-  tmux set-option -g -t "$SESSION" renumber-windows on
 
   local REPO_WIN
   local REPO_ROOT
