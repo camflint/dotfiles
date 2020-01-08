@@ -20,10 +20,16 @@ set backspace=indent,eol,start
 set laststatus=2
 set mouse=n
 set textwidth=120
-set fo=croqj
 set breakindent
 set breakindentopt=shift:2
 set showbreak=↳
+set formatoptions=croqj
+
+" Don't autoformat (esp. autowrap) text in some files.
+augroup autoformat
+  autocmd!
+  autocmd FileType markdown setlocal formatoptions-=c | setlocal textwidth=0
+augroup END
 
 set nocompatible
 
