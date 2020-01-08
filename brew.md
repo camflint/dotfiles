@@ -4,6 +4,7 @@ Formulae:
 - certbot
 - ctags
 - dust
+- emacs
 - exa
 - fd
 - fontforge
@@ -13,6 +14,7 @@ Formulae:
 - gnuplot
 - go
 - htop
+- hub
 - imagemagick
 - mackup
 - macvim
@@ -20,6 +22,7 @@ Formulae:
 - neomutt
 - neovim
 - notmuch
+- pandoc
 - pango
 - pass
 - pyenv
