@@ -237,6 +237,33 @@ If FETCHER is a function, ELT is used as the key in LIST (an alist)."
 (setq ffap-machine-p-known 'reject)
 
 
+;; ===============================
+;; Basic configuration (personal).
+;; ===============================
+
+; Enable MRU for recent files (C-x C-r).
+(recentf-mode 1)
+(setq recentf-max-menu-items 25)
+(setq recentf-max-saved-items 25)
+(global-set-key "\C-x\ \C-r" 'recentf-open-files)
+
+;; Mac OS copy/paste support.
+(defun copy-from-osx ()
+  (shell-command-to-string "pbpaste"))
+
+(defun paste-to-osx (text &optional push)
+  (let ((process-connection-type nil))
+    (let ((proc (start-process "pbcopy" "*Messages*" "pbcopy")))
+      (process-send-string proc text)
+      (process-send-eof proc))))
+
+(setq interprogram-cut-function 'paste-to-osx)
+(setq interprogram-paste-function 'copy-from-osx)
+
+;; Kill whole line including newline, to mimic Vim behavior.
+(setq kill-whole-line t)
+
+
 ;; ============================
 ;; Package management & config.
 ;; ============================
@@ -290,11 +317,23 @@ There are two things you can do about this warning:
              :init
              (setq evil-want-integration t)
              (setq evil-want-keybinding nil)
-             :config (evil-mode 1))
+             (setq evil-want-C-u-scroll t)
+             (setq evil-want-C-d-scroll t)
+             (setq evil-want-C-i-jump nil)
+             (setq evil-split-window-below t)
+             (setq evil-vsplit-window-right t)
+             (setq evil-want-fine-undo t)
+             :config
+             (evil-mode 1)
+             (define-key evil-normal-state-map (kbd ";") 'evil-ex))
 (use-package evil-collection
              :after evil
              :ensure t
-             :config (evil-collection-init))
+             :config (evil-collection-init)
+             :custom ((evil-collection-setup-minibuffer t)
+                      (evil-collection-bind-tab-p)))
+
+;; evil-nerd-commenter (Evil bindings a-la- vim nerd-commenter).
 (use-package evil-nerd-commenter
              :ensure t
              :init (evilnc-default-hotkeys))
@@ -302,7 +341,9 @@ There are two things you can do about this warning:
 ;; helm.el (fuzzy completion).
 (use-package helm
              :ensure t
-             :config (helm-mode 1))
+             :config
+             (helm-mode 1)
+             (global-set-key (kbd "M-x") 'helm-M-x))
 
 ;; which-key.el
 (use-package which-key
@@ -334,11 +375,58 @@ There are two things you can do about this warning:
                     ("\\.markdown\\'" . markdown-mode))
              :init (setq markdown-command "pandoc"))
 
+;; evil-markdown (Evil bindings for markdown-mode)
+;;   Not currently available on MELPA?
+; (use-package evil-markdown
+;              :after markdown-mode
+;              :ensure t)
+
 ;; base16-emacs.el (base16 theme)
 (use-package base16-theme
              :ensure t
              :init (setq base16-theme-256-color-source "base16-shell")
              :config (load-theme 'base16-ia-dark t))
+
+;; magit (Git)
+(use-package magit
+             :ensure t)
+
+;; evil-magit (Evil bindings for magit)
+(use-package evil-magit
+             :after magit
+             :ensure t)
+
+;; org-mode
+(use-package org
+             :ensure t
+             :init
+             (setq org-link-abbrev-alist
+                   ; Abbrv. for shipotle-api repo (source file hyperlinks)
+                   '(("shipotle" . "https://github.com/convoyinc/shipotle-api/blob/master/")))
+             :config
+             (global-set-key (kbd "C-a") 'org-agenda)
+             (global-set-key (kbd "C-b") 'org-switchb))
+
+;; evil-org (Evil bindings for org-mode)
+(use-package evil-org
+             :after org
+             :ensure t
+             :config
+             (add-hook 'org-mode-hook 'evil-org-mode)
+             (add-hook 'org-mode-hook
+                       (lambda () (org-indent-mode 1)))
+             (add-hook 'evil-org-mode-hook
+                       (lambda () (evil-org-set-key-theme)))
+             (require 'evil-org-agenda)
+             (evil-org-agenda-set-keys))
+
+; evil-surround (surround.vim port)
+(use-package evil-surround
+             :after evil
+             :ensure t
+             :config
+             (global-evil-surround-mode 1))
+
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -348,6 +436,8 @@ There are two things you can do about this warning:
  '(custom-safe-themes
    (quote
     ("16dd114a84d0aeccc5ad6fd64752a11ea2e841e3853234f19dc02a7b91f5d661" default)))
+ '(evil-collection-bind-tab-p nil t)
+ '(evil-collection-setup-minibuffer t)
  '(package-selected-packages
    (quote
     (evil-smartparens which-key use-package smartparens restart-emacs rainbow-delimiters projectile lsp-ui linum-relative helm evil-nerd-commenter evil-collection))))
@@ -357,3 +447,4 @@ There are two things you can do about this warning:
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(put 'upcase-region 'disabled nil)
