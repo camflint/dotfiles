@@ -281,7 +281,7 @@ There are two things you can do about this warning:
 1. Install an Emacs version that does support SSL and be safe.
 2. Remove this warning from your init file so you won't see it again."))
   ;; uncomment to enable bleeding-edge packages
-  ;(add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
+  ;(add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t))
   (add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t))
 
 ;; !! Initialize package manager
@@ -340,10 +340,12 @@ There are two things you can do about this warning:
 
 ;; helm.el (fuzzy completion).
 (use-package helm
+             :after evil
              :ensure t
              :config
              (helm-mode 1)
-             (global-set-key (kbd "M-x") 'helm-M-x))
+             (global-set-key (kbd "C-p") 'helm-M-x)
+             (evil-define-key '(normal insert) 'global (kbd "C-p") 'helm-M-x))
 
 ;; which-key.el
 (use-package which-key
