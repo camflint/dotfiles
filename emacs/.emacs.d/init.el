@@ -325,7 +325,8 @@ There are two things you can do about this warning:
              (setq evil-want-fine-undo t)
              :config
              (evil-mode 1)
-             (define-key evil-normal-state-map (kbd ";") 'evil-ex))
+             (define-key evil-normal-state-map (kbd "\\") 'evil-ex)
+             (evil-set-leader '(normal visual replace operator motion)  (kbd "\\")))
 (use-package evil-collection
              :after evil
              :ensure t
@@ -333,10 +334,24 @@ There are two things you can do about this warning:
              :custom ((evil-collection-setup-minibuffer t)
                       (evil-collection-bind-tab-p)))
 
+;; evil-leader
+(use-package evil-leader
+             :after evil
+             :ensure t
+             :config
+             (global-evil-leader-mode)
+             (evil-leader/set-key
+               "d" 'dired-jump
+               "f" 'find-file
+               "b" 'switch-to-buffer
+               "x" 'kill-buffer))
+
 ;; evil-nerd-commenter (Evil bindings a-la- vim nerd-commenter).
 (use-package evil-nerd-commenter
+             :after evil
              :ensure t
-             :init (evilnc-default-hotkeys))
+             :init
+             (evil-define-key 'normal 'global (kbd "gc") 'evilnc-comment-or-uncomment-lines))
 
 ;; helm.el (fuzzy completion).
 (use-package helm
@@ -344,8 +359,35 @@ There are two things you can do about this warning:
              :ensure t
              :config
              (helm-mode 1)
-             (global-set-key (kbd "C-p") 'helm-M-x)
-             (evil-define-key '(normal insert) 'global (kbd "C-p") 'helm-M-x))
+             (global-set-key (kbd "C-m") 'helm-M-x)
+             (evil-define-key '(normal insert replace visual operator) 'global (kbd "C-m") 'helm-M-x))
+
+;; helm-rg.el (Helm + rg integration).
+(use-package helm-rg
+             :after helm
+             :ensure t
+             :init
+             (setq helm-rg-default-extra-args "--hidden")
+             (setq helm-rg-default-case-sensitivity "case-insensitive"))
+
+;; projectile
+(use-package projectile
+             :ensure t
+             :config
+             (projectile-mode 1)
+             (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
+
+;; helm-projectile.el (Helm + Projectile integration)
+(use-package helm-projectile
+             :after (helm projectile)
+             :ensure t
+             :config
+             (helm-projectile-on)
+             (evil-define-key 'normal 'global (kbd "C-p") 'helm-projectile-find-file)
+             (evil-define-key 'normal 'global (kbd "C-s") 'helm-projectile-rg)
+             (evil-leader/set-key
+               "s" 'helm-projectile-rg
+               "p" 'helm-projectile-find-file))
 
 ;; which-key.el
 (use-package which-key
@@ -422,13 +464,12 @@ There are two things you can do about this warning:
              (require 'evil-org-agenda)
              (evil-org-agenda-set-keys))
 
-; evil-surround (surround.vim port)
+;; evil-surround (surround.vim port)
 (use-package evil-surround
              :after evil
              :ensure t
              :config
              (global-evil-surround-mode 1))
-
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
