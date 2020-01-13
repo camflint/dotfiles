@@ -26,5 +26,5 @@
     "u": "gotoParent"
   },
   "explorer.width": 56,
-  "git.enableGutters": true
+  "git.enableGutters": false
 }

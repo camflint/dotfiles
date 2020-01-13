@@ -105,7 +105,7 @@ augroup vimrc-incsearch-highlight
 augroup END
 
 " Shortcut to close all temporary windows and turn off highlighting.
-nnoremap <leader>l :noh<cr> \| :cclose<cr> \| :lclose<cr>
+nnoremap <leader>l :noh<cr> \| :cclose<cr> \| :lclose<cr> \| <plug>lsp-preview-close
 
 " Tmux fixups.
 if &term =~ '^screen'
@@ -313,44 +313,44 @@ nnoremap dgl :diffget //3<cr>
 nnoremap <leader>do :diffoff<cr>
 
 " COC linting and type-ahead for multiple languages.
-let g:coc_start_at_startup = 1
-let g:coc_status_error_sign = '✗'
-let g:coc_status_warning_sign = '◆'
-let g:coc_status_info_sign = 'כֿ'
-let g:coc_status_hint_sign = ''
-set updatetime=300
-set shortmess+=c
-set signcolumn=yes
+" let g:coc_start_at_startup = 1
+" let g:coc_status_error_sign = '✗'
+" let g:coc_status_warning_sign = '◆'
+" let g:coc_status_info_sign = 'כֿ'
+" let g:coc_status_hint_sign = ''
+" set updatetime=300
+" set shortmess+=c
+" set signcolumn=yes
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
+" inoremap <silent><expr> <TAB>
+"       \ pumvisible() ? "\<C-n>" :
+"       \ <SID>check_back_space() ? "\<TAB>" :
+"       \ coc#refresh()
 "inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+" function! s:check_back_space() abort
+"   let col = col('.') - 1
+"   return !col || getline('.')[col - 1]  =~# '\s'
+" endfunction
 
 " Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
+" inoremap <silent><expr> <c-space> coc#refresh()
 
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
 " Coc only does snippet and additional edit on confirm.
 "inoremap <silent><expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 " Use `[g` and `]g` to navigate diagnostics
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
+" nmap <silent> [g <Plug>(coc-javascriptdiagnostic-prev)
+" nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
 " Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+" nmap <silent> gd <Plug>(coc-definition)
+" nmap <silent> gy <Plug>(coc-type-definition)
+" nmap <silent> gi <Plug>(coc-implementation)
+" nmap <silent> gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -367,8 +367,8 @@ endfunction
 "autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Remap for format selected region
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+" xmap <leader>f  <Plug>(coc-format-selected)
+" nmap <leader>f  <Plug>(coc-format-selected)
 
 augroup mygroup
   autocmd!
@@ -379,16 +379,16 @@ augroup mygroup
 augroup end
 
 " Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
+" nmap <leader>rn <Plug>(coc-rename)
 
 " Use `:Format` to format current buffer
-command! -nargs=0 Format :call CocAction('format')
+" command! -nargs=0 Format :call CocAction('format')
 
 " Use `:Fold` to fold current buffer
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+" command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 
 " use `:OR` for organize import of current buffer
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+" command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
 
 " JSON.
 autocmd FileType json syntax match Comment +\/\/.\+$+
@@ -399,11 +399,11 @@ let g:pydoc_window_lines=0.5
 "let python_highlight_all = 1
 
 " Javascript.
-let g:javascript_plugin_jsdoc = 1
-augroup javascript
-  autocmd!
-  autocmd FileType javascript setlocal foldmethod=syntax
-augroup END
+" let g:javascript_plugin_jsdoc = 1
+" augroup javascript
+"   autocmd!
+"   autocmd FileType javascript setlocal foldmethod=syntax
+" augroup END
 
 " Typescript.
 function! s:setuptypescript()
@@ -412,7 +412,7 @@ function! s:setuptypescript()
   let &makeprg = 'tsc -p ' . fnameescape(l:root)
 
   " YATS
-  let g:yats_host_keyword = 1
+  " let g:yats_host_keyword = 1
 
   " Begin COC configuration.
   set cmdheight=2  " easier to read messages
@@ -423,7 +423,7 @@ augroup typescript
   "overriding here.
   autocmd FileType typescript call s:setuptypescript()
 
-  " Map TSX/JSX filetypes so that coc-tsserver works.
+  " Map TSX/JSX filetypes so that vim-lsp/coc-tsserver works.
   autocmd FileType typescriptreact set filetype=typescript.tsx
   autocmd FileType javascriptreact set filetype=javascript.jsx
 augroup END
@@ -534,7 +534,6 @@ let g:lightline = {
   \   'mode': 'LightlineMode',
   \   'fugitive': 'LightlineFugitive',
   \   'filename': 'LightlineFilename',
-  \   'cocstatus': 'coc#status',
   \   'currentfunction': 'CocCurrentFunction',
   \   'nearestfunction': 'CocNearestFunction',
   \   'fileformat': 'LightlineFileformat',
@@ -694,6 +693,52 @@ nmap <Leader>0 <Plug>lightline#bufferline#go(10)
 " Kwbd - a better 'bd': close buffer without closing window.
 cabbrev bd <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'Kwbd' : 'bd')<cr>
 
+" vim-lsp.
+let g:lsp_settings_servers_dir = $HOME . '/.local/share/nvim/lsp/'
+" let g:lsp_settings = {
+"   \   'whitelist': [
+"   \     'typescript-language-server',
+"   \     'pyls',
+"   \     'emmylua-ls',
+"   \     'vim-language-server',
+"   \     'bash-language-server',
+"   \     'yaml-language-server',
+"   \     'dockerfile-language-server-nodejs',
+"   \     'lsp4xml',
+"   \     'json-languageserver',
+"   \     'texlab',
+"   \     'gopls'
+"   \   ]
+"   \}
+function! s:setupvimlsp()
+  set foldmethod=expr
+    \ foldexpr=lsp#ui#vim#folding#foldexpr()
+    \ foldtext=lsp#ui#vim#folding#foldtext()
+  
+  nmap <buffer> gd <plug>(lsp-definition)
+  nmap <buffer> gc <plug>(lsp-declaration)
+  nmap <buffer> gi <plug>(lsp-implementation)
+  nmap <buffer> gr <plug>(lsp-references)
+  nmap <buffer> gn <plug>(lsp-rename)
+  nmap <buffer> gh <plug>(lsp-hover)
+  nmap <buffer> gs <plug>(lsp-signature-help)
+  nmap <buffer> <leader>o <plug>(lsp-document-symbol)
+  nmap <buffer> <leader>O <plug>(lsp-workspace-symbol)
+  nmap <buffer> ]e <plug>(lsp-next-error)
+  nmap <buffer> [e <plug>(lsp-previous-error)
+  nmap <buffer> ]w <plug>(lsp-next-warning)
+  nmap <buffer> [w <plug>(lsp-previous-warning)
+  nmap <buffer> <leader>a <plug>(lsp-code-action)
+  map <buffer> <leader>f <plug>(lsp-document-range-format)
+endfunction
+augroup myvimlsp
+  autocmd!
+  autocmd FileType
+    \ typescript,typescript.tsx,javascript,javascript.jsx,python,go,lua,vim,bash,yaml,dockerfile,xml,json
+    \ call s:setupvimlsp()
+augroup end
+command! LspSetupVimLsp call s:setupvimlsp()
+
 " COC extension - explorer.
 nnoremap \n :CocCommand explorer --toggle<cr>
 function! s:coc_explorer_on_vim_enter()
@@ -800,6 +845,7 @@ let vim_markdown_preview_github = 1
 call plug#begin('~/.local/share/vim/plugged')
 
 " Essential plugins.
+"Plug 'mattn/vim-lsp-settings'
 Plug 'JamshedVesuna/vim-markdown-preview'
 Plug 'asheq/close-buffers.vim'
 Plug 'camflint/vim-superman'
@@ -823,9 +869,15 @@ Plug 'mhinz/vim-startify'
 Plug 'mtth/cursorcross.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'plasticboy/vim-markdown'
+Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/vim-lsp'
 Plug 'puremourning/vimspector', {'for': ['typescript', 'javascript']}
 Plug 'rgarver/kwbd.vim'
 Plug 'romainl/vim-qf'
+Plug 'ryanolsonx/vim-lsp-javascript'
+Plug 'ryanolsonx/vim-lsp-python'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-endwise'
@@ -848,24 +900,9 @@ endif
 
 " COC plugins.
 let g:coc_global_extensions = [
-\  'coc-css',
-\  'coc-docker',
-\  'coc-eslint',
 \  'coc-explorer',
 \  'coc-git',
 \  'coc-gitignore',
-\  'coc-html',
-\  'coc-jest',
-\  'coc-json',
-\  'coc-lua',
-\  'coc-markdownlint',
-\  'coc-marketplace',
-\  'coc-prettier',
-\  'coc-python',
-\  'coc-sql',
-\  'coc-todolist',
-\  'coc-tsserver',
-\  'coc-yaml'
 \ ]
 
 call plug#end()
