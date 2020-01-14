@@ -105,7 +105,7 @@ augroup vimrc-incsearch-highlight
 augroup END
 
 " Shortcut to close all temporary windows and turn off highlighting.
-nnoremap <leader>l :noh<cr> \| :cclose<cr> \| :lclose<cr> \| <plug>lsp-preview-close
+nnoremap <leader>l :noh<cr> \| :cclose<cr> \| :lclose<cr> \| <plug>(lsp-preview-close)
 
 " Tmux fixups.
 if &term =~ '^screen'
@@ -234,9 +234,6 @@ endfunction
 
 command! Wswap :call WinBufSwap()
 map <Leader>sr <C-c>:call WinBufSwap()<CR>
-
-" Fast help/quickfix/etc. management.
-nnoremap <leader>qc :cclose<cr>
 
 " Help window positioning.
 set helpheight=9999
@@ -716,6 +713,7 @@ function! s:setupvimlsp()
     \ foldtext=lsp#ui#vim#folding#foldtext()
   
   nmap <buffer> gd <plug>(lsp-definition)
+  nmap <buffer> gp <plug>(lsp-peek-definition)
   nmap <buffer> gc <plug>(lsp-declaration)
   nmap <buffer> gi <plug>(lsp-implementation)
   nmap <buffer> gr <plug>(lsp-references)
@@ -839,6 +837,18 @@ map <leader>n :call Navmode()<cr>
 let vim_markdown_preview_hotkey = '<C-m>'
 let vim_markdown_preview_browser = 'Firefox'
 let vim_markdown_preview_github = 1
+
+" Quickfix window & vim-qf.
+nnoremap <leader>q :copen<cr>
+
+function! s:setupvimqf()
+  map <buffer> <cr> :cclose<cr>
+endfunction
+augroup myvimqf
+  autocmd!
+  autocmd FileType qf call s:setupvimqf()
+augroup END
+command! SetupVimQf :call s:setupvimqf()
 
 " Plug. 
 "   execute :PlugInstall to install the following list for the first time.

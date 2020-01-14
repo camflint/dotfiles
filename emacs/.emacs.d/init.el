@@ -325,8 +325,9 @@ There are two things you can do about this warning:
              (setq evil-want-fine-undo t)
              :config
              (evil-mode 1)
-             (define-key evil-normal-state-map (kbd "\\") 'evil-ex)
-             (evil-set-leader '(normal visual replace operator motion)  (kbd "\\")))
+             (evil-define-key 'normal 'global (kbd ";") 'evil-ex)
+             (evil-define-key 'normal 'global (kbd "\\e") 'dired-jump))
+             ;(evil-set-leader '(normal visual replace operator motion) (kbd ",")))
 (use-package evil-collection
              :after evil
              :ensure t
@@ -340,11 +341,13 @@ There are two things you can do about this warning:
              :ensure t
              :config
              (global-evil-leader-mode)
+             (evil-leader/set-leader ",")
              (evil-leader/set-key
-               "d" 'dired-jump
-               "f" 'find-file
-               "b" 'switch-to-buffer
-               "x" 'kill-buffer))
+               "<tab>" 'next-buffer
+               "<leader><tab>" 'helm-buffers-list
+               "sx" 'delete-window
+               "s\\" 'split-window-right
+               "s-" 'split-window-below))
 
 ;; evil-nerd-commenter (Evil bindings a-la- vim nerd-commenter).
 (use-package evil-nerd-commenter
@@ -359,8 +362,8 @@ There are two things you can do about this warning:
              :ensure t
              :config
              (helm-mode 1)
-             (global-set-key (kbd "C-m") 'helm-M-x)
-             (evil-define-key '(normal insert replace visual operator) 'global (kbd "C-m") 'helm-M-x))
+             (global-set-key (kbd "C-\\") 'helm-M-x)
+             (evil-define-key '(normal insert replace visual) 'global (kbd "C-\\") 'helm-M-x))
 
 ;; helm-rg.el (Helm + rg integration).
 (use-package helm-rg
@@ -384,10 +387,7 @@ There are two things you can do about this warning:
              :config
              (helm-projectile-on)
              (evil-define-key 'normal 'global (kbd "C-p") 'helm-projectile-find-file)
-             (evil-define-key 'normal 'global (kbd "C-s") 'helm-projectile-rg)
-             (evil-leader/set-key
-               "s" 'helm-projectile-rg
-               "p" 'helm-projectile-find-file))
+             (evil-define-key 'normal 'global (kbd "C-s") 'helm-projectile-rg))
 
 ;; which-key.el
 (use-package which-key
