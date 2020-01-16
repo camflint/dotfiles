@@ -277,8 +277,8 @@ endfunction
 nnoremap <silent> <C-g> :call Cscope('3', expand('<cword>'))<CR>
 nnoremap <leader>t :Tags<cr>
 "nnoremap <leader>o :BTags<cr>
-nnoremap <leader>o :CocList outline<cr>
-nnoremap <leader>O :CocList symbols<cr>
+" nnoremap <leader>o :CocList outline<cr>
+" nnoremap <leader>O :CocList symbols<cr>
 
 " Fugitive / git setup.
 nnoremap <leader>fs :Git<cr>
@@ -421,8 +421,8 @@ augroup typescript
   autocmd FileType typescript call s:setuptypescript()
 
   " Map TSX/JSX filetypes so that vim-lsp/coc-tsserver works.
-  autocmd FileType typescriptreact set filetype=typescript.tsx
-  autocmd FileType javascriptreact set filetype=javascript.jsx
+  " autocmd FileType typescriptreact set filetype=typescript.tsx
+  " autocmd FileType javascriptreact set filetype=javascript.jsx
 augroup END
 "let g:typescript_compiler_options='--lib es6,dom --downLevelIteration --target es5'
 
@@ -524,8 +524,8 @@ let g:lightline = {
   \ 'colorscheme': 'base16',
   \ 'subseparator': { 'left': '|', 'right': '|' },
   \ 'active': {
-  \   'left': [ [ 'mode', 'paste' ], [ 'nearestfunction' ] ],
-  \   'right': [ [ 'lineinfo' ], [ 'percent' ], [ 'readonly', 'linter_warnings', 'linter_errors', 'linter_hints', 'linter_infos' ] ]
+  \   'left': [ [ 'mode', 'paste' ] ],
+  \   'right': [ [ 'lineinfo' ], [ 'percent' ], [ 'readonly' ] ]
   \ },
   \ 'component_function': {
   \   'mode': 'LightlineMode',
@@ -691,7 +691,13 @@ nmap <Leader>0 <Plug>lightline#bufferline#go(10)
 cabbrev bd <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'Kwbd' : 'bd')<cr>
 
 " vim-lsp.
-let g:lsp_settings_servers_dir = $HOME . '/.local/share/nvim/lsp/'
+let g:lsp_log_verbose = 1
+let g:lsp_log_file = expand('~/.local/share/nvim/lsp/vim-lsp.log')
+let g:lsp_settings_servers_dir = expand('~/.local/share/nvim/lsp/')
+
+" Disable typeahead due to severe performance issues.
+let g:asyncomplete_auto_popup = 0
+
 " let g:lsp_settings = {
 "   \   'whitelist': [
 "   \     'typescript-language-server',
@@ -707,10 +713,31 @@ let g:lsp_settings_servers_dir = $HOME . '/.local/share/nvim/lsp/'
 "   \     'gopls'
 "   \   ]
 "   \}
+
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
 function! s:setupvimlsp()
-  set foldmethod=expr
-    \ foldexpr=lsp#ui#vim#folding#foldexpr()
-    \ foldtext=lsp#ui#vim#folding#foldtext()
+  " Having serious performance issues with folding.
+  "   https://github.com/prabirshrestha/vim-lsp/issues/671
+  " set foldmethod=expr
+  "   \ foldexpr=lsp#ui#vim#folding#foldexpr()
+  "   \ foldtext=lsp#ui#vim#folding#foldtext()
+  
+  inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+  inoremap <expr> <cr>  pumvisible() ? "\<C-y>" : "\<cr>"
+
+  inoremap <silent><expr> <TAB>
+    \ pumvisible() ? "\<C-n>" :
+    \ <SID>check_back_space() ? "\<TAB>" :
+    \ asyncomplete#force_refresh()
+
+  if has("gui_running")
+    inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+    inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+  endif
   
   nmap <buffer> gd <plug>(lsp-definition)
   nmap <buffer> gp <plug>(lsp-peek-definition)
@@ -722,6 +749,7 @@ function! s:setupvimlsp()
   nmap <buffer> gs <plug>(lsp-signature-help)
   nmap <buffer> <leader>o <plug>(lsp-document-symbol)
   nmap <buffer> <leader>O <plug>(lsp-workspace-symbol)
+  nmap <buffer> <leader>e <plug>(lsp-document-diagnostics)
   nmap <buffer> ]e <plug>(lsp-next-error)
   nmap <buffer> [e <plug>(lsp-previous-error)
   nmap <buffer> ]w <plug>(lsp-next-warning)
@@ -732,7 +760,7 @@ endfunction
 augroup myvimlsp
   autocmd!
   autocmd FileType
-    \ typescript,typescript.tsx,javascript,javascript.jsx,python,go,lua,vim,bash,yaml,dockerfile,xml,json
+    \ typescript,typescriptreact,javascript,javascriptreact,python,go,lua,vim,bash,yaml,dockerfile,xml,json
     \ call s:setupvimlsp()
 augroup end
 command! LspSetupVimLsp call s:setupvimlsp()
@@ -755,7 +783,7 @@ endfunction
 augroup cocexplorer
     autocmd!
     "autocmd VimEnter * call s:coc_explorer_on_vim_enter()
-    autocmd BufUnload * call s:coc_explorer_on_buffer_unload()
+    "autocmd BufUnload * call s:coc_explorer_on_buffer_unload()
 augroup END
 
 " Vista - symbol viewer.
@@ -814,12 +842,12 @@ let g:vimwiki_folding = 'syntax'
 let g:goyo_width = 150
 function! s:goyo_enter()
   setlocal nonumber norelativenumber
-  CocCommand git.toggleGutters
+  "CocCommand git.toggleGutters
 endfunction
 
 function! s:goyo_leave()
   setlocal number relativenumber
-  CocCommand git.toggleGutters
+  "CocCommand git.toggleGutters
 endfunction
 
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
@@ -842,7 +870,7 @@ let vim_markdown_preview_github = 1
 nnoremap <leader>q :copen<cr>
 
 function! s:setupvimqf()
-  map <buffer> <cr> :cclose<cr>
+  "map <buffer> <cr> :cclose<cr>
 endfunction
 augroup myvimqf
   autocmd!
@@ -850,12 +878,24 @@ augroup myvimqf
 augroup END
 command! SetupVimQf :call s:setupvimqf()
 
+" vim-which-key
+nnoremap <silent> <leader> :<c-u>WhichKey ','<cr>
+nnoremap <silent> <leader>m :<c-u>WhichKey ',m'<cr>
+nnoremap <silent> <leader>f :<c-u>WhichKey ',f'<cr>
+nnoremap <silent> <leader>v :<c-u>WhichKey ',v'<cr>
+nnoremap <silent> <leader>y :<c-u>WhichKey ',y'<cr>
+nnoremap <silent> <leader>p :<c-u>WhichKey ',p'<cr>
+nnoremap <silent> <leader>w :<c-u>WhichKey ',v'<cr>
+nnoremap <silent> <leader>s :<c-u>WhichKey ',s'<cr>
+nnoremap <silent> \\ :<c-u>WhichKey '\\'<cr>
+
 " Plug. 
 "   execute :PlugInstall to install the following list for the first time.
 call plug#begin('~/.local/share/vim/plugged')
 
 " Essential plugins.
 "Plug 'mattn/vim-lsp-settings'
+"Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'JamshedVesuna/vim-markdown-preview'
 Plug 'asheq/close-buffers.vim'
 Plug 'camflint/vim-superman'
@@ -871,13 +911,14 @@ Plug 'itchyny/lightline.vim'
 Plug 'jparise/vim-graphql'
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
+Plug 'liuchengxu/vim-which-key'
 Plug 'liuchengxu/vista.vim'
 Plug 'mattesgroeger/vim-bookmarks'
+Plug 'mattn/vim-lsp-settings'
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'mhinz/vim-grepper'
 Plug 'mhinz/vim-startify'
 Plug 'mtth/cursorcross.vim'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'plasticboy/vim-markdown'
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
@@ -886,11 +927,10 @@ Plug 'prabirshrestha/vim-lsp'
 Plug 'puremourning/vimspector', {'for': ['typescript', 'javascript']}
 Plug 'rgarver/kwbd.vim'
 Plug 'romainl/vim-qf'
-Plug 'ryanolsonx/vim-lsp-javascript'
-Plug 'ryanolsonx/vim-lsp-python'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-repeat'
