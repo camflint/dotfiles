@@ -72,6 +72,10 @@ function make_project() {
       ROOT="$HOME/code/convoyinc"
       REPOS=(connect-web shipper-tms-service nacho-dashboard shipotle-api global-search-service)
       ;;
+    'pricing')
+      ROOT="$HOME/code/convoyinc"
+      REPOS=(pricing-service)
+      ;;
     'dotfiles')
       ROOT="$HOME/code/camflint"
       REPOS=(dotfiles)
@@ -80,6 +84,14 @@ function make_project() {
       ROOT="$HOME/notes"
       REPOS=(convoyinc)
       LAYOUT=basic
+      ;;
+    'scripts')
+      ROOT="$HOME/code/convoyinc"
+      REPOS=(caflint-scripts)
+      ;;
+    'notes')
+      ROOT="$HOME/notes"
+      REPOS=(home work)
       ;;
     *)
       ROOT="$(dirname $(pwd))"
@@ -120,4 +132,6 @@ alias ide2=layout_ide2
 alias basic=layout_basic
 alias proj=make_project
 alias dotfiles='proj dotfiles'
-alias connect='proj "sxp/connect"'
+alias scripts='proj scripts'
+alias nacho='proj nacho'
+alias pricing='proj pricing'
