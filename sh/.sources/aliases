@@ -33,8 +33,15 @@ alias gop='git checkout -p'
 alias gp='git pull'
 alias gpp='git push'
 alias gs='git status'
-alias gr='git reset'
+alias gr='git restore'
+alias grs='git restore --staged'
+alias gx='git reset'
+alias gxp="git reset 'HEAD^'"
 alias gg='git grep -n -i'
+alias gstash='git stash'
+alias gpop='git pop'
+alias gvv='git remote -vv'
+alias gsub='git submodule'
 
 # Docker.
 alias d=docker
@@ -51,7 +58,6 @@ alias isodateutc='date -u +"%Y-%m-%dT%H:%M:%SZ"'
 
 # Misc...
 alias nativefier='nativefier --fast-quit --hide-window-frame --maximize --single-instance'
-alias notes="$(which notes)"
 alias ptpython="ptpython --config-dir='${HOME}/.config/ptpython'"
 
 viminfo () { vim -R -M -c "Info $1 $2" +only }
