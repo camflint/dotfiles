@@ -134,7 +134,9 @@ cnoremap <c-p> <up>
 nnoremap <leader>ve :e $MYVIMRC<cr>
 nnoremap <leader>vr :so $MYVIMRC<cr>
 
-" Pasting from system clipboard.
+" Copy/paste.
+" Don't move cursor after yanking. Related tip: use Ctrl+O to toggle between top and bottom of a visual selection as
+xmap y ygv<esc>
 map <leader>yy "+y
 " Put current buffer path onto system clipboard.
 map <leader>yb :let @+=expand('%:p')<CR>
@@ -217,8 +219,8 @@ nnoremap - :EditVifm<cr>
 nnoremap \e :EditVifm<cr>
 
 " Buffer management.
-nnoremap <leader><tab> :bnext<cr>
-nnoremap <leader><leader><tab> :Buffers<cr>
+"nnoremap <leader><tab> :bnext<cr>
+nnoremap <leader><tab> :Buffers<cr>
 
 function! WinBufSwap()
   let thiswin = winnr()
@@ -288,7 +290,7 @@ nnoremap <leader>fb :Gblame<cr>
 nnoremap <leader>fg :Ggrep<space>
 nnoremap <leader>fl :Gclog<cr>
 nnoremap <leader>fm :Gmove<space>
-nnoremap <leader>fb :Gbrowse<cr>
+nnoremap <leader>fb :Gbrowse!<cr>
 nnoremap <leader>fd :Gvdiffsplit!<cr>
 nnoremap <leader>fy :.,.Gbrowse!<cr>
 nnoremap dgh :diffget //2<cr>
@@ -497,6 +499,11 @@ nmap <Leader>mj <Plug>BookmarkNext
 nmap <Leader>mk <Plug>BookmarkPrev
 nmap <Leader>mc <Plug>BookmarkClear
 nmap <Leader>mx <Plug>BookmarkClearAll
+" unmap <silent> mg
+" unmap <silent> mjj
+" unmap <silent> mkk
+map <leader><leader>mj <Plug>BookmarkMoveDown
+map <leader><leader>mk <Plug>BookmarkMoveUp
 
 " Finds the Git super-project directory.
 function! g:BMWorkDirFileLocation()
@@ -545,8 +552,12 @@ let g:lightline = {
   \   'linter_hints': 'LightlineCocHints'
   \ },
   \ 'tabline': {
-  \   'left': [],
+  \   'left': [ [ 'tabs' ] ],
   \   'right': [ [ 'close' ], [ 'buffers' ] ]
+  \ },
+  \ 'tab': {
+  \   'active': [ 'tabnum', 'modified' ],
+  \   'inactive': [ 'tabnum', 'modified' ]
   \ },
   \ 'component_type': {
   \   'readonly': 'error',
@@ -765,26 +776,53 @@ augroup myvimlsp
 augroup end
 command! LspSetupVimLsp call s:setupvimlsp()
 
+" NERDTree
+nnoremap <silent> \s :NERDTreeFind<cr>
+let g:NERDTreeBookmarksFile = expand('~/.config/local/vim/nerdtree/bookmarks')
+let g:NERDTreeMinimalUI = 1
+let g:NERDTreeAutoDeleteBuffer = 1
+
+" If vim is opened with a single directory argument, launch NERDTree.
+function! s:handle_open_with_dir_arg()
+  if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in")
+    exe 'NERDTree' argv()[0] 
+    wincmd p 
+    ene 
+    exe 'cd '.argv()[0] 
+  endif
+endfunction
+function! s:handle_close_with_single_buffer_remaining()
+  if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) 
+    quit
+  endif
+endfunction
+augroup nerdtree_setup
+  autocmd!
+  autocmd StdinReadPre * let s:std_in=1
+  autocmd VimEnter * call s:handle_open_with_dir_arg()
+  autocmd BufEnter * call s:handle_close_with_single_buffer_remaining()
+augroup END
+
 " COC extension - explorer.
-nnoremap \n :CocCommand explorer --toggle<cr>
-function! s:coc_explorer_on_vim_enter()
-  " Hook to open and reveal explorer automatically.
-  if (argc() == 0)
-    execute 'CocCommand explorer --reveal ' . getcwd()
-  endif
-endfunction
-function! s:coc_explorer_on_buffer_unload()
-  " Hook to quit if explorer is last buffer.
-  if ((winnr('$') == 1) && exists('b:coc_explorer_inited'))
-    normal quit
-    return
-  endif
-endfunction
-augroup cocexplorer
-    autocmd!
+" nnoremap \n :CocCommand explorer --toggle<cr>
+" function! s:coc_explorer_on_vim_enter()
+"   " Hook to open and reveal explorer automatically.
+"   if (argc() == 0)
+"     execute 'CocCommand explorer --reveal ' . getcwd()
+"   endif
+" endfunction
+" function! s:coc_explorer_on_buffer_unload()
+"   " Hook to quit if explorer is last buffer.
+"   if ((winnr('$') == 1) && exists('b:coc_explorer_inited'))
+"     normal quit
+"     return
+"   endif
+" endfunction
+" augroup cocexplorer
+"     autocmd!
     "autocmd VimEnter * call s:coc_explorer_on_vim_enter()
     "autocmd BufUnload * call s:coc_explorer_on_buffer_unload()
-augroup END
+" augroup END
 
 " Vista - symbol viewer.
 let g:vista_default_executive = 'coc'
@@ -859,7 +897,7 @@ nnoremap \g :Goyo<cr>
 map <space> <Plug>(easymotion-prefix)
 
 " Navmode.
-map <leader>n :call Navmode()<cr>
+nmap \n :call Navmode()<cr>
 
 " vim-markdown-preview.
 let vim_markdown_preview_hotkey = '<C-m>'
@@ -924,6 +962,7 @@ Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/vim-lsp'
+Plug 'preservim/nerdtree'
 Plug 'puremourning/vimspector', {'for': ['typescript', 'javascript']}
 Plug 'rgarver/kwbd.vim'
 Plug 'romainl/vim-qf'
@@ -940,8 +979,10 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-vinegar'
 Plug 'vifm/vifm.vim'
 Plug 'vimwiki/vimwiki'
+Plug 'wellle/targets.vim'
 Plug 'whiteinge/diffconflicts'
 Plug 'xolox/vim-misc'
+Plug 'jceb/vim-orgmode'
 
 " nvim-only plugins.
 if has('nvim')
