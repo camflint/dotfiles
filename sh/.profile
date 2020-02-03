@@ -33,6 +33,10 @@ if [[ -d $box ]]; then
   done
 fi
 
+# Cloud drive aliases.
+[ ! -L "$HOME/iCloud" ] &&\
+    ln -s "$HOME/Library/Mobile Documents/com~apple~CloudDocs" "$HOME/icloud"
+
 # Keybindings.
 bindkey '^P' up-history
 bindkey '^N' down-history
