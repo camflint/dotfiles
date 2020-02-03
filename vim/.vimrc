@@ -767,10 +767,21 @@ augroup end
 command! LspSetupVimLsp call s:setupvimlsp()
 
 " NERDTree
-nnoremap <silent> \s :NERDTreeFind<cr>
+function! s:togglenerdtree()
+  if exists("g:NERDTree") && g:NERDTree.IsOpen()
+    NERDTreeClose
+  elseif filereadable(expand('%'))
+    NERDTreeFind
+  else
+    NERDTree
+  endif
+endfunction
+command! MyToggleNERDTree call s:togglenerdtree()
+nnoremap <leader>s <cmd>MyToggleNERDTree<cr>
 let g:NERDTreeBookmarksFile = expand('~/.config/local/vim/nerdtree/bookmarks')
 let g:NERDTreeMinimalUI = 1
 let g:NERDTreeAutoDeleteBuffer = 1
+let g:NERDTreeShowHidden = 1
 
 " If vim is opened with a single directory argument, launch NERDTree.
 function! s:handle_open_with_dir_arg()
