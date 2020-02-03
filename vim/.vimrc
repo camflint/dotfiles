@@ -1,5 +1,6 @@
-" Leader key.
-let mapleader = ','
+" Leader keys.
+let mapleader = '\'
+let maplocalleader = ','
 
 " So-called 'sane' defaults.
 set encoding=utf-8
@@ -56,7 +57,7 @@ set foldlevel=2
 nnoremap n nzzzv
 nnoremap N Nzzzv
 nnoremap <space> zA
-nnoremap <leader>z zMzvzz
+nnoremap <localleader>z zMzvzz
 " Workaround to prevent folds from changing when switching buffers / typing in
 " insert mode.
 "autocmd InsertLeave,WinEnter,BufWinEnter * let &l:foldmethod=g:oldfoldmethod
@@ -105,7 +106,7 @@ augroup vimrc-incsearch-highlight
 augroup END
 
 " Shortcut to close all temporary windows and turn off highlighting.
-nnoremap <leader>l :noh<cr> \| :cclose<cr> \| :lclose<cr> \| <plug>(lsp-preview-close)
+nnoremap <localleader>l :noh<cr> \| :cclose<cr> \| :lclose<cr> \| <plug>(lsp-preview-close)
 
 " Tmux fixups.
 if &term =~ '^screen'
@@ -123,8 +124,8 @@ endif
 
 " Map ':' to ';'
 nnoremap ; :
-nnoremap <leader>; ;
-nnoremap <leader>, ,
+nnoremap <localleader>; ;
+nnoremap <localleader>, ,
 
 " Command-mode history shortcuts (avoid using arrow keys).
 cnoremap <c-n> <down>
@@ -137,11 +138,10 @@ nnoremap <leader>vr :so $MYVIMRC<cr>
 " Copy/paste.
 " Don't move cursor after yanking. Related tip: use Ctrl+O to toggle between top and bottom of a visual selection as
 xmap y ygv<esc>
-map <leader>yy "+y
+map <localleader>yy "+y
 " Put current buffer path onto system clipboard.
-map <leader>yb :let @+=expand('%:p')<CR>
-map <leader>pp "+[p
-
+map <localleader>yb :let @+=expand('%:p')<CR>
+map <localleader>pp "+[p
 
 " Better man pages (when viewed with K or :Man <topic>).
 runtime ftplugin/man.vim
@@ -177,20 +177,28 @@ endif
 "set synmaxcol=200
 
 " Window management.
-nnoremap <leader>w- <C-w>s<C-w>j
-nnoremap <leader>w<pipe> <C-w>v<C-w>l
-nnoremap <leader>w\ <C-w>v<C-w>l
-nnoremap <leader>wx <C-w>q
-nnoremap <leader>wo <C-w>o
-nnoremap <leader>wz <C-w>\|<C-w>_
-nnoremap <leader>w= :set equalalways<cr> \| <C-w>= \| :set noequalalways<cr>
-nnoremap <leader>wh <c-w>h
-nnoremap <leader>wl <c-w>l
-nnoremap <leader>wj <c-w>j
-nnoremap <leader>wk <c-w>k
-nnoremap <leader>wf :Vifm<cr>
+nnoremap <localleader>s- <C-w>s<C-w>j
+nnoremap <localleader>s<pipe> <C-w>v<C-w>l
+nnoremap <localleader>s\ <C-w>v<C-w>l
+nnoremap <localleader>sx <C-w>q
+nnoremap <localleader>so <C-w>o
+nnoremap <localleader>sz <C-w>\|<C-w>_
+nnoremap <localleader>s= :set equalalways<cr> \| <C-w>= \| :set noequalalways<cr>
 " Redistribute windows when the client is resized.
 autocmd VimResized * wincmd =
+
+function! WinBufSwap()
+  let thiswin = winnr()
+  let thisbuf = bufnr("%")
+  let lastwin = winnr("#")
+  let lastbuf = winbufnr(lastwin)
+
+  exec  lastwin . " wincmd w" ."|".
+      \ "buffer ". thisbuf ."|".
+      \ thiswin ." wincmd w" ."|".
+      \ "buffer ". lastbuf
+endfunction
+nnoremap <localleader>ss <C-c>:call WinBufSwap()<cr>
 
 " Fuzzy file search, opening etc.
 nnoremap <c-p> :Files <c-r>=getcwd()<cr><cr>
@@ -211,31 +219,19 @@ let g:grepper.dir = 'cwd'
 let g:grepper.prompt_text = '$t> '
 let g:grepper.prompt_mapping_tool = '<leader>g'
 nnoremap <c-s> :Grepper -tool rg<cr>
-nnoremap <leader>* :Grepper -tool rg -cword -noprompt<cr>
+nnoremap <localleader>* :Grepper -tool rg -cword -noprompt<cr>
 
 " vifm settings.
 let g:vifm_replace_netrw = 1
 nnoremap - :EditVifm<cr>
-nnoremap \e :EditVifm<cr>
+nnoremap <leader>e :EditVifm<cr>
 
 " Buffer management.
 "nnoremap <leader><tab> :bnext<cr>
-nnoremap <leader><tab> :Buffers<cr>
+nnoremap <localleader><tab> :Buffers<cr>
 
-function! WinBufSwap()
-  let thiswin = winnr()
-  let thisbuf = bufnr("%")
-  let lastwin = winnr("#")
-  let lastbuf = winbufnr(lastwin)
-
-  exec  lastwin . " wincmd w" ."|".
-      \ "buffer ". thisbuf ."|".
-      \ thiswin ." wincmd w" ."|".
-      \ "buffer ". lastbuf
-endfunction
-
-command! Wswap :call WinBufSwap()
-map <Leader>sr <C-c>:call WinBufSwap()<CR>
+" Tab management.
+nnoremap <leader><tab> :tabnext<cr>
 
 " Help window positioning.
 set helpheight=9999
@@ -276,11 +272,8 @@ function! Cscope(option, query)
   call fzf#run(opts)
 endfunction
 
-nnoremap <silent> <C-g> :call Cscope('3', expand('<cword>'))<CR>
-nnoremap <leader>t :Tags<cr>
-"nnoremap <leader>o :BTags<cr>
-" nnoremap <leader>o :CocList outline<cr>
-" nnoremap <leader>O :CocList symbols<cr>
+" nnoremap <silent> <C-g> :call Cscope('3', expand('<cword>'))<CR>
+nnoremap <localleader>t :Tags<cr>
 
 " Fugitive / git setup.
 nnoremap <leader>fs :Git<cr>
@@ -293,9 +286,6 @@ nnoremap <leader>fm :Gmove<space>
 nnoremap <leader>fb :Gbrowse!<cr>
 nnoremap <leader>fd :Gvdiffsplit!<cr>
 nnoremap <leader>fy :.,.Gbrowse!<cr>
-nnoremap dgh :diffget //2<cr>
-nnoremap dgl :diffget //3<cr>
-nnoremap do :diffoff<cr>
 
 " Delete all Git conflict markers
 " Creates the command :GremoveConflictMarkers
@@ -369,13 +359,13 @@ endfunction
 " xmap <leader>f  <Plug>(coc-format-selected)
 " nmap <leader>f  <Plug>(coc-format-selected)
 
-augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
+" augroup mygroup
+"   autocmd!
+"   " Setup formatexpr specified filetype(s).
+"   autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+"   " Update signature help on jump placeholder
+"   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+" augroup end
 
 " Remap for rename current word
 " nmap <leader>rn <Plug>(coc-rename)
@@ -825,17 +815,14 @@ augroup END
 " augroup END
 
 " Vista - symbol viewer.
-let g:vista_default_executive = 'coc'
+let g:vista_default_executive = 'vim_lsp'
 let g:vista_finder_alternative_executives = ['ctags']
 let g:vista_fzf_preview = ['right:50%']
 let g:vista_sidebar_width= 47
 let g:vista_echo_cursor_strategy = 'scroll'
 let g:vista#renderer#enable_icon = 1
-
 autocmd FileType vista,vista_kind nnoremap <buffer><silent> / :<c-u>call vista#finder#fzf#Run(g:vista_default_executive)<cr>
-
-nnoremap \o :Vista coc<cr>
-
+nnoremap <leader>o :Vista vim_lsp<cr>
 
 " Startify.
 let g:startify_change_to_dir = 0
@@ -917,15 +904,28 @@ augroup END
 command! SetupVimQf :call s:setupvimqf()
 
 " vim-which-key
-nnoremap <silent> <leader> :<c-u>WhichKey ','<cr>
-nnoremap <silent> <leader>m :<c-u>WhichKey ',m'<cr>
-nnoremap <silent> <leader>f :<c-u>WhichKey ',f'<cr>
-nnoremap <silent> <leader>v :<c-u>WhichKey ',v'<cr>
-nnoremap <silent> <leader>y :<c-u>WhichKey ',y'<cr>
-nnoremap <silent> <leader>p :<c-u>WhichKey ',p'<cr>
-nnoremap <silent> <leader>w :<c-u>WhichKey ',v'<cr>
-nnoremap <silent> <leader>s :<c-u>WhichKey ',s'<cr>
-nnoremap <silent> \\ :<c-u>WhichKey '\\'<cr>
+" nnoremap <silent> <leader> :<c-u>WhichKey ','<cr>
+" nnoremap <silent> <leader>m :<c-u>WhichKey ',m'<cr>
+" nnoremap <silent> <leader>f :<c-u>WhichKey ',f'<cr>
+" nnoremap <silent> <leader>v :<c-u>WhichKey ',v'<cr>
+" nnoremap <silent> <leader>y :<c-u>WhichKey ',y'<cr>
+" nnoremap <silent> <leader>p :<c-u>WhichKey ',p'<cr>
+" nnoremap <silent> <leader>w :<c-u>WhichKey ',v'<cr>
+" nnoremap <silent> <leader>s :<c-u>WhichKey ',s'<cr>
+" nnoremap <silent> \\ :<c-u>WhichKey '\\'<cr>
+
+" vim-orgmode
+let g:org_heading_shade_leading_stars=1
+let g:org_indent=1
+let g:org_aggressive_conceal=1
+function! s:setuporgmode()
+  imap <buffer> <tab> <Cmd><Plug>(OrgDemoteOnHeadingInsert)<cr>
+  imap <buffer> <s-tab> <Cmd><Plug>(OrgPromoteOnHeadingInsert)<cr>
+endfunction
+augroup MyOrgMode
+  autocmd! FileType org :call s:setuporgmode()
+augroup END
+
 
 " Plug. 
 "   execute :PlugInstall to install the following list for the first time.
@@ -983,6 +983,7 @@ Plug 'wellle/targets.vim'
 Plug 'whiteinge/diffconflicts'
 Plug 'xolox/vim-misc'
 Plug 'jceb/vim-orgmode'
+Plug 'itchyny/calendar.vim'
 
 " nvim-only plugins.
 if has('nvim')
