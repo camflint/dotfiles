@@ -207,14 +207,8 @@ augroup on_change_colorschema
   autocmd ColorScheme * call <SID>base16_customize()
 augroup END
 
-" This color scheme setup relies on a base16-shell alias having been run to modify the shell's 256-color palette, and
-" generate the following file for vim.
-if filereadable(expand('~/.vimrc_background'))
-  let base16colorspace=256
-  source ~/.vimrc_background
-endif
+" See the very bottom of this file for the code that actually triggers the theme.
 
-" Use italic for comments.
 " ================================================================================ 
 "                                    MAPPINGS
 " ================================================================================ 
@@ -1094,3 +1088,10 @@ endif
 
 call plug#end()
 
+" This color scheme setup relies on a base16-shell alias having been run to modify the shell's 256-color palette. Doing
+" so should generate the following file for vim. Make sure this statement comes last, as our customization hook higher
+" in the file depends on plugins being loaded.
+if filereadable(expand('~/.vimrc_background'))
+  let base16colorspace=256
+  source ~/.vimrc_background
+endif
