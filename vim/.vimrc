@@ -233,7 +233,7 @@ nnoremap <leader>ve :e $MYVIMRC<cr>
 nnoremap <leader>vr :so $MYVIMRC<cr>
 
 " Select only text and not prefix/suffix whitespace (contrast with V).
-nnoremap vv 0v$
+nnoremap vv ^v$
 
 " Command-mode history shortcuts (avoid using arrow keys).
 cnoremap <c-n> <down>
@@ -348,13 +348,29 @@ function! s:setup_vim_lsp_keymaps()
   " set foldmethod=expr
   "   \ foldexpr=lsp#ui#vim#folding#foldexpr()
   "   \ foldtext=lsp#ui#vim#folding#foldtext()
+
+  setlocal omnifunc=lsp#complete
+  setlocal completeopt+=preview
+
+  autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
   
-  inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+  "inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : lsp#complete()
   inoremap <expr> <cr>  pumvisible() ? "\<C-y>" : "\<cr>"
+  inoremap <expr> <C-y> pumvisible() ? asyncomplete#close_popup() : "\<C-y>"
+  inoremap <expr> <C-e> pumvisible() ? asyncomplete#cancel_popup() : "\<C-e>"
+
+  function! s:check_back_space() abort
+      let col = col('.') - 1
+      return !col || getline('.')[col - 1]  =~ '\s'
+  endfunction
+  inoremap <silent><expr> <TAB>
+    \ pumvisible() ? "\<C-n>" :
+    \ <SID>check_back_space() ? "\<TAB>" :
+    \ asyncomplete#force_refresh()
 
   if has("gui_running")
     inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-    inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+    inoremap <expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
   endif
   
   nmap <buffer> gd <plug>(lsp-definition)
@@ -377,11 +393,9 @@ function! s:setup_vim_lsp_keymaps()
 endfunction
 augroup myvimlsp
   autocmd!
-  autocmd FileType
-    \ typescript,typescriptreact,javascript,javascriptreact,python,go,lua,vim,bash,yaml,dockerfile,xml,json
-    \ call <SID>setup_vim_lsp_keymaps()
+  autocmd User lsp_buffer_enabled call <SID>setup_vim_lsp_keymaps()
 augroup end
-command! RefreshLspKeymaps call <SID>setup_vim_lsp_keymaps()
+command! LspRefresh call <SID>setup_vim_lsp_keymaps()
 
 " Git.
 nnoremap <leader>fs :Git<cr>
@@ -894,27 +908,25 @@ let g:vista#renderer#enable_icon = 1
 autocmd FileType vista,vista_kind nnoremap <buffer><silent> / :<c-u>call vista#finder#fzf#Run(g:vista_default_executive)<cr>
 
 " Autocomplete (various).
-let g:asyncomplete_auto_popup = 0  " Disable typeahead due to severe performance issues.
-
-function! s:check_back_space() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~ '\s'
-endfunction
-inoremap <silent><expr> <TAB>
-  \ pumvisible() ? "\<C-n>" :
-  \ <SID>check_back_space() ? "\<TAB>" :
-  \ asyncomplete#force_refresh()
+let g:asyncomplete_auto_popup = 0
+let g:asyncomplete_popup_delay = 100
 
 " vim-lsp & vim-lsp-settings.
 let g:lsp_log_verbose = 1
 let g:lsp_log_file = expand('~/.local/share/nvim/lsp/vim-lsp.log')
 let g:lsp_settings_servers_dir = expand('~/.local/share/nvim/lsp/')
+let g:lsp_completion_resolve_timeout = 10
+let g:lsp_diagnostics_echo_cursor = 1
+let g:lsp_virtual_text_enabled = 0
 
 " NERDTree.
 let g:NERDTreeBookmarksFile = expand('~/.config/local/vim/nerdtree/bookmarks')
 let g:NERDTreeMinimalUI = 1
 let g:NERDTreeAutoDeleteBuffer = 1
 let g:NERDTreeShowHidden = 1
+let g:NERDTreeAutoCenter = 1
+let g:NERDTreeHijackNetrw = 1
+let g:NERDTreeWinSize = 62
 function! s:togglenerdtree()
   if exists("g:NERDTree") && g:NERDTree.IsOpen()
     NERDTreeClose
