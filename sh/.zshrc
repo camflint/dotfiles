@@ -4,6 +4,17 @@
 # Source common configuration.
 source $HOME/.profile
 
+# Keybindings.
+bindkey '^P' up-history
+bindkey '^N' down-history
+bindkey '^?' backward-delete-char
+bindkey '^h' backward-delete-char
+bindkey '^w' backward-kill-word
+bindkey '^r' history-incremental-search-backward
+
+# Disable XON/XOFF to let through <C-S> key events.
+bindkey -r '\C-s'
+
 # Colored prompt.
 autoload -U colors && colors
 local lc=$'\e[' rc=m	# Standard ANSI terminal escape values

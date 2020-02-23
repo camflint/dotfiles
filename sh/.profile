@@ -11,7 +11,6 @@ export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
 
 # Disable XON/XOFF to let through <C-S> key events.
-bindkey -r '\C-s'
 stty -ixon
 
 # Path completion.
@@ -26,7 +25,7 @@ fi
 box="$HOME/Boxcryptor/iCloud Drive (Mac & PC only)"
 if [[ -d $box ]]; then
   export CDPATH="$box:$CDPATH"
-  for d in $box/*; do;
+  for d in $box/*; do
     if [[ -d ${d} ]]; then
         export CDPATH="$d:$CDPATH"
     fi
@@ -36,14 +35,6 @@ fi
 # Cloud drive aliases.
 [ ! -L "$HOME/iCloud" ] &&\
     ln -s "$HOME/Library/Mobile Documents/com~apple~CloudDocs" "$HOME/icloud"
-
-# Keybindings.
-bindkey '^P' up-history
-bindkey '^N' down-history
-bindkey '^?' backward-delete-char
-bindkey '^h' backward-delete-char
-bindkey '^w' backward-kill-word
-bindkey '^r' history-incremental-search-backward
 
 # GNU tools.
 GNU_PATH=/usr/local/opt/coreutils/libexec/gnubin

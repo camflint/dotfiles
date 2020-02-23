@@ -1,3 +1,6 @@
+shopt -s extglob
+shopt -s nullglob
+
 # Source common configuration.
 source $HOME/.profile
 

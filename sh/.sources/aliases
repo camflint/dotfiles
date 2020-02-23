@@ -7,6 +7,7 @@ alias fm='vifm .'
 alias f=find
 alias fd='fd --hidden --no-ignore'
 alias rg='rg --hidden --ignore-case'
+alias rgp='rg --hidden --ignore-case --color=never'  # "plain" ripgrep
 alias cat=bat
 alias ls='exa'
 alias la='ls -a'
@@ -15,6 +16,8 @@ alias lla='ls -al'
 
 # Git.
 alias ga='git add'
+alias gaa="git add '*'"
+alias gamend='git commit --amend -a -C HEAD'
 alias gap='git add -p'
 alias gb='git branch'
 alias gc='git commit'
@@ -26,28 +29,37 @@ alias gdc='git diff --cached'
 alias gds='git diff --staged'
 alias gdt='git difftool'
 alias gf='git fetch'
+alias gg='git grep -n -i'
 alias gl='git l'
+alias gls='git ls-files --exclude-standard'
 alias gmt='git mergetool'
 alias go='git checkout'
 alias gop='git checkout -p'
 alias gp='git pull'
+alias gpop='git pop'
 alias gpp='git push'
-alias gs='git status'
+alias gppu='git push -u'
 alias gr='git restore'
 alias grs='git restore --staged'
+alias gs='git status'
+alias gshow='git show'
+alias gstash='git stash'
+alias gsub='git submodule'
+alias gvv='git remote -vv'
 alias gx='git reset'
 alias gxp="git reset 'HEAD^'"
-alias gg='git grep -n -i'
-alias gstash='git stash'
-alias gpop='git pop'
-alias gvv='git remote -vv'
-alias gsub='git submodule'
+
+function gob() {
+  name="$1"; shift
+  git checkout -b $name --no-guess $*
+}
 
 # Docker.
 alias d=docker
 alias dc='docker container'
 
 # Tmux.
+alias tn='tmux new-session -s'
 alias nater='tmuxinator'
 
 # Development misc.
@@ -62,5 +74,3 @@ alias ptpython="ptpython --config-dir='${HOME}/.config/ptpython'"
 
 viminfo () { vim -R -M -c "Info $1 $2" +only }
 alias info=viminfo
-
-
