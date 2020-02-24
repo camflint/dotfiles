@@ -57,14 +57,14 @@ bindkey -a -s "fs" "ifs "
 bindkey -a -s "hs" "ihs\n"
 bindkey -a -s "ts" "its\n"
 
-# ZPlugin!
-source $HOME/.zplugin/bin/zplugin.zsh
+# zinit!
+source $HOME/.zinit/bin/zinit.zsh
 
 # Load plugins here....
 
-zplugin light zsh-users/zsh-autosuggestions
-#zplugin ice wait'' atinit'zpcompinit' silent; zplugin light zdharma/fast-syntax-highlighting
-zplugin light zdharma/fast-syntax-highlighting
+zinit light zsh-users/zsh-autosuggestions
+#zinit ice wait'' atinit'zpcompinit' silent; zinit light zdharma/fast-syntax-highlighting
+zinit light zdharma/fast-syntax-highlighting
 
 # Plugin options.
 export FAST_HIGHLIGHT[whatis_chroma_type]=0
@@ -81,7 +81,7 @@ compinit
 compdef vman="man"
 
 # Plugin zsh-syntax-highlighting must come last.
-zplugin ice wait silent; zplugin load zsh-users/zsh-syntax-highlighting
+zinit ice wait silent; zinit load zsh-users/zsh-syntax-highlighting
 
 # FZF+zsh integration (diff. locations depending on OS).
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
