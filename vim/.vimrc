@@ -229,15 +229,22 @@ nnoremap <localleader>; ;
 nnoremap <localleader>, ,
 
 " Fast config editing and reloading.
-nnoremap <leader>ve :e $MYVIMRC<cr>
+nnoremap <leader>ve :vsplit $MYVIMRC<cr>
 nnoremap <leader>vr :so $MYVIMRC<cr>
 
 " Select only text and not prefix/suffix whitespace (contrast with V).
 nnoremap vv ^v$
 
+" Move lines up and down.
+nnoremap - ddp
+nnoremap _ ddkP
+
 " Command-mode history shortcuts (avoid using arrow keys).
 cnoremap <c-n> <down>
 cnoremap <c-p> <up>
+
+" Uppercase the current word, without changing the cursor position or mode.
+inoremap <c-u> <esc>viwU`^i
 
 " Use very-magic search mode, so regular expressions are more intuitive.
 nnoremap / /\v
@@ -285,16 +292,16 @@ nnoremap <leader>bx :Bdelete all<cr>
 nnoremap <leader>bi :Bdelete select<cr>
 
 " Buffer number keys.
-nmap <Leader>1 <Plug>lightline#bufferline#go(1)
-nmap <Leader>2 <Plug>lightline#bufferline#go(2)
-nmap <Leader>3 <Plug>lightline#bufferline#go(3)
-nmap <Leader>4 <Plug>lightline#bufferline#go(4)
-nmap <Leader>5 <Plug>lightline#bufferline#go(5)
-nmap <Leader>6 <Plug>lightline#bufferline#go(6)
-nmap <Leader>7 <Plug>lightline#bufferline#go(7)
-nmap <Leader>8 <Plug>lightline#bufferline#go(8)
-nmap <Leader>9 <Plug>lightline#bufferline#go(9)
-nmap <Leader>0 <Plug>lightline#bufferline#go(10)
+nnoremap <Leader>1 <Plug>lightline#bufferline#go(1)
+nnoremap <Leader>2 <Plug>lightline#bufferline#go(2)
+nnoremap <Leader>3 <Plug>lightline#bufferline#go(3)
+nnoremap <Leader>4 <Plug>lightline#bufferline#go(4)
+nnoremap <Leader>5 <Plug>lightline#bufferline#go(5)
+nnoremap <Leader>6 <Plug>lightline#bufferline#go(6)
+nnoremap <Leader>7 <Plug>lightline#bufferline#go(7)
+nnoremap <Leader>8 <Plug>lightline#bufferline#go(8)
+nnoremap <Leader>9 <Plug>lightline#bufferline#go(9)
+nnoremap <Leader>0 <Plug>lightline#bufferline#go(10)
 
 " Tab management.
 nnoremap <leader><tab> :tabnext<cr>
@@ -334,9 +341,8 @@ nnoremap <c-s> :Grepper -tool rg<cr>
 nnoremap <localleader>* :Grepper -tool rg -cword -noprompt<cr>
 
 " File explorers.
-nnoremap - :EditVifm<cr>
-nnoremap <leader>e :EditVifm<cr>
 nnoremap <leader>s <cmd>MyToggleNERDTree<cr>
+nnoremap <leader>e :EditVifm<cr>
 
 " Symbol explorers.
 nnoremap <leader>o :Vista vim_lsp<cr>
@@ -441,13 +447,13 @@ nnoremap <leader>do :diffoff<cr>
 "         return getcwd().'/.'.filename
 "     endif
 " endfunction
-nmap <Leader>mm <Plug>BookmarkToggle
-nmap <Leader>mi  <Plug>BookmarkAnnotate
-nmap <Leader>ma <Plug>BookmarkShowAll
-nmap <Leader>mj <Plug>BookmarkNext
-nmap <Leader>mk <Plug>BookmarkPrev
-nmap <Leader>mc <Plug>BookmarkClear
-nmap <Leader>mx <Plug>BookmarkClearAll
+nnoremap <Leader>mm <Plug>BookmarkToggle
+nnoremap <Leader>mi  <Plug>BookmarkAnnotate
+nnoremap <Leader>ma <Plug>BookmarkShowAll
+nnoremap <Leader>mj <Plug>BookmarkNext
+nnoremap <Leader>mk <Plug>BookmarkPrev
+nnoremap <Leader>mc <Plug>BookmarkClear
+nnoremap <Leader>mx <Plug>BookmarkClearAll
 map <leader><leader>mj <Plug>BookmarkMoveDown
 map <leader><leader>mk <Plug>BookmarkMoveUp
 
@@ -458,7 +464,7 @@ nnoremap <leader>g :Goyo<cr>
 map <space> <Plug>(easymotion-prefix)
 
 " Enter navmode for less-like scrolling.
-nmap \n :call Navmode()<cr>
+nnoremap \n :call Navmode()<cr>
 
 " Open the quickfix window.
 nnoremap <leader>q :copen<cr>
@@ -503,8 +509,31 @@ augroup END
 "                                  SNIPPETS
 " ================================================================================ 
 
+" A syntax for placeholders
+" Pressing CTRL-n jumps to the next match.
+inoremap <c-n> <Esc>/<++><CR><Esc>cf>
+
 " Insert datetime.
-imap <C-d> <C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR>
+inoremap <C-d> <C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR>
+
+" Javascript/Typescript snippets.
+function! s:setup_js_ts_snippets()
+  iabbrev <buffer> describe@@ 
+        \describe(`<++>`, () => {
+        \  <cr><tab><++><cr>
+        \});<c-n>
+  iabbrev <buffer> context@@ 
+        \context(`<++>`, () => {
+        \<cr><tab><++><cr>
+        \});<c-n>
+  iabbrev <buffer> it@@ 
+        \it(`<++>`, async () => {
+        \<cr><tab><++><cr>
+        \});<c-n>
+endfunction
+augroup MyJsTsSnippets
+  autocmd! FileType javascript,typescript :call <SID>setup_js_ts_snippets()
+augroup END
 
 " ================================================================================ 
 "                                   PLUGINS
@@ -726,8 +755,8 @@ let g:gutentags_modules=['ctags']
 let g:gutentags_cache_dir=expand('~/.local/share/gutentags')
 
 " Edit/compile/run cycle.
-nmap <silent> <F5> :make<cr><cr><cr>
-nmap <silent><expr> <F6> execute("Termdebug ". expand('%:r')) 
+nnoremap <silent> <F5> :make<cr><cr><cr>
+nnoremap <silent><expr> <F6> execute("Termdebug ". expand('%:r')) 
 
 " Vimspector and termdebug.
 let g:termdebug_wide = 143
@@ -992,6 +1021,7 @@ let g:startify_lists = [
 
 " Cursorcross.
 let g:cursorcross_no_map_CR=1
+let g:cursorcross_mappings=0
 
 " Vimwiki.
 " let g:vimwiki_list = [{
