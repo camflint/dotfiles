@@ -40,6 +40,9 @@ set nofoldenable
 set list
 set listchars=tab:
 
+" Performance tweaks.
+set lazyredraw
+
 " Keyword completion (autocomplete).
 set complete-=i  " Don't search include files for every keyword completion.
 
@@ -266,8 +269,13 @@ map <Right> <Nop>
 map <Up> <Nop>
 map <Down> <Nop>
 
-" Shortcut to close all temporary windows and turn off highlighting.
-nnoremap <localleader>l :noh<cr> \| :cclose<cr> \| :lclose<cr> \| <plug>(lsp-preview-close)
+" Shortcut to close all temporary windows, turn off highlighting, and otherwise reset editing state.
+nnoremap <localleader>l :noh<cr> \|
+\ :cclose<cr> \|
+\ :lclose<cr> \|
+\ <plug>(ExchangeClear) \|
+\ <plug>(lsp-preview-close) \|
+\ <plug>(clever-f-reset)
 
 " Shortcut to temporarily enable 'hlsearch' only when typing the search query.
 augroup vimrc-incsearch-highlight
@@ -285,26 +293,29 @@ map <localleader>yb :let @+=expand('%:p')<CR> |" Put current buffer path onto sy
 
 " Buffer management.
 nnoremap <localleader><tab> :Buffers<cr>
+nnoremap <leader>b :Buffers<cr>
 
-nnoremap <leader>bo :Bdelete other<cr>
-nnoremap <leader>bc :Bdelete this<cr>
-nnoremap <leader>bx :Bdelete all<cr>
-nnoremap <leader>bi :Bdelete select<cr>
+nnoremap <localleader>bo :Bdelete other<cr>
+nnoremap <localleader>bc :Bdelete this<cr>
+nnoremap <localleader>bx :Bdelete all<cr>
+nnoremap <localleader>bi :Bdelete select<cr>
+
+nnoremap <leader>r :FZFMru<cr>
 
 " Buffer number keys.
-nnoremap <Leader>1 <Plug>lightline#bufferline#go(1)
-nnoremap <Leader>2 <Plug>lightline#bufferline#go(2)
-nnoremap <Leader>3 <Plug>lightline#bufferline#go(3)
-nnoremap <Leader>4 <Plug>lightline#bufferline#go(4)
-nnoremap <Leader>5 <Plug>lightline#bufferline#go(5)
-nnoremap <Leader>6 <Plug>lightline#bufferline#go(6)
-nnoremap <Leader>7 <Plug>lightline#bufferline#go(7)
-nnoremap <Leader>8 <Plug>lightline#bufferline#go(8)
-nnoremap <Leader>9 <Plug>lightline#bufferline#go(9)
-nnoremap <Leader>0 <Plug>lightline#bufferline#go(10)
+nnoremap <localleader>1 <Plug>lightline#bufferline#go(1)
+nnoremap <localleader>2 <Plug>lightline#bufferline#go(2)
+nnoremap <localleader>3 <Plug>lightline#bufferline#go(3)
+nnoremap <localleader>4 <Plug>lightline#bufferline#go(4)
+nnoremap <localleader>5 <Plug>lightline#bufferline#go(5)
+nnoremap <localleader>6 <Plug>lightline#bufferline#go(6)
+nnoremap <localleader>7 <Plug>lightline#bufferline#go(7)
+nnoremap <localleader>8 <Plug>lightline#bufferline#go(8)
+nnoremap <localleader>9 <Plug>lightline#bufferline#go(9)
+nnoremap <localleader>0 <Plug>lightline#bufferline#go(10)
 
 " Tab management.
-nnoremap <leader><tab> :tabnext<cr>
+"nnoremap <localleader><tab> :tabnext<cr>
 
 " Split management.
 nnoremap <localleader>s- <C-w>s<C-w>j                                             |" Split vertically.
@@ -335,6 +346,7 @@ nnoremap <leader>h :Startify<cr>
 " Fuzzy file finders.
 nnoremap <c-p> :Files <c-r>=getcwd()<cr><cr>
 nnoremap <m-p> :Files <c-r>=expand('%:h')<cr><cr>
+nnoremap <leader>f :Files <c-r>=getcwd()<cr><cr>
 
 " Project search.
 nnoremap <c-s> :Grepper -tool rg<cr>
@@ -361,7 +373,8 @@ function! s:setup_vim_lsp_keymaps()
   autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
   
   "inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : lsp#complete()
-  inoremap <expr> <cr>  pumvisible() ? "\<C-y>" : "\<cr>"
+  "inoremap <expr> <cr>  pumvisible() ? "\<C-y>" : "\<cr>"
+  inoremap <expr> <cr>  pumvisible() ? "\<C-y>" : "<plug>delimitMateCR"
   inoremap <expr> <C-y> pumvisible() ? asyncomplete#close_popup() : "\<C-y>"
   inoremap <expr> <C-e> pumvisible() ? asyncomplete#cancel_popup() : "\<C-e>"
 
@@ -387,15 +400,15 @@ function! s:setup_vim_lsp_keymaps()
   nmap <buffer> gn <plug>(lsp-rename)
   nmap <buffer> gh <plug>(lsp-hover)
   nmap <buffer> gs <plug>(lsp-signature-help)
-  nmap <buffer> <leader>o <plug>(lsp-document-symbol)
-  nmap <buffer> <leader>O <plug>(lsp-workspace-symbol)
-  nmap <buffer> <leader>q <plug>(lsp-document-diagnostics)
+  nmap <buffer> <localleader>o <plug>(lsp-document-symbol)
+  nmap <buffer> <localleader>O <plug>(lsp-workspace-symbol)
+  nmap <buffer> <localleader>q <plug>(lsp-document-diagnostics)
   nmap <buffer> ]e <plug>(lsp-next-error)
   nmap <buffer> [e <plug>(lsp-previous-error)
   nmap <buffer> ]w <plug>(lsp-next-warning)
   nmap <buffer> [w <plug>(lsp-previous-warning)
-  nmap <buffer> <leader>a <plug>(lsp-code-action)
-  map <buffer> <leader>f <plug>(lsp-document-range-format)
+  nmap <buffer> <localleader>a <plug>(lsp-code-action)
+  map <buffer> <localleader>gf <plug>(lsp-document-range-format)
 endfunction
 augroup myvimlsp
   autocmd!
@@ -404,16 +417,16 @@ augroup end
 command! LspRefresh call <SID>setup_vim_lsp_keymaps()
 
 " Git.
-nnoremap <leader>fs :Git<cr>
-nnoremap <leader>fc :Gcommit<cr>
-nnoremap <leader>fp :Gpull<cr>
-nnoremap <leader>fb :Gblame<cr>
-nnoremap <leader>fg :Ggrep<space>
-nnoremap <leader>fl :Gclog<cr>
-nnoremap <leader>fm :Gmove<space>
-nnoremap <leader>fb :Gbrowse!<cr>
-nnoremap <leader>fd :Gvdiffsplit!<cr>
-nnoremap <leader>fy :.,.Gbrowse!<cr>
+nnoremap <leader>gs :Git<cr>
+nnoremap <leader>gc :Gcommit<cr>
+nnoremap <leader>gp :Gpull<cr>
+nnoremap <leader>gb :Gblame<cr>
+nnoremap <leader>gg :Ggrep<space>
+nnoremap <leader>gl :Gclog<cr>
+nnoremap <leader>gm :Gmove<space>
+nnoremap <leader>gb :Gbrowse!<cr>
+nnoremap <leader>gd :Gvdiffsplit!<cr>
+nnoremap <leader>gy :.,.Gbrowse!<cr>
 
 " Delete all Git conflict markers
 " Creates the command :GremoveConflictMarkers
@@ -425,6 +438,7 @@ endfunction
 command! -range=% GremoveConflictMarkers <line1>,<line2>call RemoveConflictMarkers()
 
 " Diffing.
+set diffopt+=internal,algorithm:patience
 nnoremap dgh :diffget //2<cr>
 nnoremap dgl :diffget //3<cr>
 nnoremap <leader>do :diffoff<cr>
@@ -458,7 +472,7 @@ map <leader><leader>mj <Plug>BookmarkMoveDown
 map <leader><leader>mk <Plug>BookmarkMoveUp
 
 " Invoke Goyu for a distraction-free writing environment.
-nnoremap <leader>g :Goyo<cr>
+nnoremap <leader>q :Goyo<cr>
  
 " Invoke Easymotion for rapid movement.
 map <space> <Plug>(easymotion-prefix)
@@ -467,7 +481,7 @@ map <space> <Plug>(easymotion-prefix)
 nnoremap \n :call Navmode()<cr>
 
 " Open the quickfix window.
-nnoremap <leader>q :copen<cr>
+nnoremap <localleader>q :copen<cr>
 
 " Get hints on key sequences after a timeout, using vim-whichkey.  Needs to be kept in sync with the prefixes used in
 " above mappings.
@@ -518,22 +532,35 @@ inoremap <C-d> <C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR>
 
 " Javascript/Typescript snippets.
 function! s:setup_js_ts_snippets()
-  iabbrev <buffer> describe@@ 
+  iabbrev <buffer> describe@ 
         \describe(`<++>`, () => {
         \  <cr><tab><++><cr>
         \});<c-n>
-  iabbrev <buffer> context@@ 
+  iabbrev <buffer> context@ 
         \context(`<++>`, () => {
         \<cr><tab><++><cr>
         \});<c-n>
-  iabbrev <buffer> it@@ 
+  iabbrev <buffer> it@ 
         \it(`<++>`, async () => {
         \<cr><tab><++><cr>
         \});<c-n>
+  iabbrev <buffer> before@ 
+        \before(() => {
+        \<cr><tab><++><cr>
+        \});<c-n>
+  iabbrev <buffer> beforeEach@ 
+        \beforeEach(() => {
+        \<cr><tab><++><cr>
+        \});<c-n>
+  iabbrev <buffer> inspect@ 
+        \const util = require('util');<cr>
+        \console.log(util.inspect(`<++>`), {depth: 2});
+        \<c-n>
 endfunction
 augroup MyJsTsSnippets
   autocmd! FileType javascript,typescript :call <SID>setup_js_ts_snippets()
 augroup END
+command! SetupJsTsSnippets :call <SID>setup_js_ts_snippets()
 
 " ================================================================================ 
 "                                   PLUGINS
@@ -565,6 +592,9 @@ elseif !empty(glob('/usr/share/doc/fzf'))
   source /usr/share/doc/fzf/examples/fzf.vim
 endif
 let g:fzf_history_dir = expand('~/.local/share/fzf-vim-history')
+
+" Fzf-mru.
+let g:fzf_mru_no_sort = 1
 
 " Fzf/cscope integration.
 "   source: https://alex.dzyoba.com/blog/vim-revamp/
@@ -955,7 +985,7 @@ let g:NERDTreeAutoDeleteBuffer = 1
 let g:NERDTreeShowHidden = 1
 let g:NERDTreeAutoCenter = 1
 let g:NERDTreeHijackNetrw = 1
-let g:NERDTreeWinSize = 62
+let g:NERDTreeWinSize = 75
 function! s:togglenerdtree()
   if exists("g:NERDTree") && g:NERDTree.IsOpen()
     NERDTreeClose
@@ -1067,6 +1097,14 @@ augroup MyOrgMode
   autocmd! FileType org :call <SID>setup_org_mode()
 augroup END
 
+" clever-f
+let g:clever_f_chars_match_any_signs = ';'
+
+" Far
+let g:far#source = 'rg'
+noremap <silent> <localleader>f :Farf<cr>
+noremap <silent> <localleader>r :Farr<cr>
+
 " Plug. 
 "  execute :PlugInstall to install the following list for the first time.
 call plug#begin('~/.local/share/vim/plugged')
@@ -1074,10 +1112,12 @@ call plug#begin('~/.local/share/vim/plugged')
 " Essential plugins.
 Plug 'JamshedVesuna/vim-markdown-preview'
 Plug 'asheq/close-buffers.vim'
+Plug 'brooth/far.vim'
 Plug 'camflint/vim-superman'
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'easymotion/vim-easymotion'
+Plug 'faceleg/delete-surrounding-function-call.vim'
 Plug 'fcpg/vim-navmode'
 Plug 'godlygeek/tabular'
 Plug 'hiphish/info.vim'
@@ -1097,6 +1137,7 @@ Plug 'mengelbrecht/lightline-bufferline'
 Plug 'mhinz/vim-grepper'
 Plug 'mhinz/vim-startify'
 Plug 'mtth/cursorcross.vim'
+Plug 'pbogut/fzf-mru.vim'
 Plug 'plasticboy/vim-markdown'
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
@@ -1104,9 +1145,12 @@ Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'preservim/nerdtree'
 Plug 'puremourning/vimspector', {'for': ['typescript', 'javascript']}
+Plug 'raimondi/delimitmate'
 Plug 'rgarver/kwbd.vim'
+Plug 'rhysd/clever-f.vim'
 Plug 'romainl/vim-qf'
 Plug 'sheerun/vim-polyglot'
+Plug 'tommcdo/vim-exchange'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-eunuch'
