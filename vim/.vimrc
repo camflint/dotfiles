@@ -1,7 +1,4 @@
-" ================================================================================ 
-"                                BASIC OPTIONS
-" ================================================================================ 
-"
+" Basic options -----------------------------------------------------------{{{1
 " Self-explanatory defaults.
 set encoding=utf-8
 set textwidth=120
@@ -92,13 +89,6 @@ set showbreak=↳
 " Smart comment formatting (gq).
 set formatoptions=croqj
 
-" Formatting exceptions:
-"  Don't autoformat (esp. autowrap) text in some files.
-augroup autoformat
-  autocmd!
-  autocmd FileType markdown setlocal formatoptions-=c | setlocal textwidth=0
-augroup END
-
 " Fix: number/relativenumber in Goyo
 " augroup numbertoggle
 "   autocmd!
@@ -117,11 +107,7 @@ augroup END
 runtime ftplugin/man.vim
 set keywordprg=:Man
 
-" ================================================================================ 
-"                                TMUX INTEGRATION
-" ================================================================================ 
-
-" Tmux fixups.
+" Tmux integration --------------------------------------------------------{{{1
 if &term =~ '^screen'
     " Fix shift key.
     execute "set <xUp>=\e[1;*A"
@@ -135,10 +121,7 @@ if &term =~ '^screen'
     endif
 endif
 
-" ================================================================================ 
-"                                  COLOR SCHEMES
-" ================================================================================ 
-
+" Color scheme & themes ---------------------------------------------------{{{1
 " Use 256-color by default.
 if !has('gui_running')
   set t_Co=256
@@ -212,15 +195,71 @@ augroup END
 
 " See the very bottom of this file for the code that actually triggers the theme.
 
-" ================================================================================ 
-"                                    MAPPINGS
-" ================================================================================ 
+
+" Filetype customization --------------------------------------------------{{{1
+
+" Filetype: javascript
+function! s:setup_filetype_javascript()
+  call <SID>setup_js_ts_snippets()
+endfunction
+
+" Filetype: json
+function! s:setup_filetype_json()
+  syntax match Comment +\/\/.\+$+
+endfunction
+
+" Filetype: markdown
+function! s:setup_filetype_markdown()
+  " Don't autoformat (esp. autowrap) text in some files.
+  autocmd FileType markdown setlocal formatoptions-=c | setlocal textwidth=0
+endfunction
+
+" Filetype: org
+function! s:setup_filetype_org()
+  setlocal foldenable
+  call <SID>setup_org_mode_mappings()
+endfunction
+
+" Filetype: typescript
+function! s:setup_filetype_typescript()
+  " makeprg
+  let l:root = findfile('tsconfig.json', expand('%:p:h').';')
+  let &makeprg = 'tsc -p ' . fnameescape(l:root)
+endfunction
+
+" Filetype: vim
+function! s:setup_filetype_vim()
+  setlocal foldenable
+  setlocal foldmethod=marker
+  setlocal foldlevelstart=0
+  setlocal foldlevel=0
+  setlocal textwidth=80
+endfunction
+
+augroup setup_filetypes
+  autocmd!
+  autocmd FileType javascript,typescript :call <SID>setup_filetype_javascript()
+  autocmd FileType json                  :call <SID>setup_filetype_json()
+  autocmd FileType markdown              :call <SID>setup_filetype_markdown()
+  autocmd FileType org                   :call <SID>setup_filetype_org()
+  autocmd FileType typescript            :call <SID>setup_filetype_typescript()
+  autocmd FileType vim                   :call <SID>setup_filetype_vim()
+augroup END
+
+" Always re-apply filetype settings when .vimrc is sourced (because sourcing
+" .vimrc may potentially overwrite global settings).
+execute 'set filetype=' . &filetype
+
+" Re-expand to cursor.
+execute 'normal zMzvzz'
+
+" Mappings ----------------------------------------------------------------{{{1
 
 " Leader keys.
 let mapleader = '\'
 let maplocalleader = ','
 
-" Folding maps.
+" Folding.
 nnoremap n nzzzv
 nnoremap N Nzzzv
 nnoremap <space> zA
@@ -232,7 +271,8 @@ nnoremap <localleader>; ;
 nnoremap <localleader>, ,
 
 " Fast config editing and reloading.
-nnoremap <leader>ve :vsplit $MYVIMRC<cr>
+" Note explicit path for editing, since $MYVIMRC only sources ~/.vimrc.
+nnoremap <leader>ve :vsplit ~/.vimrc<cr>
 nnoremap <leader>vr :so $MYVIMRC<cr>
 
 " Select only text and not prefix/suffix whitespace (contrast with V).
@@ -325,7 +365,10 @@ nnoremap <localleader>sx <C-w>q                                                 
 nnoremap <localleader>so <C-w>o                                                   |" Kill other splits ("only").
 nnoremap <localleader>sz <C-w>\|<C-w>_                                            |" Zoom split.
 nnoremap <localleader>s= :set equalalways<cr> \| <C-w>= \| :set noequalalways<cr> |" Distribute splits.
-autocmd VimResized * wincmd =                                                     |" Redistribute windows when the client is resized.
+augroup split_resize
+  autocmd!
+  autocmd VimResized * wincmd =                                                   |" Redistribute windows when the client is resized.
+augroup END
 
 function! WinBufSwap()
   let thiswin = winnr()
@@ -370,11 +413,13 @@ function! s:setup_vim_lsp_keymaps()
   setlocal omnifunc=lsp#complete
   setlocal completeopt+=preview
 
-  autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
+  augroup lsp_close_popup
+    autocmd!
+    autocmd CompleteDone * if pumvisible() == 0 | pclose | endif
+  augroup END
   
   "inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : lsp#complete()
-  "inoremap <expr> <cr>  pumvisible() ? "\<C-y>" : "\<cr>"
-  inoremap <expr> <cr>  pumvisible() ? "\<C-y>" : "<plug>delimitMateCR"
+  inoremap <expr> <cr>  pumvisible() ? "\<C-y>" : "\<cr>"
   inoremap <expr> <C-y> pumvisible() ? asyncomplete#close_popup() : "\<C-y>"
   inoremap <expr> <C-e> pumvisible() ? asyncomplete#cancel_popup() : "\<C-e>"
 
@@ -515,14 +560,8 @@ function! s:setup_org_mode_mappings()
   imap <buffer><silent> <m-t> <C-O><Cmd>OrgSetTags<CR>
 endfunction
 command! SetupOrgModeMappings :call <SID>setup_org_mode_mappings()
-augroup MyOrgModeMappings
-  autocmd! FileType org :call <SID>setup_org_mode_mappings()
-augroup END
 
-" ================================================================================ 
-"                                  SNIPPETS
-" ================================================================================ 
-
+" Text snippets -----------------------------------------------------------{{{1
 " A syntax for placeholders
 " Pressing CTRL-n jumps to the next match.
 inoremap <c-n> <Esc>/<++><CR><Esc>cf>
@@ -557,15 +596,9 @@ function! s:setup_js_ts_snippets()
         \console.log(util.inspect(`<++>`), {depth: 2});
         \<c-n>
 endfunction
-augroup MyJsTsSnippets
-  autocmd! FileType javascript,typescript :call <SID>setup_js_ts_snippets()
-augroup END
 command! SetupJsTsSnippets :call <SID>setup_js_ts_snippets()
 
-" ================================================================================ 
-"                                   PLUGINS
-" ================================================================================ 
-
+" Plugin settings ---------------------------------------------------------{{{1
 " Grepper.
 let g:grepper = {}
 let g:grepper.tools = ['git', 'grep', 'rg']
@@ -738,31 +771,6 @@ let g:bookmark_auto_save = 1
 " use `:OR` for organize import of current buffer
 " command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
 
-" ================================================================================ 
-"                                  FILETYPES
-" ================================================================================ 
-
-" Fix comments in JSON.
-autocmd FileType json syntax match Comment +\/\/.\+$+
-
-" Typescript.
-function! s:setuptypescript()
-  " makeprg
-  let l:root = findfile('tsconfig.json', expand('%:p:h').';')
-  let &makeprg = 'tsc -p ' . fnameescape(l:root)
-
-  " Begin COC-specific configuration.
-  "set cmdheight=2  " easier to read messages
-endfunction
-augroup typescript
-  autocmd!
-  autocmd FileType typescript call s:setuptypescript()
-
-  " Begin COC-specific configuration.
-  " autocmd FileType typescriptreact set filetype=typescript.tsx
-  " autocmd FileType javascriptreact set filetype=javascript.jsx
-augroup END
-
 " C/C++.
 set path=.,**
 set path+=/usr/local/include
@@ -933,8 +941,11 @@ function! s:MaybeUpdateLightline()
     call lightline#update()
   end
 endfunction
-autocmd BufWritePost,TextChanged,TextChangedI * call s:MaybeUpdateLightline()
-autocmd User CocDiagnosticChange call lightline#update()
+augroup setup_lightline
+  autocmd!
+  autocmd BufWritePost,TextChanged,TextChangedI * call s:MaybeUpdateLightline()
+  autocmd User CocDiagnosticChange call lightline#update()
+augroup END
   
 " Reload lightline on demand.
 function! s:LightlineReload()
@@ -964,7 +975,10 @@ let g:vista_fzf_preview = ['right:50%']
 let g:vista_sidebar_width= 47
 let g:vista_echo_cursor_strategy = 'scroll'
 let g:vista#renderer#enable_icon = 1
-autocmd FileType vista,vista_kind nnoremap <buffer><silent> / :<c-u>call vista#finder#fzf#Run(g:vista_default_executive)<cr>
+augroup filetype_vista
+  autocmd!
+  autocmd FileType vista,vista_kind nnoremap <buffer><silent> / :<c-u>call vista#finder#fzf#Run(g:vista_default_executive)<cr>
+augroup end
 
 " Autocomplete (various).
 let g:asyncomplete_auto_popup = 0
@@ -1074,8 +1088,11 @@ function! s:goyo_leave()
   "CocCommand git.toggleGutters
 endfunction
 
-autocmd! User GoyoEnter nested call <SID>goyo_enter()
-autocmd! User GoyoLeave nested call <SID>goyo_leave()
+augroup setup_goyo
+  autocmd!
+  autocmd User GoyoEnter nested call <SID>goyo_enter()
+  autocmd User GoyoLeave nested call <SID>goyo_leave()
+augroup END
 
 " vim-markdown-preview.
 let vim_markdown_preview_hotkey = '<C-m>'
@@ -1089,21 +1106,23 @@ let g:org_aggressive_conceal=1
 if isdirectory(expand('~/notes'))
   let g:org_agenda_files = ['~/notes/*.org']
 endif
-function! s:setup_org_mode()
-  set foldenable
-endfunction
-command! SetupOrgMode :call <SID>setup_org_mode()
-augroup MyOrgMode
-  autocmd! FileType org :call <SID>setup_org_mode()
-augroup END
 
 " clever-f
 let g:clever_f_chars_match_any_signs = ';'
 
 " Far
 let g:far#source = 'rg'
-noremap <silent> <localleader>f :Farf<cr>
-noremap <silent> <localleader>r :Farr<cr>
+noremap <localleader>f :F<space>
+noremap <localleader>r :Far<space>
+
+" Peekaboo
+let g:peekaboo_window = "vert bo 65new"
+
+" Exchange
+" nnoremap cxc <Plug>(ExchangeClear)
+" nnoremap cxx <Plug>(ExchangeLine)
+
+" Plugin registry ---------------------------------------------------------{{{1
 
 " Plug. 
 "  execute :PlugInstall to install the following list for the first time.
@@ -1129,6 +1148,7 @@ Plug 'jceb/vim-orgmode'
 Plug 'jparise/vim-graphql'
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
+Plug 'junegunn/vim-peekaboo'
 Plug 'liuchengxu/vim-which-key'
 Plug 'liuchengxu/vista.vim'
 Plug 'mattesgroeger/vim-bookmarks'
