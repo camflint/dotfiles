@@ -108,6 +108,8 @@ runtime ftplugin/man.vim
 set keywordprg=:Man
 
 " Tmux integration --------------------------------------------------------{{{1
+
+" Note that vim-tmux-navigator plugin takes care of <C-hjkl> keys.
 if &term =~ '^screen'
     " Fix shift key.
     execute "set <xUp>=\e[1;*A"
@@ -120,6 +122,12 @@ if &term =~ '^screen'
       set ttymouse=xterm2
     endif
 endif
+
+" Mapping to quickly switch between full-screen vim and half-screen vim (meant
+" to play nicely with 50% tmux panes).
+nnoremap <silent> <leader>z 
+      \ :call system("tmux resize-pane -Z") \|
+      \ :call system("tmux send-keys -t:.1 '\\s' 'c-l'")<cr>
 
 " Color scheme & themes ---------------------------------------------------{{{1
 " Use 256-color by default.
