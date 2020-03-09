@@ -225,6 +225,9 @@ endfunction
 " Filetype: org
 function! s:setup_filetype_org()
   setlocal foldenable
+  setlocal foldlevelstart=0
+  setlocal foldlevel=0
+  setlocal textwidth=80
   call <SID>setup_org_mode_mappings()
 endfunction
 
@@ -340,7 +343,6 @@ map <localleader>pp "+[p                      |" Paste from the system clipboard
 map <localleader>yb :let @+=expand('%:p')<CR> |" Put current buffer path onto system clipboard.
 
 " Buffer management.
-nnoremap <localleader><tab> :Buffers<cr>
 nnoremap <leader>b :Buffers<cr>
 
 nnoremap <localleader>bo :Bdelete other<cr>
@@ -351,16 +353,16 @@ nnoremap <localleader>bi :Bdelete select<cr>
 nnoremap <leader>r :FZFMru<cr>
 
 " Buffer number keys.
-nnoremap <localleader>1 <Plug>lightline#bufferline#go(1)
-nnoremap <localleader>2 <Plug>lightline#bufferline#go(2)
-nnoremap <localleader>3 <Plug>lightline#bufferline#go(3)
-nnoremap <localleader>4 <Plug>lightline#bufferline#go(4)
-nnoremap <localleader>5 <Plug>lightline#bufferline#go(5)
-nnoremap <localleader>6 <Plug>lightline#bufferline#go(6)
-nnoremap <localleader>7 <Plug>lightline#bufferline#go(7)
-nnoremap <localleader>8 <Plug>lightline#bufferline#go(8)
-nnoremap <localleader>9 <Plug>lightline#bufferline#go(9)
-nnoremap <localleader>0 <Plug>lightline#bufferline#go(10)
+nmap <leader>1 <Plug>lightline#bufferline#go(1)
+nmap <leader>2 <Plug>lightline#bufferline#go(2)
+nmap <leader>3 <Plug>lightline#bufferline#go(3)
+nmap <leader>4 <Plug>lightline#bufferline#go(4)
+nmap <leader>5 <Plug>lightline#bufferline#go(5)
+nmap <leader>6 <Plug>lightline#bufferline#go(6)
+nmap <leader>7 <Plug>lightline#bufferline#go(7)
+nmap <leader>8 <Plug>lightline#bufferline#go(8)
+nmap <leader>9 <Plug>lightline#bufferline#go(9)
+nmap <leader>0 <Plug>lightline#bufferline#go(10)
 
 " Tab management.
 "nnoremap <localleader><tab> :tabnext<cr>
