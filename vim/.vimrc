@@ -126,8 +126,7 @@ endif
 " Mapping to quickly switch between full-screen vim and half-screen vim (meant
 " to play nicely with 50% tmux panes).
 nnoremap <silent> <leader>z 
-      \ :call system("tmux resize-pane -Z") \|
-      \ :call system("tmux send-keys -t:.1 '\\s' 'c-l'")<cr>
+      \ :call system("tmux resize-pane -Z")<cr>
 
 " Color scheme & themes ---------------------------------------------------{{{1
 " Use 256-color by default.

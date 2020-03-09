@@ -21,7 +21,7 @@ function layout_ide1() {
   tmux split-window -d -t "$WINDOW.1" -h -c "$CWD"
   tmux split-window -d -t "$WINDOW.2" -v -c "$CWD"
   tmux split-window -d -t "$WINDOW.3" -v -c "$CWD"
-  tmux select-layout -t "$WINDOW.1" main-vertical \; run-shell -t "$WINDOW.1" '~/.scripts/tx-update-main-pane-dims.sh -w 65 -h 65'
+  tmux select-layout -t "$WINDOW.1" main-vertical \; run-shell -t "$WINDOW.1" '~/.scripts/tx-update-main-pane-dims.sh -w 50 -h 65'
   tmux send-keys -t "$WINDOW.1" "$EDITOR" "Enter"
   tmux select-pane -t "$WINDOW.1"
 }
