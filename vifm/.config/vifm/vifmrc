@@ -425,15 +425,17 @@ nnoremap ; :
 " Enable integration with terminal multiplexers.
 screen!
 
-" Horizontal split view: bottom pane is preview
-split
+" Initial splits.
+"split
+only
 
-" Show preview in bottom pane.
-set quickview
+" Preview i.e. "quickview."
+"set quickview
+set noquickview
 
-" Use millerview (columns) for top pane.
+" File list vew type (lsview, millerview, column).
 set millerview
-set milleroptions=lsize:1,csize:2,rsize:0
+set milleroptions=lsize:0,csize:1,rsize:3,rpreview:all
 
 " Cpp filtering.
 command! cpponly :filter {*.d,*.build,*.dSYM\/}
