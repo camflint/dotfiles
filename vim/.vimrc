@@ -253,7 +253,7 @@ augroup setup_filetypes
   autocmd FileType markdown              :call <SID>setup_filetype_markdown()
   autocmd FileType org                   :call <SID>setup_filetype_org()
   autocmd FileType typescript            :call <SID>setup_filetype_typescript()
-  autocmd FileType vim                   :call <SID>setup_filetype_vim()
+  autocmd FileType vim,vifm              :call <SID>setup_filetype_vim()
 augroup END
 
 " Always re-apply filetype settings when .vimrc is sourced (because sourcing
@@ -515,15 +515,16 @@ nnoremap <leader>do :diffoff<cr>
 "         return getcwd().'/.'.filename
 "     endif
 " endfunction
-nnoremap <Leader>mm <Plug>BookmarkToggle
-nnoremap <Leader>mi  <Plug>BookmarkAnnotate
-nnoremap <Leader>ma <Plug>BookmarkShowAll
-nnoremap <Leader>mj <Plug>BookmarkNext
-nnoremap <Leader>mk <Plug>BookmarkPrev
-nnoremap <Leader>mc <Plug>BookmarkClear
-nnoremap <Leader>mx <Plug>BookmarkClearAll
-map <leader><leader>mj <Plug>BookmarkMoveDown
-map <leader><leader>mk <Plug>BookmarkMoveUp
+" nnoremap <Leader>mm <Plug>BookmarkToggle
+" nnoremap <Leader>mi  <Plug>BookmarkAnnotate
+" nnoremap <Leader>ma <Plug>BookmarkShowAll
+" nnoremap <Leader>mj <Plug>BookmarkNext
+" nnoremap <Leader>mk <Plug>BookmarkPrev
+" nnoremap <Leader>mc <Plug>BookmarkClear
+" nnoremap <Leader>mx <Plug>BookmarkClearAll
+" map <leader><leader>mj <Plug>BookmarkMoveDown
+" map <leader><leader>mk <Plug>BookmarkMoveUp
+nnoremap <leader>m :Marks<cr>
 
 " Invoke Goyu for a distraction-free writing environment.
 nnoremap <leader>q :Goyo<cr>
@@ -1117,7 +1118,7 @@ if isdirectory(expand('~/notes'))
 endif
 
 " clever-f
-let g:clever_f_chars_match_any_signs = ';'
+"let g:clever_f_chars_match_any_signs = ':'
 
 " Far
 let g:far#source = 'rg'
