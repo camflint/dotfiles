@@ -1,14 +1,31 @@
 #!/usr/bin/env zsh
 
 function cyclethemes() {
-  local favorites=(phd twilight gruvbox-dark-soft snazzy icy bespin)
-  for name in "${favorites[@]}"; do
+  local i=1
+  while true; do
+    local name="${@[$i]}"
     local cmd="base16_${name}"
-    echo $cmd ; eval $cmd
+    echo "[${i}/${#@}] $name"
+    eval $cmd
     local vim_pane_id=$(tmux list-panes -F '#{pane_id}:#{pane_current_command}' | rg 'vim' | cut -d: -f1)
     [ -n $vim_pane_id ] && tmux send-keys -t ".$vim_pane_id" "escape" "escape" ":source \$MYVIMRC" "enter"
     read -s -k 1
+    if [ $i -lt $#@ ]; then
+      i=$((i + 1))
+    else
+      i=1
+    fi
   done
+}
+
+function cycle_light() {
+  local favorites=(atelier-lakeside-light atelier-heath-light atelier-seaside-light atelier-forest-light gruvbox-light-medium gruvbox-light-soft unikitty-light)
+  cyclethemes $favorites
+}
+
+function cycle_dark() {
+  local favorites=(ashes atlas atelier-savanna atelier-estuary circus porple mocha helios nord phd 3024 spacemacs flat outrun-dark gruvbox-dark-medium gruvbox-dark-pale gruvbox-dark-soft monokai unikitty-dark)
+  cyclethemes $favorites
 }
 
 function testcolor() {
