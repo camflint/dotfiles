@@ -269,6 +269,9 @@ execute 'normal zMzvzz'
 let mapleader = '\'
 let maplocalleader = ','
 
+" Quick suspend.
+nnoremap Z :suspend<cr>
+
 " Folding.
 nnoremap n nzzzv
 nnoremap N Nzzzv
@@ -1131,6 +1134,16 @@ let g:peekaboo_window = "vert bo 65new"
 " Exchange
 " nnoremap cxc <Plug>(ExchangeClear)
 " nnoremap cxx <Plug>(ExchangeLine)
+
+" QF
+" Enable ack-style mappings:
+"  s - open entry in a new horizontal window
+"  v - open entry in a new vertical window
+"  t - open entry in a new tab
+"  o - open entry and come back
+"  O - open entry and close the location/quickfix window
+"  p - open entry in a preview window
+let g:qf_mapping_ack_style=1
 
 " Plugin registry ---------------------------------------------------------{{{1
 

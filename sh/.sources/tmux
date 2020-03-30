@@ -1,34 +1,5 @@
 #!/usr/bin/env sh
 
-# tmux-switch: quickly create or switch to a session, inside or outside of Tmux.
-function tmux-switch-session() {
-  sid=$1
-  if [[ -z "$sid" ]]; then
-    local -r fmt='#{session_id}:|#S|(#{session_attached} attached)'
-    sid=$({ tmux display-message -p -F "$fmt" && tmux list-sessions -F "$fmt"; } \
-      | awk '!seen[$1]++' \
-      | column -t -s'|' \
-      | fzf -q '$' --reverse --prompt 'switch session: ' -1 \
-      | cut -d':' -f1)
-  fi
-  if [[ -z "$sid" ]]; then
-    return 1
-  fi
-  local change
-  [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
-  tmux $change -t "$sid" 2>/dev/null || { tmux new-session -d -s $sid && tmux attach-session -t "$sid"; }
-}
-
-function tmux-switch-window() {
-  if [[ -z "$TMUX" ]]; then return 1; fi
-  local -r fmt='#{window_id}:|#W|(#{?window_active,active,})'
-  wid=$(tmux list-windows -F "$fmt" \
-    | column -t -s'|' \
-    | fzf -q '@' --reverse --prompt 'switch window: ' -1 \
-    | cut -d':' -f1)
-  [[ ! -z "$wid" ]] && tmux select-window -t "$wid"
-}
-
 function tmux-distribute-top() {
   if [[ -z "$TMUX" ]]; then return 1; fi
 
@@ -95,5 +66,5 @@ function tx-update-main-pane-dims() {
   tmux select-layout
 }
 
-alias ts='tmux-switch-session'
-alias tw='tmux-switch-window'
+alias ts='~/.scripts/tx-switch-session.sh'
+alias tw='~/.scripts/tx-switch-window.sh'

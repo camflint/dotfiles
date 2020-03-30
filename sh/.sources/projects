@@ -26,18 +26,17 @@ function layout_ide1() {
   tmux select-pane -t "$WINDOW.1"
 }
 
-# ide2
-function layout_ide2() {
-}
-
-# $1 - project name
+# $1 - project name or absolute path to repo dir
 # $2 - layout name
 function make_project() {
-  local SESSION ; local LAYOUT
+  local SESSION
+  local LAYOUT
+  local BG=0
   [[ -n "$1" ]] && SESSION="$1"
-  [[ -n "$2" ]] && LAYOUT="$1" || LAYOUT='ide1'
+  [[ -n "$2" ]] && LAYOUT="$2" || LAYOUT='basic'
+  [ "$3" = "bg" ] && BG=1
 
-  tmux start-server &> /dev/null
+  tmux start-server &>/dev/null
 
   local CHANGE_COMMAND
   if [[ -n "$TMUX" ]]; then CHANGE_COMMAND='switch-client'; else CHANGE_COMMAND='attach-session'; fi
@@ -48,11 +47,14 @@ function make_project() {
   
   if [[ -n "$SESSION" ]]; then
     tmux has-session -t "$SESSION" &> /dev/null
-    if [[ "$?" == "0" ]]; then
+    if [ "$?" = "0" ]; then
       # Attach to existing session.
-      echo "Attaching to existing session..."; sleep 0.5
-      tmux $CHANGE_COMMAND -t "$SESSION"
-
+      if [ ! $BG -eq 1 ]; then
+        echo "Attaching to existing session..."; sleep 0.5
+        tmux $CHANGE_COMMAND -t "$SESSION"
+      else
+        echo "$SESSION: already started"
+      fi
       return 0
     fi
   fi
@@ -61,44 +63,66 @@ function make_project() {
   # Build new session.
   #
 
+  echo "$SESSION"
+  echo "$LAYOUT"
+  echo "$BG"
+
   local ROOT
   local REPOS
-  case $SESSION in
-    'nacho')
+  case "$SESSION" in
+    shipotle)
       ROOT="$HOME/code/convoyinc"
-      REPOS=(nacho-dashboard shipotle-api global-search-service shipment-search-service)
+      REPOS=(shipotle-api)
       ;;
-    'connect') 
+    nacho)
       ROOT="$HOME/code/convoyinc"
-      REPOS=(connect-web shipper-tms-service nacho-dashboard shipotle-api global-search-service)
+      REPOS=(nacho-dashboard)
       ;;
-    'pricing')
+    sss)
+      ROOT="$HOME/code/convoyinc"
+      REPOS=(shipment-search-service)
+      ;;
+    gss)
+      ROOT="$HOME/code/convoyinc"
+      REPOS=(global-search-service)
+      ;;
+    pricing)
       ROOT="$HOME/code/convoyinc"
       REPOS=(pricing-service)
       ;;
-    'dotfiles')
+    dotfiles)
       ROOT="$HOME/code/camflint"
       REPOS=(dotfiles)
       ;;
-    'wiki')
-      ROOT="$HOME/notes"
-      REPOS=(convoyinc)
-      LAYOUT=basic
-      ;;
-    'scripts')
+    caflint-scripts)
       ROOT="$HOME/code/convoyinc"
       REPOS=(caflint-scripts)
       ;;
-    'notes')
-      ROOT="$HOME/notes"
-      REPOS=(home work)
+    notes)
+      ROOT="$HOME"
+      REPOS=(notes)
+      ;;
+    scratch)
+      ROOT="$HOME"
+      REPOS=(scratch)
       ;;
     *)
-      ROOT="$(dirname $(pwd))"
-      SESSION="$(basename $(pwd))"
-      REPOS=($SESSION)
+      if [ -z "$SESSION" ]; then
+        ROOT="$(dirname $(pwd))"
+        SESSION="$(basename $(pwd))"
+        REPOS=("$SESSION")
+      else
+        ROOT="$(dirname $SESSION)"
+        SESSION="$(basename $SESSION)"
+        REPOS=("$SESSION")
+      fi
       ;;
   esac
+
+  if [ ! -d "$ROOT" ]; then
+    echo "ERROR: invalid root: $ROOT" >&2
+    return 1
+  fi
 
   local x
   local y
@@ -110,20 +134,44 @@ function make_project() {
     y=$(tput lines)
   fi
 
-  tmux new-session -c "$ROOT" -n main -s "$SESSION" -d -x $x -y $y
+  tmux new-session -c "$ROOT" -n main -s "$SESSION" -d -x $x -y $y &>/dev/null
 
   local REPO_WIN
   local REPO_ROOT
   for name in "${REPOS[@]}"; do
     REPO_WIN="$SESSION:$name"
     REPO_ROOT="$ROOT/$name"
+    if [ ! -d "$REPO_ROOT" ]; then
+      echo "ERROR: invalid repo root: $REPO_ROOT" >&2
+      return 1
+    fi
     tmux new-window -d -t "$SESSION" -c "$REPO_ROOT" -n "$name"
     ${LAYOUT_FUNCS[$LAYOUT]} "$REPO_WIN" "$REPO_ROOT"
   done
-  tmux kill-window -t "$SESSION:main"
-  tmux select-window -t "$SESSION:1"
+  tmux kill-window -t "$SESSION:main" &>/dev/null
+  tmux select-window -t "$SESSION:1" &>/dev/null
 
-  tmux $CHANGE_COMMAND -t "$SESSION"
+  if [ ! $BG -eq 1 ]; then
+    tmux $CHANGE_COMMAND -t "$SESSION"
+  else 
+    echo "$SESSION: started"
+  fi
+}
+
+function up() {
+  # Start most frequently-used projects first, to control the session ID sequence.
+  # This makes switching between them easier.
+  make_project shipotle basic bg
+  make_project nacho basic bg
+  make_project dotfiles basic bg
+  make_project caflint-scripts basic bg
+  make_project notes basic bg
+  make_project scratch basic bg
+
+  # Now open a project for every repo.
+  for path in (fd --type d --max-depth 1 --absolute-path -g '*' "$HOME/code/convoyinc"); do
+    make_project "$path" basic bg
+  done
 }
 
 alias ide=ide1
