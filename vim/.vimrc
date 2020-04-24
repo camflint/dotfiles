@@ -5,8 +5,12 @@ set textwidth=120
 set autoindent
 set cursorline
 set ruler
-set mouse=a
 set showmatch
+
+set mouse=a
+set mousefocus
+set mousemodel=popup
+set selectmode=mouse
 
 " Backup settings.
 set swapfile
@@ -146,6 +150,10 @@ endif
 
 " Base16 colorscheme.
 function! s:base16_customize() abort
+  if trim(execute('colorscheme')) !~ 'base16'
+    return
+  endif
+
   " Use italic for comments.
   hi! Comment cterm=italic gui=italic
 
@@ -201,7 +209,6 @@ augroup on_change_colorschema
 augroup END
 
 " See the very bottom of this file for the code that actually triggers the theme.
-
 
 " Filetype customization --------------------------------------------------{{{1
 
@@ -1155,6 +1162,7 @@ call plug#begin('~/.local/share/vim/plugged')
 Plug 'JamshedVesuna/vim-markdown-preview'
 Plug 'asheq/close-buffers.vim'
 Plug 'brooth/far.vim'
+Plug 'camflint/onehalf', { 'rtp': 'vim' }
 Plug 'camflint/vim-superman'
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-tmux-navigator'
@@ -1217,10 +1225,12 @@ endif
 
 call plug#end()
 
+" Theme activation --------------------------------------------------------{{{1
+"
 " This color scheme setup relies on a base16-shell alias having been run to modify the shell's 256-color palette. Doing
 " so should generate the following file for vim. Make sure this statement comes last, as our customization hook higher
 " in the file depends on plugins being loaded.
-if filereadable(expand('~/.vimrc_background'))
+if filereadable(expand('~/.vimrc_background')) && !has('gui_running')
   let base16colorspace=256
   source ~/.vimrc_background
 endif
