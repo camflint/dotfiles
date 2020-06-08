@@ -1,0 +1,53 @@
+let s:black =   [ '#202c3d', 0 ]
+let s:red =     [ '#f76f6e', 1 ]
+let s:green =   [ '#4eac6d', 2 ]
+let s:yellow =  [ '#af9a0a', 3 ]
+let s:blue =    [ '#609fda', 4 ]
+let s:magenta = [ '#cc84ad', 5 ]
+let s:cyan =    [ '#3dab95', 6 ]
+let s:white =   [ '#919ab9', 7 ]
+
+let s:brightblack =   [ '#352f49', 0 ]
+let s:brightred =     [ '#eb7b4d', 1 ]
+let s:brightgreen =   [ '#57ad47', 2 ]
+let s:brightyellow =  [ '#bd951a', 3 ]
+let s:brightblue =    [ '#8196e8', 4 ]
+let s:brightmagenta = [ '#c97ed7', 5 ]
+let s:brightcyan =    [ '#2aa9b6', 6 ]
+let s:brightwhite =   [ '#a0abae', 7 ]
+
+let s:fg =      [ '#a0abae', 15 ]
+let s:bg =      [ '#202c3d', 0 ]
+let s:fgalt =   [ '#919ab9', 7 ]
+let s:bgalt =   [ '#352f49', 8 ]
+
+let s:verywhite =    [ '#dadada', 253 ]
+let s:superwhite =    [ '#eeeeee', 255 ]
+
+let s:p = {'normal': {}, 'inactive': {}, 'insert': {}, 'visual': {}, 'replace': {}, 'tabline': {}}
+let s:p.normal.left = [ [ s:superwhite, s:green ] ]
+let s:p.normal.right = [ [ s:verywhite, s:bgalt ], [ s:verywhite, s:bgalt ] ]
+let s:p.normal.middle = [ [ s:fgalt, s:bgalt ] ]
+let s:p.normal.error = [ [ s:fgalt, s:red ] ]
+let s:p.normal.warning = [ [ s:fgalt, s:yellow ] ]
+let s:p.insert.left = [ [ s:superwhite, s:blue ] ]
+let s:p.visual.left = [ [ s:superwhite, s:cyan ] ]
+let s:p.replace.left = [ [ s:superwhite, s:magenta ] ]
+let s:p.tabline.left = [ [ s:verywhite, s:bgalt ] ]
+let s:p.tabline.tabsel = [ [ s:bg, s:fgalt ] ]
+let s:p.tabline.middle = [ [ s:fgalt, s:bgalt ] ]
+let s:p.tabline.right = copy(s:p.normal.right)
+let s:p.inactive.left =  [ [ s:bgalt, s:fgalt ] ]
+let s:p.inactive.right = [ [ s:bgalt, s:fgalt ], [ s:bgalt, s:fgalt ] ]
+" let s:p.insert.left = [ [ s:bgalt, s:green ], [ s:bgalt, s:bgalt ] ]
+" let s:p.replace.left = [ [ s:bgalt, s:red ], [ s:bgalt, s:bgalt ] ]
+" let s:p.visual.left = [ [ s:bgalt, s:magenta ], [ s:bgalt, s:bgalt ] ]
+" let s:p.inactive.middle = [ [ s:bgalt, s:bgalt ] ]
+" let s:p.tabline.left = [ [ s:bgalt, s:bgalt ] ]
+" let s:p.tabline.tabsel = [ [ s:bgalt, s:bgalt ] ]
+" let s:p.tabline.middle = [ [ s:bgalt, s:bgalt ] ]
+" let s:p.tabline.right = copy(s:p.normal.right)
+" let s:p.normal.error = [ [ s:bgalt, s:red ] ]
+" let s:p.normal.warning = [ [ s:bgalt, s:yellow ] ]
+
+let g:lightline#colorscheme#tempus_summer#palette = lightline#colorscheme#flatten(s:p)

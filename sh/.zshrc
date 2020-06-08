@@ -1,5 +1,6 @@
 # Uncomment me and run 'zprof' in a new interactive shell to profile startup.
 #zmodload zsh/zprof
+zmodload zsh/mathfunc
 
 # Source common configuration.
 source $HOME/.profile
@@ -22,7 +23,7 @@ local lc=$'\e[' rc=m	# Standard ANSI terminal escape values
 # for k in ${(k)color[(I)fg-*]}; do
 #   fg_dim[${k#fg-}]="$lc${color[faint]};${color[$k]}$rc"
 # done
-PS1="%{$fg_bold[white]%}%{$reset_color%} "
+PS1="%{$fg_no_bold[white]%}>%{$reset_color%} "
 
 # Prefix each new prompt with a newline, except right after the shell is
 # spawned.
@@ -62,13 +63,15 @@ source $HOME/.zinit/bin/zinit.zsh
 
 # Load plugins here....
 
+# Plugin options.
+# export FAST_HIGHLIGHT[whatis_chroma_type]=0
+export ZSH_AUTOSUGGEST_USE_ASYNC=1
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#352f49,bg=#919ab9'
+
+
 zinit light zsh-users/zsh-autosuggestions
 #zinit ice wait'' atinit'zpcompinit' silent; zinit light zdharma/fast-syntax-highlighting
-zinit light zdharma/fast-syntax-highlighting
-
-# Plugin options.
-export FAST_HIGHLIGHT[whatis_chroma_type]=0
-export ZSH_AUTOSUGGEST_USE_ASYNC=1
+#zinit light zdharma/fast-syntax-highlighting
 
 # Tab key accepts typeahead suggestions.
 #bindkey '\t' autosuggest-accept

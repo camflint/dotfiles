@@ -63,11 +63,12 @@ if command -v pyenv 1>/dev/null 2>&1; then
 fi
 
 # Golang.
-export PATH=$HOME/go/bin:$PATH
+export PATH="$HOME/go/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
 
 # FZF.
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --ignore-case --glob "!.git/*"'
-export FZF_DEFAULT_OPTS='--bind=ctrl-j:down,ctrl-k:up'
+export FZF_DEFAULT_OPTS='--bind=ctrl-j:down,ctrl-k:up --color=gutter:-1,info:9,hl:3,hl+:11,bg+:8,pointer:5,prompt:4,border:7 --no-bold'
 
 export FZF_CTRL_T_COMMAND='"$(command which fd)" --type f --type d --type l --hidden --no-ignore --follow --color never . 2> /dev/null'
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always --line-range :500 {}' --preview-window=right:67% --height=80%"
@@ -95,7 +96,11 @@ if [[ -d "$HOME/.scripts" ]]; then
 fi
 
 # Base16 colorscheme.
-BASE16_SHELL="$HOME/.local/share/base16-shell"
-[ -n "$PS1" ] && \
-  [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
-    eval "$("$BASE16_SHELL/profile_helper.sh")"
+# BASE16_SHELL="$HOME/.local/share/base16-shell"
+# [ -n "$PS1" ] && \
+#   [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
+#     eval "$("$BASE16_SHELL/profile_helper.sh")"
+
+# [ -d "$HOME/.scripts/base16_hooks" ] && 
+#   export BASE16_SHELL_HOOKS=$HOME/.scripts/base16_hooks
+

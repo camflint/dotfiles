@@ -31,7 +31,9 @@ alias gdt='git difftool'
 alias gf='git fetch'
 alias gg='git grep -n -i'
 alias gl='git l'
+alias glm='git lm'
 alias gls='git ls-files --exclude-standard'
+alias gmb='git merge-base'
 alias gmt='git mergetool'
 alias go='git checkout'
 alias gop='git checkout -p'
@@ -40,6 +42,7 @@ alias gpop='git pop'
 alias gpp='git push'
 alias gppu='git push -u'
 alias gr='git restore'
+alias grebase='git rebase'
 alias grs='git restore --staged'
 alias gs='git status'
 alias gshow='git show'
@@ -48,6 +51,9 @@ alias gsub='git submodule'
 alias gvv='git remote -vv'
 alias gx='git reset'
 alias gxp="git reset 'HEAD^'"
+
+# Github.
+alias hpr='gh pr create'
 
 function gob() {
   name="$1"; shift
@@ -68,9 +74,17 @@ alias mochaf='mocha -f'
 alias isodate='date +%Y-%m-%dT%H:%M:%S%z'
 alias isodateutc='date -u +"%Y-%m-%dT%H:%M:%SZ"'
 
-# Misc...
+# Nativefier
+#  Other options to specify:
+#   --name <name>
+#   --icon <path-to-png>
+#   <targetUrl>
+#   /Applications
 alias nativefier='nativefier --fast-quit --hide-window-frame --maximize --single-instance'
+
+# Misc.
 alias ptpython="ptpython --config-dir='${HOME}/.config/ptpython'"
+alias rec='asciinema rec'
 
 viminfo () { vim -R -M -c "Info $1 $2" +only }
 alias info=viminfo
