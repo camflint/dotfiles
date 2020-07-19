@@ -13,8 +13,10 @@ export LANGUAGE=en_US.UTF-8
 # Disable XON/XOFF to let through <C-S> key events.
 stty -ixon
 
-# Path completion.
+# CDPATH: iCloud.
 export CDPATH=.:~:~/Projects:~/Library/Mobile\ Documents/com~apple~CloudDocs
+
+# CDPATH: Git repos.
 if [[ -d "$HOME/code" ]]; then
     for d in $HOME/code/*; do
         if [[ -d ${d} ]]; then
@@ -22,6 +24,8 @@ if [[ -d "$HOME/code" ]]; then
         fi
     done
 fi
+
+# CDPATH: Boxcryptor.
 box="$HOME/Boxcryptor/iCloud Drive (Mac & PC only)"
 if [[ -d $box ]]; then
   export CDPATH="$box:$CDPATH"
@@ -32,9 +36,19 @@ if [[ -d $box ]]; then
   done
 fi
 
-# Cloud drive aliases.
-[ ! -L "$HOME/iCloud" ] &&\
+# symlink: Google Drive.
+[ ! -L "$HOME/icloud" ] &&\
     ln -s "$HOME/Library/Mobile Documents/com~apple~CloudDocs" "$HOME/icloud"
+[ ! -L "$HOME/gdrive_convoy" ] &&\
+    ln -s "/Volumes/GoogleDrive/My Drive" "$HOME/gdrive_convoy"
+[ ! -L "$HOME/gdrive" ] &&\
+    ln -s "/Volumes/GoogleDrive/My Drive/Bridge" "$HOME/gdrive"
+
+# symlink: Notes.
+[ ! -L "$HOME/notes_convoy" ] &&\
+  ln -s "$HOME/gdrive_convoy/notes" "$HOME/notes_convoy"
+[ ! -L "$HOME/notes" ] &&\
+  ln -s "$HOME/gdrive/notes" "$HOME/notes"
 
 # GNU tools.
 GNU_PATH=/usr/local/opt/coreutils/libexec/gnubin
@@ -63,7 +77,8 @@ if command -v pyenv 1>/dev/null 2>&1; then
 fi
 
 # Golang.
-export PATH=$HOME/go/bin:$PATH
+export PATH="$HOME/go/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
 
 # FZF.
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --ignore-case --glob "!.git/*"'

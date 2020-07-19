@@ -19,12 +19,49 @@ function cyclethemes() {
 }
 
 function cycle_light() {
-  local favorites=(atelier-lakeside-light atelier-heath-light atelier-seaside-light atelier-forest-light gruvbox-light-medium gruvbox-light-soft unikitty-light)
+  local favorites=(
+    atelier-forest-light
+    atelier-heath-light
+    atelier-lakeside-light
+    atelier-seaside-light
+    equilibrium-gray-light
+    equilibrium-light
+    gruvbox-light-medium
+    gruvbox-light-soft
+    huminoid-light
+    unikitty-light
+  )
   cyclethemes $favorites
 }
 
 function cycle_dark() {
-  local favorites=(ashes atlas atelier-savanna atelier-estuary circus porple mocha helios nord phd 3024 spacemacs flat outrun-dark gruvbox-dark-medium gruvbox-dark-pale gruvbox-dark-soft monokai unikitty-dark)
+  local favorites=(
+    3024
+    ashes
+    atelier-estuary
+    atelier-savanna
+    atlas
+    circus
+    decaf
+    espresso
+    flat
+    gruvbox-dark-medium
+    gruvbox-dark-pale
+    gruvbox-dark-soft
+    helios
+    material
+    mocha
+    monokai
+    nord
+    nova
+    oceanicnext
+    outrun-dark
+    phd
+    porple
+    sandcastle
+    spacemacs
+    unikitty-dark
+  )
   cyclethemes $favorites
 }
 
