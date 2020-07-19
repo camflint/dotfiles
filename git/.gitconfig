@@ -12,6 +12,7 @@
   b = branch
   r = remote
   l = log --pretty=format:'%C(white dim)%h%Creset -%C(yellow bold)%d%Creset %s %C(green)(%cr) %C(blue dim)<%an>%Creset' --abbrev-commit
+  lm = log --pretty=format:'%C(white dim)%h%Creset -%C(yellow bold)%d%Creset %s %C(green)(%cr) %C(blue dim)<%an>%Creset' --abbrev-commit --first-parent --simplify-merges
   mt = mergetool
   dt = difftool
 
@@ -44,3 +45,9 @@
   
 [credential]
 	helper = store
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge --skip -- %f
+	process = git-lfs filter-process --skip
+	required = true
