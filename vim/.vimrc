@@ -4,7 +4,7 @@ set encoding=utf-8
 set textwidth=120
 set autoindent
 set cursorline
-set ruler
+set noruler
 set showmatch
 
 set mouse=a
@@ -60,9 +60,74 @@ set number relativenumber
 set showmode
 set showcmd
 
-" Always show the status bar, because I use the status bar as a bufferline.
+" statusline.
+function! StatuslineBufferIndex()
+  let buffers = getbufinfo({'buflisted': 1, 'bufloaded': 1})
+  if len(buffers) ==# 0
+    return '' 
+  endif
+  let index = 1
+  let found = v:false
+  for buf in buffers
+    if buf.bufnr ==# bufnr()
+      let found = v:true
+      break
+    endif
+    let index += 1
+  endfor
+  if found
+    return index .. '/' .. len(buffers)
+  else
+    return ''
+  endif
+endfunction
+function! StatuslineFilename()
+  return ' ' .. expand('%:t') .. (&mod ? ' [+] ' : ' ')
+endfunction
 set laststatus=2
-set showtabline=2
+set statusline=%-10.25(%#User1#%{StatuslineFilename()}%#TabLineFill#\ %{StatuslineBufferIndex()}%)%=%m%r\ %y\ %l:%c\ %p%%
+
+" tabline (format).
+function MyTabLine()
+  let s = ''
+  let s .= '%#TabLineFill#%='
+  let t = tabpagenr()
+  let i = 1
+  while i <= tabpagenr('$')
+    " let buflist = tabpagebuflist(i)
+    " let winnr = tabpagewinnr(i)
+    let s .= (i == t ? '%#TabLineSel#' : '%#TabLine#')
+    let s .= '%' . i . 'T'
+    " let s .= (i == t ? '%1*' : '%2*')
+    let s .= ' '
+    let s .= i
+    " let s .= i . ':'
+    " let s .= winnr . '/' . tabpagewinnr(i,'$')
+    " let s .= ' %*'
+    " let s .= (i == t ? '%#TabLineSel#' : '%#TabLine#')
+    " let bufnr = buflist[winnr - 1]
+    " let file = bufname(bufnr)
+    " let buftype = getbufvar(bufnr, 'buftype')
+    " if buftype == 'nofile'
+    "   if file =~ '\/.'
+    "     let file = substitute(file, '.*\/\ze.', '', '')
+    "   endif
+    " else
+    "   let file = fnamemodify(file, ':p:t')
+    " endif
+    " if file == ''
+    "   let file = '[No Name]'
+    " endif
+    " let s .= file
+    let s .= '%T '
+    let i = i + 1
+  endwhile
+  let s .= '%#TabLine#'
+  " let s .= (tabpagenr('$') > 1 ? ' %999XX ' : ' X ')
+  return s
+endfunction
+set showtabline=1
+set tabline=%!MyTabLine()
 
 " Make sure we can always see 3 lines of context around the cursor.
 set scrolloff=3
@@ -101,11 +166,7 @@ set formatoptions=croqj
 " augroup END
 
 " Help window positioning.
-set helpheight=9999
-augroup vert_help
-  autocmd!
-  autocmd BufEnter *.txt if &buftype == 'help' | wincmd L | endif
-augroup END
+" <TODO>
 
 " Better man pages (when viewed with K or :Man <topic>).
 runtime ftplugin/man.vim
@@ -140,7 +201,7 @@ endif
 
 " 'termguicolors' works in consoles with 24-bit (RGB) color support only.  When set, 'termguicolors' instructs vim to
 " issue RGB color escape codes with the colors from gui, guifg, guibg etc. (see :help :highlight).
-if exists('+termguicolors') && $TERM !~# '^\%(screen\|tmux|rxvt\)'
+if exists('+termguicolors') && $TERM !~# '\v^(screen|tmux|rxvt)'
   let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
   let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
   set termguicolors
@@ -253,6 +314,12 @@ function! s:setup_filetype_vim()
   setlocal textwidth=80
 endfunction
 
+" Filetype: help
+function! s:setup_filetype_help()
+  " Don't show hidden chars, since helpfiles contain a lot of tabs.
+  setlocal nolist
+endfunction
+
 augroup setup_filetypes
   autocmd!
   autocmd FileType javascript,typescript :call <SID>setup_filetype_javascript()
@@ -261,6 +328,7 @@ augroup setup_filetypes
   autocmd FileType org                   :call <SID>setup_filetype_org()
   autocmd FileType typescript            :call <SID>setup_filetype_typescript()
   autocmd FileType vim,vifm              :call <SID>setup_filetype_vim()
+  autocmd FileType help                  :call <SID>setup_filetype_help()
 augroup END
 
 " Always re-apply filetype settings when .vimrc is sourced (because sourcing
@@ -323,12 +391,6 @@ map <PageUp> <C-U>
 map <End> <C-F>
 map <Home> <C-B>
 
-" Disable arrow keys (no cheating!)
-map <Left> <Nop>
-map <Right> <Nop>
-map <Up> <Nop>
-map <Down> <Nop>
-
 " Shortcut to close all temporary windows, turn off highlighting, and otherwise reset editing state.
 nnoremap <localleader>l :noh<cr> \|
 \ :cclose<cr> \|
@@ -359,8 +421,6 @@ nnoremap <localleader>bc :Bdelete this<cr>
 nnoremap <localleader>bx :Bdelete all<cr>
 nnoremap <localleader>bi :Bdelete select<cr>
 
-nnoremap <leader>r :FZFMru<cr>
-
 " Buffer number keys.
 nmap <leader>1 <Plug>lightline#bufferline#go(1)
 nmap <leader>2 <Plug>lightline#bufferline#go(2)
@@ -373,8 +433,12 @@ nmap <leader>8 <Plug>lightline#bufferline#go(8)
 nmap <leader>9 <Plug>lightline#bufferline#go(9)
 nmap <leader>0 <Plug>lightline#bufferline#go(10)
 
+" Recent files.
+nnoremap <leader>r :FZFMru<cr>
+
 " Tab management.
-"nnoremap <localleader><tab> :tabnext<cr>
+nnoremap J :tabprev<CR>
+nnoremap K :tabnext<CR>
 
 " Split management.
 nnoremap <localleader>s- <C-w>s<C-w>j                                             |" Split vertically.
@@ -384,10 +448,10 @@ nnoremap <localleader>sx <C-w>q                                                 
 nnoremap <localleader>so <C-w>o                                                   |" Kill other splits ("only").
 nnoremap <localleader>sz <C-w>\|<C-w>_                                            |" Zoom split.
 nnoremap <localleader>s= :set equalalways<cr> \| <C-w>= \| :set noequalalways<cr> |" Distribute splits.
-augroup split_resize
-  autocmd!
-  autocmd VimResized * wincmd =                                                   |" Redistribute windows when the client is resized.
-augroup END
+" augroup split_resize
+"   autocmd!
+"   autocmd VimResized * wincmd =                                                   |" Redistribute windows when the client is resized.
+" augroup END
 
 function! WinBufSwap()
   let thiswin = winnr()
@@ -398,28 +462,38 @@ function! WinBufSwap()
   exec  lastwin . " wincmd w" ."|".
       \ "buffer ". thisbuf ."|".
       \ thiswin ." wincmd w" ."|".
-      \ "buffer ". lastbuf
+      \ "buffer ". lastbuf . "|".
+      \ lastwin . " wincmd w"
 endfunction
 nnoremap <localleader>ss <C-c>:call WinBufSwap()<cr> |" Swap this and the last window.
 
 " Home screen.
-nnoremap <leader>h :Startify<cr>
+nnoremap <leader>q :Startify<cr>
 
 " Fuzzy file finders.
-nnoremap <c-p> :Files <c-r>=getcwd()<cr><cr>
-nnoremap <m-p> :Files <c-r>=expand('%:h')<cr><cr>
 nnoremap <leader>f :Files <c-r>=getcwd()<cr><cr>
+nnoremap <leader>F :Files <c-r>=expand('%:h')<cr><cr>
 
 " Project search.
 nnoremap <c-s> :Grepper -tool rg<cr>
+nnoremap <leader>s :Grepper -tool rg<cr>
 nnoremap <localleader>* :Grepper -tool rg -cword -noprompt<cr>
 
 " File explorers.
-nnoremap <leader>s <cmd>MyToggleNERDTree<cr>
+nnoremap <leader>o <cmd>MyToggleNERDTree<cr>
 nnoremap <leader>e :EditVifm<cr>
 
-" Symbol explorers.
-nnoremap <leader>o :Vista vim_lsp<cr>
+" Commands.
+nnoremap <leader>c <c-u>:Commands<cr>
+
+" Command history.
+nnoremap <leader>C <c-u>:History:<cr>
+
+" Search history.
+nnoremap <leader>S <c-u>:History/<cr>
+
+" Help tags.
+nnoremap <leader>h <c-u>:Helptags<cr>
 
 " Intellisense (LSP) mappings.
 function! s:setup_vim_lsp_keymaps()
@@ -537,7 +611,7 @@ nnoremap <leader>do :diffoff<cr>
 nnoremap <leader>m :Marks<cr>
 
 " Invoke Goyu for a distraction-free writing environment.
-nnoremap <leader>q :Goyo<cr>
+nnoremap <leader>w :Goyo<cr>
  
 " Invoke Easymotion for rapid movement.
 map <space> <Plug>(easymotion-prefix)
@@ -567,19 +641,22 @@ function! s:setup_org_mode_mappings()
   nmap <buffer><silent> <localleader>2 <Cmd>OrgAgendaTodo<CR>
   nmap <buffer><silent> <localleader>3 <Cmd>OrgAgendaWeek<CR>
 
-  imap <buffer><silent> <c-m-h> <C-O><Plug>OrgDemoteOnHeadingInsert<CR>
-  imap <buffer><silent> <c-m-l> <C-O><Cmd><Plug>OrgPromoteOnHeadingInsert<CR>
-  imap <buffer><silent> <m-h> <Plug>OrgNewHeadingBelowAfterChildrenNormal<CR>
-  imap <buffer><silent> <m-i> <C-O><Cmd>OrgPlainListItemNewBelow<CR>
-  imap <buffer><silent> <m-I> <C-O><Cmd>OrgPlainListItemNewAbove<CR>
-  imap <buffer><silent> <m-c> <C-O><Cmd>OrgCheckBoxNewBelow<CR>
-  imap <buffer><silent> <m-C> <C-O><Cmd>OrgCheckBoxNewAbove<CR>
-  imap <buffer><silent> <m-x> <C-O><Cmd>OrgCheckBoxToggle<CR>
-  imap <buffer><silent> <m-d> <C-O><Cmd>OrgDateInsertTimestampActiveCmdLine<CR>
-  imap <buffer><silent> <m-l> <C-O><Cmd>OrgHyperlinkInsert<CR>
-  imap <buffer><silent> <m-t> <C-O><Cmd>OrgSetTags<CR>
+  imap <buffer><silent> <c-m-h> <Plug>OrgDemoteOnHeadingInsert
+  imap <buffer><silent> <c-m-l> <Plug>OrgPromoteOnHeadingInsert
+  imap <buffer><silent> <m-h> <Plug>OrgNewHeadingBelowAfterChildrenInsert
+  imap <buffer><silent> <m-i> <Plug>OrgPlainListItemNewBelow
+  imap <buffer><silent> <m-I> <Plug>OrgPlainListItemNewAbove
+  imap <buffer><silent> <m-c> <Plug>OrgCheckBoxNewBelow
+  imap <buffer><silent> <m-C> <Plug>OrgCheckBoxNewAbove
+  imap <buffer><silent> <m-x> <Plug>OrgCheckBoxToggle
+  imap <buffer><silent> <m-d> <Plug>OrgDateInsertTimestampActiveCmdLine
+  imap <buffer><silent> <m-l> <Plug>OrgHyperlinkInsert
+  imap <buffer><silent> <m-t> <Plug>OrgSetTags
 endfunction
 command! SetupOrgModeMappings :call <SID>setup_org_mode_mappings()
+
+" Markdown mappings.
+map <c-m> <plug>MarkdownPreviewToggle
 
 " Text snippets -----------------------------------------------------------{{{1
 " A syntax for placeholders
@@ -587,7 +664,7 @@ command! SetupOrgModeMappings :call <SID>setup_org_mode_mappings()
 inoremap <c-n> <Esc>/<++><CR><Esc>cf>
 
 " Insert datetime.
-inoremap <C-d> <C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR>
+"inoremap <C-d> <C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR>
 
 " Javascript/Typescript snippets.
 function! s:setup_js_ts_snippets()
@@ -676,10 +753,10 @@ let g:pydoc_window_lines=0.5
 
 " Tabularize.
 if exists(":Tabularize")
-  nmap <Leader>a= :Tabularize /=<CR>
-  vmap <Leader>a= :Tabularize /=<CR>
-  nmap <Leader>a: :Tabularize /:\zs<CR>
-  vmap <Leader>a: :Tabularize /:\zs<CR>
+  nmap <Leader>t= :Tabularize /=<CR>
+  vmap <Leader>t= :Tabularize /=<CR>
+  nmap <Leader>t: :Tabularize /:\zs<CR>
+  vmap <Leader>t: :Tabularize /:\zs<CR>
 endif
 
 inoremap <silent> <Bar>   <Bar><Esc>:call <SID>align()<CR>a
@@ -820,140 +897,194 @@ nnoremap <silent><expr> <F6> execute("Termdebug ". expand('%:r'))
 let g:termdebug_wide = 143
 let g:vimspector_enable_mappings = 'HUMAN'
 
-" Lightline.
-let g:lightline = {
-  \ 'colorscheme': 'base16',
-  \ 'subseparator': { 'left': '|', 'right': '|' },
-  \ 'active': {
-  \   'left': [ [ 'mode', 'paste' ] ],
-  \   'right': [ [ 'lineinfo' ], [ 'percent' ], [ 'readonly' ] ]
-  \ },
-  \ 'component_function': {
-  \   'mode': 'LightlineMode',
-  \   'fugitive': 'LightlineFugitive',
-  \   'filename': 'LightlineFilename',
-  \   'currentfunction': 'CocCurrentFunction',
-  \   'nearestfunction': 'CocNearestFunction',
-  \   'fileformat': 'LightlineFileformat',
-  \   'fileencoing': 'LightlineFileencoding',
-  \   'filetype': 'LightlineFiletype'
-  \ },
-  \ 'component_expand': {
-  \   'buffers': 'lightline#bufferline#buffers',
-  \   'linter_warnings': 'LightlineCocWarnings',
-  \   'linter_errors': 'LightlineCocErrors',
-  \   'linter_infos': 'LightlineCocInfos',
-  \   'linter_hints': 'LightlineCocHints'
-  \ },
-  \ 'tabline': {
-  \   'left': [ [ 'tabs' ] ],
-  \   'right': [ [ 'close' ], [ 'buffers' ] ]
-  \ },
-  \ 'tab': {
-  \   'active': [ 'tabnum', 'modified' ],
-  \   'inactive': [ 'tabnum', 'modified' ]
-  \ },
-  \ 'component_type': {
-  \   'readonly': 'error',
-  \   'linter_warnings': 'warning',
-  \   'linter_errors': 'error',
-  \   'linter_infos': 'tabsel',
-  \   'linter_hints': 'middle',
-  \   'buffers': 'tabsel'
-  \ },
-  \ 'enable': {
-  \   'statusline': 1,
-  \   'tabline': 1
-  \ }
-  \}
+" " Lightline.
+" let s:black =   [ '#202c3d', 0 ]
+" let s:red =     [ '#f76f6e', 1 ]
+" let s:green =   [ '#4eac6d', 2 ]
+" let s:yellow =  [ '#af9a0a', 3 ]
+" let s:blue =    [ '#609fda', 4 ]
+" let s:magenta = [ '#cc84ad', 5 ]
+" let s:cyan =    [ '#3dab95', 6 ]
+" let s:white =   [ '#919ab9', 7 ]
 
-" Lightline component definitions.
-function! CocCurrentFunction()
-  return get(b:, 'coc_current_function', '')
-endfunction
-function! CocNearestFunction()
-  return get(b:, 'vista_nearest_method_or_function', '')
-endfunction
-function! LightlineModified()
-  return &ft =~ 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
-endfunction
-function! LightlineReadonly()
-  return &ft !~? 'help' && &readonly ? 'RO' : ''
-endfunction
-function! LightlineCocErrors() abort
-  return s:lightline_coc_diagnostic('error', 'error')
-endfunction
-function! LightlineCocWarnings() abort
-  return s:lightline_coc_diagnostic('warning', 'warning')
-endfunction
-function! LightlineCocInfos() abort
-  return s:lightline_coc_diagnostic('information', 'info')
-endfunction
-function! LightlineCocHints() abort
-  return s:lightline_coc_diagnostic('hints', 'hint')
-endfunction
-function! LightlineFilename()
-  let fname = expand('%:t')
-  return fname == 'ControlP' && has_key(g:lightline, 'ctrlp_item') ? g:lightline.ctrlp_item :
-        \ fname == '__Tagbar__' ? g:lightline.fname :
-        \ fname =~ '__Gundo\|NERD_tree' ? '' :
-        \ &ft == 'vimfiler' ? vimfiler#get_status_string() :
-        \ &ft == 'unite' ? unite#get_status_string() :
-        \ &ft == 'vimshell' ? vimshell#get_status_string() :
-        \ ('' != LightlineReadonly() ? LightlineReadonly() . ' ' : '') .
-        \ ('' != fname ? fname : '[No Name]') .
-        \ ('' != LightlineModified() ? ' ' . LightlineModified() : '')
-endfunction
-function! LightlineFugitive()
-  try
-    if expand('%:t') !~? 'Tagbar\|Gundo\|NERD' && &ft !~? 'vimfiler' && exists('*fugitive#head')
-      let mark = ''  " edit here for cool mark
-      let branch = fugitive#head()
-      return branch !=# '' ? mark.branch : ''
-    endif
-  catch
-  endtry
-  return ''
-endfunction
-function! LightlineFileformat()
-  return winwidth(0) > 70 ? &fileformat : ''
-endfunction
-function! LightlineFiletype()
-  return winwidth(0) > 70 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
-endfunction
-function! LightlineFileencoding()
-  return winwidth(0) > 70 ? (&fenc !=# '' ? &fenc : &enc) : ''
-endfunction
-function! LightlineMode()
-  let fname = expand('%:t')
-  return fname == '__Tagbar__' ? 'Tagbar' :
-        \ fname == 'ControlP' ? 'CtrlP' :
-        \ fname == '__Gundo__' ? 'Gundo' :
-        \ fname == '__Gundo_Preview__' ? 'Gundo Preview' :
-        \ fname =~ 'NERD_tree' ? 'NERDTree' :
-        \ &ft == 'unite' ? 'Unite' :
-        \ &ft == 'vimfiler' ? 'VimFiler' :
-        \ &ft == 'vimshell' ? 'VimShell' :
-        \ winwidth(0) > 60 ? lightline#mode() : ''
-endfunction
-function! s:lightline_coc_diagnostic(kind, sign) abort
-  let info = get(b:, 'coc_diagnostic_info', 0)
-  if empty(info) || get(info, a:kind, 0) == 0
-    return ''
-  endif
-  if a:sign == 'error'
-    let s = g:coc_status_error_sign
-  elseif a:sign == 'warning'
-    let s = g:coc_status_warning_sign
-  elseif a:sign == 'info'
-    let s = g:coc_status_info_sign
-  elseif a:sign == 'hint'
-    let s = g:coc_status_hint_sign
-  else
-    let s = ''
-  endif
-  return printf('%s %d', s, info[a:kind])
-endfunction
+" let s:brightblack =   [ '#352f49', 0 ]
+" let s:brightred =     [ '#eb7b4d', 1 ]
+" let s:brightgreen =   [ '#57ad47', 2 ]
+" let s:brightyellow =  [ '#bd951a', 3 ]
+" let s:brightblue =    [ '#8196e8', 4 ]
+" let s:brightmagenta = [ '#c97ed7', 5 ]
+" let s:brightcyan =    [ '#2aa9b6', 6 ]
+" let s:brightwhite =   [ '#a0abae', 7 ]
+
+" let s:fg =      [ '#a0abae', 15 ]
+" let s:bg =      [ '#202c3d', 0 ]
+" let s:fgalt =   [ '#919ab9', 7 ]
+" let s:bgalt =   [ '#352f49', 8 ]
+
+" let s:verywhite =    [ '#dadada', 253 ]
+" let s:superwhite =    [ '#eeeeee', 255 ]
+
+" let s:p = {'normal': {}, 'inactive': {}, 'insert': {}, 'visual': {}, 'replace': {}, 'tabline': {}}
+" let s:p.normal.left = [ [ s:superwhite, s:green ] ]
+" let s:p.normal.right = [ [ s:verywhite, s:bg ], [ s:verywhite, s:bg ] ]
+" let s:p.normal.middle = [ [ s:fgalt, s:bg ] ]
+" let s:p.normal.error = [ [ s:fgalt, s:red ] ]
+" let s:p.normal.warning = [ [ s:fgalt, s:yellow ] ]
+" let s:p.insert.left = [ [ s:superwhite, s:blue ] ]
+" let s:p.visual.left = [ [ s:superwhite, s:cyan ] ]
+" let s:p.replace.left = [ [ s:superwhite, s:magenta ] ]
+" let s:p.tabline.left = [ [ s:verywhite, s:bg ] ]
+" let s:p.tabline.tabsel = [ [ s:bg, s:fgalt ] ]
+" let s:p.tabline.middle = [ [ s:fgalt, s:bg ] ]
+" let s:p.tabline.right = copy(s:p.normal.right)
+" let s:p.inactive.left =  [ [ s:bg, s:fgalt ] ]
+" let s:p.inactive.right = [ [ s:bg, s:fgalt ], [ s:bg, s:fgalt ] ]
+" " let s:p.insert.left = [ [ s:bgalt, s:green ], [ s:bgalt, s:bgalt ] ]
+" " let s:p.replace.left = [ [ s:bgalt, s:red ], [ s:bgalt, s:bgalt ] ]
+" " let s:p.visual.left = [ [ s:bgalt, s:magenta ], [ s:bgalt, s:bgalt ] ]
+" " let s:p.inactive.middle = [ [ s:bgalt, s:bgalt ] ]
+" " let s:p.tabline.left = [ [ s:bgalt, s:bgalt ] ]
+" " let s:p.tabline.tabsel = [ [ s:bgalt, s:bgalt ] ]
+" " let s:p.tabline.middle = [ [ s:bgalt, s:bgalt ] ]
+" " let s:p.tabline.right = copy(s:p.normal.right)
+" " let s:p.normal.error = [ [ s:bgalt, s:red ] ]
+" " let s:p.normal.warning = [ [ s:bgalt, s:yellow ] ]
+
+" let g:lightline#colorscheme#tempus_summer#palette = lightline#colorscheme#flatten(s:p)
+
+" let g:lightline = {
+"   \ 'colorscheme': 'tempus_summer',
+"   \ 'subseparator': { 'left': '|', 'right': '|' },
+"   \ 'active': {
+"   \   'left': [ ],
+"   \   'right': [ [ 'lineinfo' ], [ 'percent' ], [ 'readonly' ], [ 'mode' ] ]
+"   \ },
+"   \ 'component_function': {
+"   \   'mode': 'LightlineMode',
+"   \   'fugitive': 'LightlineFugitive',
+"   \   'filename': 'LightlineFilename',
+"   \   'currentfunction': 'CocCurrentFunction',
+"   \   'nearestfunction': 'CocNearestFunction',
+"   \   'fileformat': 'LightlineFileformat',
+"   \   'fileencoing': 'LightlineFileencoding',
+"   \   'filetype': 'LightlineFiletype'
+"   \ },
+"   \ 'component_expand': {
+"   \   'buffers': 'lightline#bufferline#buffers',
+"   \   'linter_warnings': 'LightlineCocWarnings',
+"   \   'linter_errors': 'LightlineCocErrors',
+"   \   'linter_infos': 'LightlineCocInfos',
+"   \   'linter_hints': 'LightlineCocHints'
+"   \ },
+"   \ 'tabline': {
+"   \   'left': [ [ 'tabs' ] ],
+"   \   'right': [ [ 'close' ], [ 'buffers' ] ]
+"   \ },
+"   \ 'tab': {
+"   \   'active': [ 'tabnum', 'modified' ],
+"   \   'inactive': [ 'tabnum', 'modified' ]
+"   \ },
+"   \ 'component_type': {
+"   \   'readonly': 'error',
+"   \   'linter_warnings': 'warning',
+"   \   'linter_errors': 'error',
+"   \   'linter_infos': 'tabsel',
+"   \   'linter_hints': 'middle',
+"   \   'buffers': 'tabsel'
+"   \ },
+"   \ 'enable': {
+"   \   'statusline': 1,
+"   \   'tabline': 1
+"   \ }
+"   \}
+
+" " Lightline component definitions.
+" function! CocCurrentFunction()
+"   return get(b:, 'coc_current_function', '')
+" endfunction
+" function! CocNearestFunction()
+"   return get(b:, 'vista_nearest_method_or_function', '')
+" endfunction
+" function! LightlineModified()
+"   return &ft =~ 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+" endfunction
+" function! LightlineReadonly()
+"   return &ft !~? 'help' && &readonly ? 'RO' : ''
+" endfunction
+" function! LightlineCocErrors() abort
+"   return s:lightline_coc_diagnostic('error', 'error')
+" endfunction
+" function! LightlineCocWarnings() abort
+"   return s:lightline_coc_diagnostic('warning', 'warning')
+" endfunction
+" function! LightlineCocInfos() abort
+"   return s:lightline_coc_diagnostic('information', 'info')
+" endfunction
+" function! LightlineCocHints() abort
+"   return s:lightline_coc_diagnostic('hints', 'hint')
+" endfunction
+" function! LightlineFilename()
+"   let fname = expand('%:t')
+"   return fname == 'ControlP' && has_key(g:lightline, 'ctrlp_item') ? g:lightline.ctrlp_item :
+"         \ fname == '__Tagbar__' ? g:lightline.fname :
+"         \ fname =~ '__Gundo\|NERD_tree' ? '' :
+"         \ &ft == 'vimfiler' ? vimfiler#get_status_string() :
+"         \ &ft == 'unite' ? unite#get_status_string() :
+"         \ &ft == 'vimshell' ? vimshell#get_status_string() :
+"         \ ('' != LightlineReadonly() ? LightlineReadonly() . ' ' : '') .
+"         \ ('' != fname ? fname : '[No Name]') .
+"         \ ('' != LightlineModified() ? ' ' . LightlineModified() : '')
+" endfunction
+" function! LightlineFugitive()
+"   try
+"     if expand('%:t') !~? 'Tagbar\|Gundo\|NERD' && &ft !~? 'vimfiler' && exists('*fugitive#head')
+"       let mark = ''  " edit here for cool mark
+"       let branch = fugitive#head()
+"       return branch !=# '' ? mark.branch : ''
+"     endif
+"   catch
+"   endtry
+"   return ''
+" endfunction
+" function! LightlineFileformat()
+"   return winwidth(0) > 70 ? &fileformat : ''
+" endfunction
+" function! LightlineFiletype()
+"   return winwidth(0) > 70 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
+" endfunction
+" function! LightlineFileencoding()
+"   return winwidth(0) > 70 ? (&fenc !=# '' ? &fenc : &enc) : ''
+" endfunction
+" function! LightlineMode()
+"   let fname = expand('%:t')
+"   return fname == '__Tagbar__' ? 'Tagbar' :
+"         \ fname == 'ControlP' ? 'CtrlP' :
+"         \ fname == '__Gundo__' ? 'Gundo' :
+"         \ fname == '__Gundo_Preview__' ? 'Gundo Preview' :
+"         \ fname =~ 'NERD_tree' ? 'NERDTree' :
+"         \ &ft == 'unite' ? 'Unite' :
+"         \ &ft == 'vimfiler' ? 'VimFiler' :
+"         \ &ft == 'vimshell' ? 'VimShell' :
+"         \ winwidth(0) > 60 ? lightline#mode() : ''
+" endfunction
+" function! s:lightline_coc_diagnostic(kind, sign) abort
+"   let info = get(b:, 'coc_diagnostic_info', 0)
+"   if empty(info) || get(info, a:kind, 0) == 0
+"     return ''
+"   endif
+"   if a:sign == 'error'
+"     let s = g:coc_status_error_sign
+"   elseif a:sign == 'warning'
+"     let s = g:coc_status_warning_sign
+"   elseif a:sign == 'info'
+"     let s = g:coc_status_info_sign
+"   elseif a:sign == 'hint'
+"     let s = g:coc_status_hint_sign
+"   else
+"     let s = ''
+"   endif
+"   return printf('%s %d', s, info[a:kind])
+" endfunction
 
 " Update and show lightline but only if it's visible (e.g., not in Goyo)
 function! s:MaybeUpdateLightline()
@@ -988,18 +1119,6 @@ let g:lightline#bufferline#number_map = {
 " Kwbd - a better 'bd': close buffer without closing window.
 cabbrev bd <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'Kwbd' : 'bd')<cr>
 
-" Vista.
-let g:vista_default_executive = 'vim_lsp'
-let g:vista_finder_alternative_executives = ['ctags']
-let g:vista_fzf_preview = ['right:50%']
-let g:vista_sidebar_width= 47
-let g:vista_echo_cursor_strategy = 'scroll'
-let g:vista#renderer#enable_icon = 1
-augroup filetype_vista
-  autocmd!
-  autocmd FileType vista,vista_kind nnoremap <buffer><silent> / :<c-u>call vista#finder#fzf#Run(g:vista_default_executive)<cr>
-augroup end
-
 " Autocomplete (various).
 let g:asyncomplete_auto_popup = 0
 let g:asyncomplete_popup_delay = 100
@@ -1011,6 +1130,11 @@ let g:lsp_settings_servers_dir = expand('~/.local/share/nvim/lsp/')
 let g:lsp_completion_resolve_timeout = 10
 let g:lsp_diagnostics_echo_cursor = 1
 let g:lsp_virtual_text_enabled = 0
+let g:lsp_diagnostics_enabled = !&diff
+augroup lsp_diag_diff
+  autocmd!
+  autocmd OptionSet diff let g:lsp_diagnostics_enabled = !&diff
+augroup END
 
 " NERDTree.
 let g:NERDTreeBookmarksFile = expand('~/.config/local/vim/nerdtree/bookmarks')
@@ -1074,27 +1198,65 @@ augroup END
 " augroup END
 
 " Startify.
+function! s:SortByChangedTickDesc(buf1, buf2)
+  return -1 * 
+        \ a:buf1.changedtick > a:buf2.changedtick ? 1 :
+        \ a:buf1.changedtick < a:buf2.changedtick ? -1 :
+        \ 0
+endfunction
+function! s:BufInfoToStartifyLine(key, value)
+  let buf = a:value
+  let name = len(buf.name) > 0 ? buf.name : '[No Name]'
+  return { 'line': name, 'cmd': 'buffer ' .. buf.bufnr }
+endfunction
+function! s:ListBuffersByChangedTickDesc()
+  let buffers = getbufinfo({'buflisted': 1}) 
+  let buffers = sort(buffers, 's:SortByChangedTickDesc')
+  return map(buffers, function('s:BufInfoToStartifyLine'))
+endfunction
 let g:startify_change_to_dir = 0
+let g:startify_files_number = 7
+let g:startify_enable_special = 0
+" let g:startify_custom_header = [
+"   \ '            _          ',
+"   \ '    _   __ (_)____ ___ ',
+"   \ '   | | / // // __ `__ \',
+"   \ '   | |/ // // / / / / /',
+"   \ '   |___//_//_/ /_/ /_/ ',
+"   \ ' ',
+" \ ]
 let g:startify_lists = [
-      \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
-      \ { 'type': 'files',     'header': ['   MRU']            },
-      \ { 'type': 'sessions',  'header': ['   Sessions']       },
-      \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
-      \ { 'type': 'commands',  'header': ['   Commands']       },
-      \ ]
+  \ { 'type': function('s:ListBuffersByChangedTickDesc'), 'header': ['   Buffers']        },
+  \ { 'type': 'dir',                                      'header': ['   Files']          },
+  \ { 'type': 'sessions',                                 'header': ['   Sessions']       },
+  \ { 'type': 'bookmarks',                                'header': ['   Bookmarks']      },
+  \ { 'type': 'commands',                                 'header': ['   Commands']       },
+\ ]
+function! s:SetupStartify()
+  nnoremap <buffer> o <plug>(startify-open-buffers)
+  nnoremap <buffer> e :EditVifm<cr>
+endfunction
+autocmd User Startified :call s:SetupStartify()
 
 " Cursorcross.
 let g:cursorcross_no_map_CR=1
 let g:cursorcross_mappings=0
 
 " Vimwiki.
-" let g:vimwiki_list = [{
-"   \ 'path': '$HOME/notes',
-"   \ 'path_html': '$HOME/notes/dist'
-"   \ }]
+let g:vimwiki_list = [{
+  \ 'path': $HOME .. '/wiki',
+  \ 'path_html': $HOME .. 'wiki/dist',
+  \ 'auto_toc': 1,
+  \ 'auto_tags': 1,
+  \ 'auto_diary_index': 1,
+  \ 'diary_rel_path': 'journal/',
+  \ 'diary_index': 'journal',
+  \ 'diary_header': 'Journal',
+\ }]
 " let g:vimwiki_listsym_rejected = '✗'
-" let g:vimwiki_use_mouse = 1
-" let g:vimwiki_folding = 'syntax'
+let g:vimwiki_listsyms = ' ○◐●✓'
+let g:vimwiki_use_mouse = 1
+let g:vimwiki_folding = 'expr'
 
 " Goyo.
 let g:goyo_width = 150
@@ -1114,14 +1276,12 @@ augroup setup_goyo
   autocmd User GoyoLeave nested call <SID>goyo_leave()
 augroup END
 
-" vim-markdown-preview.
-let vim_markdown_preview_hotkey = '<C-m>'
-let vim_markdown_preview_browser = 'Firefox'
-let vim_markdown_preview_github = 1
+" markdown-preview.nvim
+"let g:mkdp_browser = 'Chrome'
 
 " vim-orgmode
 let g:org_heading_shade_leading_stars=1
-let g:org_indent=1
+let g:org_indent=0
 let g:org_aggressive_conceal=1
 if isdirectory(expand('~/notes'))
   let g:org_agenda_files = ['~/notes/*.org']
@@ -1159,35 +1319,40 @@ let g:qf_mapping_ack_style=1
 call plug#begin('~/.local/share/vim/plugged')
 
 " Essential plugins.
-Plug 'JamshedVesuna/vim-markdown-preview'
 Plug 'asheq/close-buffers.vim'
 Plug 'brooth/far.vim'
+Plug 'camflint/base16-vim'
 Plug 'camflint/onehalf', { 'rtp': 'vim' }
+Plug 'camflint/vim-paraglide'
 Plug 'camflint/vim-superman'
-Plug 'chriskempson/base16-vim'
+Plug 'chrisbra/Colorizer'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'dkarter/bullets.vim'
+Plug 'dougbeney/pickachu'
 Plug 'easymotion/vim-easymotion'
 Plug 'faceleg/delete-surrounding-function-call.vim'
+Plug 'fcpg/vim-fahrenheit'
 Plug 'fcpg/vim-navmode'
 Plug 'godlygeek/tabular'
 Plug 'hiphish/info.vim'
+Plug 'https://gitlab.com/protesilaos/tempus-themes-vim.git'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
 Plug 'inkarkat/vim-PatternsOnText'
 Plug 'inkarkat/vim-ingo-library'
 Plug 'itchyny/calendar.vim'
-Plug 'itchyny/lightline.vim'
 Plug 'jceb/vim-orgmode'
 Plug 'jparise/vim-graphql'
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/vim-peekaboo'
+Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
 Plug 'liuchengxu/vim-which-key'
-Plug 'liuchengxu/vista.vim'
 Plug 'mattesgroeger/vim-bookmarks'
 Plug 'mattn/vim-lsp-settings'
-Plug 'mengelbrecht/lightline-bufferline'
 Plug 'mhinz/vim-grepper'
 Plug 'mhinz/vim-startify'
 Plug 'mtth/cursorcross.vim'
+Plug 'mzlogin/vim-markdown-toc'
 Plug 'pbogut/fzf-mru.vim'
 Plug 'plasticboy/vim-markdown'
 Plug 'prabirshrestha/async.vim'
@@ -1201,6 +1366,7 @@ Plug 'rgarver/kwbd.vim'
 Plug 'rhysd/clever-f.vim'
 Plug 'romainl/vim-qf'
 Plug 'sheerun/vim-polyglot'
+Plug 'tomasr/molokai'
 Plug 'tommcdo/vim-exchange'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-endwise'
@@ -1209,6 +1375,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rhubarb'
+Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-vinegar'
