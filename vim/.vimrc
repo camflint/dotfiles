@@ -656,7 +656,7 @@ endfunction
 command! SetupOrgModeMappings :call <SID>setup_org_mode_mappings()
 
 " Markdown mappings.
-map <c-m> <plug>MarkdownPreviewToggle
+map <c-M> <plug>MarkdownPreviewToggle
 
 " Text snippets -----------------------------------------------------------{{{1
 " A syntax for placeholders
