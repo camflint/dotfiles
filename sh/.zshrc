@@ -81,11 +81,12 @@ source $HOME/.zinit/bin/zinit.zsh
 # Load plugins here....
 
 # Plugin options.
-export FAST_HIGHLIGHT[whatis_chroma_type]=0
+# export FAST_HIGHLIGHT[whatis_chroma_type]=0
 export ZSH_AUTOSUGGEST_USE_ASYNC=1
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#352f49,bg=#919ab9'
 
 zinit light zsh-users/zsh-autosuggestions
+zinit light wfxr/formarks
 #zinit ice wait'' atinit'zpcompinit' silent; zinit light zdharma/fast-syntax-highlighting
 #zinit light zdharma/fast-syntax-highlighting
 
@@ -100,7 +101,16 @@ compinit
 compdef vman="man"
 
 # Plugin zsh-syntax-highlighting must come last.
+forgit_log=fgl
+forgit_diff=fgd
+forgit_add=fga
+forgit_reset_head=fgx
+forgit_ignore=fgi
+forgit_restore=fgr
+forgit_clean=fgc
+forgit_stash_show=fgs
 zinit ice wait silent; zinit load zsh-users/zsh-syntax-highlighting
+zinit load wfxr/forgit
 
 # FZF+zsh integration (diff. locations depending on OS).
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

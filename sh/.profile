@@ -81,7 +81,7 @@ export PATH="$HOME/go/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
 
 # FZF.
-export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --ignore-case --glob "!.git/*"'
+export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --ignore-case --glob "!.git/*" "!node_modules/*"'
 export FZF_DEFAULT_OPTS='--bind=ctrl-j:down,ctrl-k:up'
 
 export FZF_CTRL_T_COMMAND='"$(command which fd)" --type f --type d --type l --hidden --no-ignore --follow --color never . 2> /dev/null'
@@ -91,8 +91,6 @@ export FZF_ALT_C_COMMAND='"$(command which fd)" --type d --hidden --no-ignore --
 export FZF_ALT_C_OPTS="--preview 'tree -a -C -L 1 {} | head -100' --preview-window=right:67% --height=80%"
 
 # Node.js, npm, nvm, etc.
-#export NVM_DIR="$HOME/.nvm"
-#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 export PATH="./node_modules/.bin:$PATH"
 
 # External sources.
