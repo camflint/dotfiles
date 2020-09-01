@@ -4,9 +4,9 @@ zmodload zsh/mathfunc
 
 # Determine the terminal app. We will set up differently depending on whether we are initializing a new standalone shell
 # (e.g. within Alacritty, iTerm, etc.) vs in a hosted shell (like Visual Studio Code).
-local IS_HOSTED=
-[[ ! "$TERM" =~ "alacritty|iterm" ]] && \
-  IS_HOSTED=1
+local ENABLE_TMUX=0
+# [[ ! "$TERM" =~ "alacritty|iterm|kitty" ]] && \
+#   ENABLE_TMUX=1
 
 # Source common configuration.
 source $HOME/.profile
@@ -29,7 +29,7 @@ local lc=$'\e[' rc=m	# Standard ANSI terminal escape values
 # for k in ${(k)color[(I)fg-*]}; do
 #   fg_dim[${k#fg-}]="$lc${color[faint]};${color[$k]}$rc"
 # done
-PS1="%{$fg_no_bold[white]%}>%{$reset_color%} "
+PS1="%{$fg_bold[bright_white]%}$%{$reset_color%} "
 
 # Prefix each new prompt with a newline, except right after the shell is
 # spawned.
@@ -40,6 +40,17 @@ function precmd() {
     echo -n $'\n'
   fi
 }
+
+# Communicate changed directories to Kitty, so it can keep the window title in sync with the directory name.
+function synctitle() {
+  if which kitty &> /dev/null; then
+    kitty @ set-window-title $(basename $(pwd))
+  fi
+}
+function chpwd() {
+  synctitle
+}
+synctitle
 
 # Options.
 setopt auto_cd
@@ -107,7 +118,7 @@ fi
 
 # Otherwise, start a new session in tmux - provided this is a top-level
 # interactive shell session.
-if [ ! $IS_HOSTED ] && [ -z "$TMUX" ]; then
+if [ ! $ENABLE_TMUX ] && [ -z "$TMUX" ]; then
   # Connect to the main tmux session group with a new session. Creates the session
   # group if necessary.
   TMUX_MAIN_SESSION_GROUP_NAME=main
