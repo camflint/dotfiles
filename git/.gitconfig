@@ -48,6 +48,19 @@
 
 [filter "lfs"]
 	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge --skip -- %f
-	process = git-lfs filter-process --skip
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
 	required = true
+
+[core]
+	pager = delta
+
+[delta]
+  syntax-theme = gruvbox
+  line-numbers = true
+  side-by-side = true
+  ; line-numbers-left-format = ""
+  ; line-numbers-right-format = "│ "
+
+[interactive]
+  diffFilter = delta --color-only
