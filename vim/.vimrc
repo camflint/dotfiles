@@ -264,18 +264,29 @@ function! s:base16_customize() abort
   call <SID>LightlineReload()
 endfunction
 
-augroup on_change_colorschema
-  autocmd!
-  autocmd ColorScheme * call <SID>base16_customize()
-augroup END
+" augroup on_change_colorschema
+"   autocmd!
+"   autocmd ColorScheme * call <SID>base16_customize()
+" augroup END
 
 " See the very bottom of this file for the code that actually triggers the theme.
 
 " Filetype customization --------------------------------------------------{{{1
 
+function! s:setup_code_general()
+  " YouCompleteMe mappings.
+  nnoremap <buffer> gd :YcmCompleter GoToDefinition<cr>
+  nnoremap <buffer> gc :YcmCompleter GoToDeclaration<cr>
+  nnoremap <buffer> gi :YcmCompleter GoToImplementation<cr>
+  nnoremap <buffer> gt :YcmCompleter GoToType<cr>
+  nnoremap <buffer> gr :YcmCompleter GoToReferences<cr>
+  nnoremap <buffer> gh :YcmCompleter GetDoc<cr>
+endfunction
+
 " Filetype: javascript
 function! s:setup_filetype_javascript()
   call <SID>setup_js_ts_snippets()
+  call <SID>setup_code_general()
 endfunction
 
 " Filetype: json
@@ -303,6 +314,7 @@ function! s:setup_filetype_typescript()
   " makeprg
   let l:root = findfile('tsconfig.json', expand('%:p:h').';')
   let &makeprg = 'tsc -p ' . fnameescape(l:root)
+  call <SID>setup_code_general()
 endfunction
 
 " Filetype: vim
@@ -312,6 +324,7 @@ function! s:setup_filetype_vim()
   setlocal foldlevelstart=0
   setlocal foldlevel=0
   setlocal textwidth=80
+  call <SID>setup_code_general()
 endfunction
 
 " Filetype: help
@@ -350,7 +363,7 @@ nnoremap Z :suspend<cr>
 " Folding.
 nnoremap n nzzzv
 nnoremap N Nzzzv
-nnoremap <space> zA
+"nnoremap <space> zA
 nnoremap <localleader>z zMzvzz
 
 " Map ':' to ';'
@@ -396,7 +409,7 @@ nnoremap <localleader>l :noh<cr> \|
 \ :cclose<cr> \|
 \ :lclose<cr> \|
 \ <plug>(ExchangeClear) \|
-\ <plug>(lsp-preview-close) \|
+"\ <plug>(lsp-preview-close) \|
 \ <plug>(clever-f-reset)
 
 " Shortcut to temporarily enable 'hlsearch' only when typing the search query.
@@ -414,7 +427,10 @@ map <localleader>pp "+[p                      |" Paste from the system clipboard
 map <localleader>yb :let @+=expand('%:p')<CR> |" Put current buffer path onto system clipboard.
 
 " Buffer management.
-nnoremap <leader>b :Buffers<cr>
+nmap <tab> <Plug>unimpairedBNext
+nmap <S-tab> <Plug>unimpairedBPrevious
+"nnoremap <leader>b :Buffers<cr>
+nnoremap <leader>b :Clap buffers<cr>
 
 nnoremap <localleader>bo :Bdelete other<cr>
 nnoremap <localleader>bc :Bdelete this<cr>
@@ -434,11 +450,13 @@ nmap <leader>9 <Plug>lightline#bufferline#go(9)
 nmap <leader>0 <Plug>lightline#bufferline#go(10)
 
 " Recent files.
-nnoremap <leader>r :FZFMru<cr>
+"nnoremap <leader>r :FZFMru<cr>
+nnoremap <leader>r :Clap history<cr>
 
 " Tab management.
-nnoremap J :tabprev<CR>
-nnoremap K :tabnext<CR>
+" 8/30 - disabled due to 'J' join line conflict.
+" nnoremap J :tabprev<CR>
+" nnoremap K :tabnext<CR>
 
 " Split management.
 nnoremap <localleader>s- <C-w>s<C-w>j                                             |" Split vertically.
@@ -468,20 +486,24 @@ endfunction
 nnoremap <localleader>ss <C-c>:call WinBufSwap()<cr> |" Swap this and the last window.
 
 " Home screen.
-nnoremap <leader>q :Startify<cr>
+" 8/30 - replaced with :Clap quickfix<cr> (see below)
+"nnoremap <leader>q :Startify<cr>
 
 " Fuzzy file finders.
-nnoremap <leader>f :Files <c-r>=getcwd()<cr><cr>
-nnoremap <leader>F :Files <c-r>=expand('%:h')<cr><cr>
+" nnoremap <leader>f :Files <c-r>=getcwd()<cr><cr>
+nnoremap <leader>f :Clap files ++finder=rg --files --hidden --follow --ignore-case --glob \"!.git/\" --glob \"!node_modules/\" .<cr>
+"nnoremap <leader>F :execute("Clap files ++finder=rg --files --hidden --follow --ignore-case --glob \"!.git/\" --glob \"!node_modules/\"" . getcwd())
 
 " Project search.
-nnoremap <c-s> :Grepper -tool rg<cr>
-nnoremap <leader>s :Grepper -tool rg<cr>
-nnoremap <localleader>* :Grepper -tool rg -cword -noprompt<cr>
+"nnoremap <leader>s :Grepper -tool rg<cr>
+nnoremap <leader>s :Clap grep2<cr>
+"nnoremap <localleader>* :Grepper -tool rg -cword -noprompt<cr>
+nnoremap K :Clap grep2 ++query=<cword><cr>
 
 " File explorers.
-nnoremap <leader>o <cmd>MyToggleNERDTree<cr>
-nnoremap <leader>e :EditVifm<cr>
+nnoremap <leader>o <c-u>:MyToggleNERDTree<cr>
+" nnoremap <leader>e :EditVifm<cr>
+nnoremap <leader>e :Clap filer<cr>
 
 " Commands.
 nnoremap <leader>c <c-u>:Commands<cr>
@@ -489,70 +511,87 @@ nnoremap <leader>c <c-u>:Commands<cr>
 " Command history.
 nnoremap <leader>C <c-u>:History:<cr>
 
+" Yank history.
+nnoremap <leader>y <c-u>:Clap yanks<cr>
+
 " Search history.
-nnoremap <leader>S <c-u>:History/<cr>
+"nnoremap <leader>S <c-u>:History/<cr>
+nnoremap <leader>S <c-u>:Clap search_history<cr>
 
 " Help tags.
 nnoremap <leader>h <c-u>:Helptags<cr>
 
-" Intellisense (LSP) mappings.
-function! s:setup_vim_lsp_keymaps()
-  " Having serious performance issues with folding.
-  "   https://github.com/prabirshrestha/vim-lsp/issues/671
-  " set foldmethod=expr
-  "   \ foldexpr=lsp#ui#vim#folding#foldexpr()
-  "   \ foldtext=lsp#ui#vim#folding#foldtext()
+" Quickfix list.
+nnoremap <leader>q <c-u>:Clap quickfix<cr>
 
-  setlocal omnifunc=lsp#complete
-  setlocal completeopt+=preview
+" Jump history.
+nnoremap <leader>j <c-u>:Clap jumps<cr>
 
-  augroup lsp_close_popup
-    autocmd!
-    autocmd CompleteDone * if pumvisible() == 0 | pclose | endif
-  augroup END
-  
-  "inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : lsp#complete()
-  inoremap <expr> <cr>  pumvisible() ? "\<C-y>" : "\<cr>"
-  inoremap <expr> <C-y> pumvisible() ? asyncomplete#close_popup() : "\<C-y>"
-  inoremap <expr> <C-e> pumvisible() ? asyncomplete#cancel_popup() : "\<C-e>"
-
-  function! s:check_back_space() abort
-      let col = col('.') - 1
-      return !col || getline('.')[col - 1]  =~ '\s'
-  endfunction
-  inoremap <silent><expr> <TAB>
-    \ pumvisible() ? "\<C-n>" :
-    \ <SID>check_back_space() ? "\<TAB>" :
-    \ asyncomplete#force_refresh()
-
-  if has("gui_running")
-    inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-    inoremap <expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-  endif
-  
-  nmap <buffer> gd <plug>(lsp-definition)
-  nmap <buffer> gp <plug>(lsp-peek-definition)
-  nmap <buffer> gc <plug>(lsp-declaration)
-  nmap <buffer> gi <plug>(lsp-implementation)
-  nmap <buffer> gr <plug>(lsp-references)
-  nmap <buffer> gn <plug>(lsp-rename)
-  nmap <buffer> gh <plug>(lsp-hover)
-  nmap <buffer> gs <plug>(lsp-signature-help)
-  nmap <buffer> <localleader>o <plug>(lsp-document-symbol)
-  nmap <buffer> <localleader>O <plug>(lsp-workspace-symbol)
-  nmap <buffer> <localleader>q <plug>(lsp-document-diagnostics)
-  nmap <buffer> ]e <plug>(lsp-next-error)
-  nmap <buffer> [e <plug>(lsp-previous-error)
-  nmap <buffer> ]w <plug>(lsp-next-warning)
-  nmap <buffer> [w <plug>(lsp-previous-warning)
-  nmap <buffer> <localleader>a <plug>(lsp-code-action)
-  map <buffer> <localleader>gf <plug>(lsp-document-range-format)
+function! s:CustomizeYcmQuickFixWindow()
+  " Show YcmCompleter results in Clap popup instead of the quickfix window.
+  cclose
+  execute ':Clap quickfix'
 endfunction
-augroup myvimlsp
-  autocmd!
-  autocmd User lsp_buffer_enabled call <SID>setup_vim_lsp_keymaps()
-augroup end
-command! LspRefresh call <SID>setup_vim_lsp_keymaps()
+autocmd User YcmQuickFixOpened call <SID>CustomizeYcmQuickFixWindow()
+
+" Intellisense (LSP) mappings.
+" function! s:setup_vim_lsp_keymaps()
+"   " Having serious performance issues with folding.
+"   "   https://github.com/prabirshrestha/vim-lsp/issues/671
+"   " set foldmethod=expr
+"   "   \ foldexpr=lsp#ui#vim#folding#foldexpr()
+"   "   \ foldtext=lsp#ui#vim#folding#foldtext()
+
+"   setlocal omnifunc=lsp#complete
+"   setlocal completeopt+=preview
+
+"   augroup lsp_close_popup
+"     autocmd!
+"     autocmd CompleteDone * if pumvisible() == 0 | pclose | endif
+"   augroup END
+  
+"   "inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : lsp#complete()
+"   inoremap <expr> <cr>  pumvisible() ? "\<C-y>" : "\<cr>"
+"   inoremap <expr> <C-y> pumvisible() ? asyncomplete#close_popup() : "\<C-y>"
+"   inoremap <expr> <C-e> pumvisible() ? asyncomplete#cancel_popup() : "\<C-e>"
+
+"   function! s:check_back_space() abort
+"       let col = col('.') - 1
+"       return !col || getline('.')[col - 1]  =~ '\s'
+"   endfunction
+"   inoremap <silent><expr> <TAB>
+"     \ pumvisible() ? "\<C-n>" :
+"     \ <SID>check_back_space() ? "\<TAB>" :
+"     \ asyncomplete#force_refresh()
+
+"   if has("gui_running")
+"     inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+"     inoremap <expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+"   endif
+  
+"   nmap <buffer> gd <plug>(lsp-definition)
+"   nmap <buffer> gp <plug>(lsp-peek-definition)
+"   nmap <buffer> gc <plug>(lsp-declaration)
+"   nmap <buffer> gi <plug>(lsp-implementation)
+"   nmap <buffer> gr <plug>(lsp-references)
+"   nmap <buffer> gn <plug>(lsp-rename)
+"   nmap <buffer> gh <plug>(lsp-hover)
+"   nmap <buffer> gs <plug>(lsp-signature-help)
+"   nmap <buffer> <localleader>o <plug>(lsp-document-symbol)
+"   nmap <buffer> <localleader>O <plug>(lsp-workspace-symbol)
+"   nmap <buffer> <localleader>q <plug>(lsp-document-diagnostics)
+"   nmap <buffer> ]e <plug>(lsp-next-error)
+"   nmap <buffer> [e <plug>(lsp-previous-error)
+"   nmap <buffer> ]w <plug>(lsp-next-warning)
+"   nmap <buffer> [w <plug>(lsp-previous-warning)
+"   nmap <buffer> <localleader>a <plug>(lsp-code-action)
+"   map <buffer> <localleader>gf <plug>(lsp-document-range-format)
+" endfunction
+" augroup myvimlsp
+"   autocmd!
+"   autocmd User lsp_buffer_enabled call <SID>setup_vim_lsp_keymaps()
+" augroup end
+" command! LspRefresh call <SID>setup_vim_lsp_keymaps()
 
 " Git.
 nnoremap <leader>gs :Git<cr>
@@ -656,7 +695,13 @@ endfunction
 command! SetupOrgModeMappings :call <SID>setup_org_mode_mappings()
 
 " Markdown mappings.
-map <c-M> <plug>MarkdownPreviewToggle
+function! s:setup_markdown_mappings()
+  map <m-m> <plug>MarkdownPreviewToggle
+endfunction
+augroup SetupMarkdownMappings
+  autocmd! filetype markdown call <SID>setup_markdown_mappings()
+augroup END
+
 
 " Text snippets -----------------------------------------------------------{{{1
 " A syntax for placeholders
@@ -722,6 +767,25 @@ elseif !empty(glob('/usr/share/doc/fzf'))
   source /usr/share/doc/fzf/examples/fzf.vim
 endif
 let g:fzf_history_dir = expand('~/.local/share/fzf-vim-history')
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'WildMenu'],
+  \ 'hl':      ['bg', 'Warning'],
+  \ 'fg+':     ['fg', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['bg', 'Warning'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'WildMenu'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['bg', 'WildMenu'],
+  \ 'gutter':  ['bg', 'WildMenu'] }
+let g:fzf_preview_window = ''
+
+autocmd! FileType fzf set laststatus=0 noshowmode noruler nonumber norelativenumber
+  \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler number relativenumber
 
 " Fzf-mru.
 let g:fzf_mru_no_sort = 1
@@ -1319,6 +1383,22 @@ let g:peekaboo_window = "vert bo 65new"
 "  p - open entry in a preview window
 let g:qf_mapping_ack_style=1
 
+let g:clap_layout = { 'relative': 'editor' }
+let g:clap_open_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit',
+\}
+"let g:clap_disable_run_rooter = v:true
+let g:clap_provider_grep_delay = 100  " ms
+let g:clap_provider_grep_opts = '-H --no-heading --vimgrep --smart-case --hidden -g "!.git/" "!node_modules/"'
+let g:clap_default_external_filter = 'maple'
+let g:clap_insert_mode_only = v:true
+
+" Smooth scrolling.
+let g:SexyScroller_MinLines = 50
+let g:SexyScroller_MinColumns = 200
+
 " Plugin registry ---------------------------------------------------------{{{1
 
 " Plug. 
@@ -1326,10 +1406,15 @@ let g:qf_mapping_ack_style=1
 call plug#begin('~/.local/share/vim/plugged')
 
 " Essential plugins.
+" Plug 'prabirshrestha/async.vim'
+" Plug 'prabirshrestha/asyncomplete-lsp.vim'
+" Plug 'prabirshrestha/asyncomplete.vim'
+" Plug 'prabirshrestha/vim-lsp'
+"Plug 'mattn/vim-lsp-settings'
 Plug 'asheq/close-buffers.vim'
 Plug 'brooth/far.vim'
 Plug 'camflint/base16-vim'
-Plug 'camflint/onehalf', { 'rtp': 'vim' }
+"Plug 'camflint/onehalf', { 'rtp': 'vim' }
 Plug 'camflint/vim-paraglide'
 Plug 'camflint/vim-superman'
 Plug 'chrisbra/Colorizer'
@@ -1352,20 +1437,17 @@ Plug 'jparise/vim-graphql'
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/vim-peekaboo'
+Plug 'liuchengxu/vim-clap'
 Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
 Plug 'liuchengxu/vim-which-key'
 Plug 'mattesgroeger/vim-bookmarks'
-Plug 'mattn/vim-lsp-settings'
 Plug 'mhinz/vim-grepper'
 Plug 'mhinz/vim-startify'
+Plug 'ms-jpq/chadtree', { 'branch': 'chad' }
 Plug 'mtth/cursorcross.vim'
 Plug 'mzlogin/vim-markdown-toc'
 Plug 'pbogut/fzf-mru.vim'
 Plug 'plasticboy/vim-markdown'
-Plug 'prabirshrestha/async.vim'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/vim-lsp'
 Plug 'preservim/nerdtree'
 Plug 'puremourning/vimspector', {'for': ['typescript', 'javascript']}
 Plug 'raimondi/delimitmate'
