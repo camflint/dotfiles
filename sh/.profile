@@ -108,9 +108,3 @@ done
 if [[ -d "$HOME/.scripts" ]]; then
     export PATH="$HOME/.scripts:$PATH"
 fi
-
-# Base16 colorscheme.
-BASE16_SHELL="$HOME/.local/share/base16-shell"
-[ -n "$PS1" ] && \
-  [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
-    eval "$("$BASE16_SHELL/profile_helper.sh")"

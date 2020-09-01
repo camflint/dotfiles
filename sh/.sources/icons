@@ -28,7 +28,7 @@ LS_COLORS+=':*.bmp=32:*.cgm=32:*.dl=32:*.dvi=32:*.emf=32:*.eps=32:*.gif=32:*.jpe
 # videos
 LS_COLORS+=':*.anx=32:*.asf=32:*.avi=32:*.axv=32:*.flc=32:*.fli=32:*.flv=32:*.gl=32:*.m2v=32:*.m4v=32:*.mkv=32:*.mov=32:*.MOV=32:*.mp4=32:*.mpeg=32:*.mpg=32:*.nuv=32:*.ogm=32:*.ogv=32:*.ogx=32:*.qt=32:*.rm=32:*.rmvb=32:*.swf=32:*.vob=32:*.webm=32:*.wmv=32'
 
-export LS_COLORS
+# export LS_COLORS
 
 EXA_COLORS='ur=0:uw=0:ux=0:ue=0:gr=0:gw=0:gx=0:tr=0:tw=0:tx=0:su=0:sf=0:xa=0'
 EXA_COLORS+=':sn=0:sb=0:df=0:ds=0'
@@ -37,5 +37,5 @@ EXA_COLORS+=':lc=0:lm=0'
 EXA_COLORS+=':xx=0:da=0:in=0:bl=0:hd=0:lp=0:cc=0'
 EXA_COLORS+=':b0=01;37;41'
 
-export EXA_COLORS
+# export EXA_COLORS
 
