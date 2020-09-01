@@ -195,15 +195,15 @@ nnoremap <silent> <leader>z
 
 " Color scheme & themes ---------------------------------------------------{{{1
 " Use 256-color by default.
-if !has('gui_running')
-  set t_Co=256
-endif
+" if !has('gui_running')
+"   set t_Co=256
+" endif
 
 " 'termguicolors' works in consoles with 24-bit (RGB) color support only.  When set, 'termguicolors' instructs vim to
 " issue RGB color escape codes with the colors from gui, guifg, guibg etc. (see :help :highlight).
-if exists('+termguicolors') && $TERM !~# '\v^(screen|tmux|rxvt)'
-  let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
-  let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
+if exists('+termguicolors') && $TERM !~# '\v^(screen|rxvt)'
+  " let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+  " let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
   set termguicolors
 else
   set notermguicolors
@@ -286,7 +286,7 @@ endfunction
 " Filetype: markdown
 function! s:setup_filetype_markdown()
   " Don't autoformat (esp. autowrap) text in some files.
-  autocmd FileType markdown setlocal formatoptions-=c | setlocal textwidth=0
+  setlocal formatoptions-=c | setlocal textwidth=0
 endfunction
 
 " Filetype: org
@@ -1124,17 +1124,24 @@ let g:asyncomplete_auto_popup = 0
 let g:asyncomplete_popup_delay = 100
 
 " vim-lsp & vim-lsp-settings.
-let g:lsp_log_verbose = 1
-let g:lsp_log_file = expand('~/.local/share/nvim/lsp/vim-lsp.log')
-let g:lsp_settings_servers_dir = expand('~/.local/share/nvim/lsp/')
-let g:lsp_completion_resolve_timeout = 10
-let g:lsp_diagnostics_echo_cursor = 1
-let g:lsp_virtual_text_enabled = 0
-let g:lsp_diagnostics_enabled = !&diff
-augroup lsp_diag_diff
-  autocmd!
-  autocmd OptionSet diff let g:lsp_diagnostics_enabled = !&diff
-augroup END
+" let g:lsp_log_verbose = 1
+" let g:lsp_log_file = expand('~/.local/share/nvim/lsp/vim-lsp.log')
+" let g:lsp_settings_servers_dir = expand('~/.local/share/nvim/lsp/')
+" let g:lsp_completion_resolve_timeout = 10
+" let g:lsp_diagnostics_echo_cursor = 1
+" let g:lsp_virtual_text_enabled = 0
+" let g:lsp_diagnostics_enabled = !&diff
+" augroup lsp_diag_diff
+"   autocmd!
+"   autocmd OptionSet diff let g:lsp_diagnostics_enabled = !&diff
+" augroup END
+
+" vim-devicons.
+let g:webdevicons_enable_nerdtree = 1
+let g:webdevicons_conceal_nerdtree_brackets = 1
+let g:WebDevIconsUnicodeDecorateFileNodes = 1
+let g:WebDevIconsNerdTreeAfterGlyphPadding = ''
+let g:WebDevIconsOS = 'Darwin'
 
 " NERDTree.
 let g:NERDTreeBookmarksFile = expand('~/.config/local/vim/nerdtree/bookmarks')
@@ -1143,7 +1150,7 @@ let g:NERDTreeAutoDeleteBuffer = 1
 let g:NERDTreeShowHidden = 1
 let g:NERDTreeAutoCenter = 1
 let g:NERDTreeHijackNetrw = 1
-let g:NERDTreeWinSize = 75
+let g:NERDTreeWinSize = 45
 function! s:togglenerdtree()
   if exists("g:NERDTree") && g:NERDTree.IsOpen()
     NERDTreeClose
@@ -1384,6 +1391,15 @@ Plug 'vimwiki/vimwiki'
 Plug 'wellle/targets.vim'
 Plug 'whiteinge/diffconflicts'
 Plug 'xolox/vim-misc'
+Plug 'ycm-core/YouCompleteMe', { 'do': './install.py --ts-completer' }
+Plug 'sonph/onehalf', {'rtp': 'vim/'}
+Plug 'rakr/vim-one'
+Plug 'drewtempelmeyer/palenight.vim'
+Plug 'morhetz/gruvbox'
+Plug 'joeytwiddle/sexy_scroller.vim'
+
+" Note: this needs to come last in the plugin list.
+Plug 'ryanoasis/vim-devicons'
 
 " nvim-only plugins.
 if has('nvim')
@@ -1392,12 +1408,30 @@ endif
 
 call plug#end()
 
+
 " Theme activation --------------------------------------------------------{{{1
 "
 " This color scheme setup relies on a base16-shell alias having been run to modify the shell's 256-color palette. Doing
 " so should generate the following file for vim. Make sure this statement comes last, as our customization hook higher
 " in the file depends on plugins being loaded.
-if filereadable(expand('~/.vimrc_background')) && !has('gui_running')
-  let base16colorspace=256
-  source ~/.vimrc_background
-endif
+" if filereadable(expand('~/.vimrc_background')) && !has('gui_running')
+"   let base16colorspace=256
+"   source ~/.vimrc_background
+" endif
+
+" if !has('gui')
+"   colorscheme tempus_summer
+
+"   hi StatusLine ctermbg=07 ctermfg=08
+"   hi StatusLineNC ctermbg=08 ctermfg=07
+"   hi TabLineFill ctermfg=07 ctermbg=08
+"   hi TabLineSel ctermfg=00 ctermbg=07
+"   hi TabLine ctermfg=07 ctermbg=00
+"   hi CursorLineNr ctermfg=253 ctermbg=08
+"   hi User1 ctermfg=00 ctermbg=07
+" endif
+set background=dark
+let g:gruvbox_italic=1
+colorscheme gruvbox
+" Background transparency.
+hi Normal guibg=NONE ctermbg=NONE

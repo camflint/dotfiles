@@ -1,6 +1,6 @@
 " Font.
-" set guifont=PragmataProMono\ Nerd\ Font\ Mono:h17
-set guifont=iA\ Writer\ Mono\ S:h17
+set guifont=PragmataProMono\ Nerd\ Font\ Mono:h18
+set macthinstrokes
 
 " Hide the GUI chrome.
 set guioptions=ac
@@ -54,9 +54,4 @@ endif
 " Scroll whichever window the mouse is over.
 set scrollfocus
 
-" Colorscheme.
-let g:molokai_original = 1
-colorscheme onehalflight
-let g:lightline.colorscheme='onehalflight'
-SetupLightline
-
+" Colorscheme override for GUI.
