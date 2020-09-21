@@ -453,6 +453,10 @@ nmap <leader>0 <Plug>lightline#bufferline#go(10)
 "nnoremap <leader>r :FZFMru<cr>
 nnoremap <leader>r :Clap history<cr>
 
+" Git-tree files.
+nnoremap <leader>g :Clap git_diff_files<cr>
+nnoremap <leader>G :Clap git_files<cr>
+
 " Tab management.
 " 8/30 - disabled due to 'J' join line conflict.
 " nnoremap J :tabprev<CR>
@@ -485,47 +489,40 @@ function! WinBufSwap()
 endfunction
 nnoremap <localleader>ss <C-c>:call WinBufSwap()<cr> |" Swap this and the last window.
 
-" Home screen.
-" 8/30 - replaced with :Clap quickfix<cr> (see below)
-"nnoremap <leader>q :Startify<cr>
-
 " Fuzzy file finders.
-" nnoremap <leader>f :Files <c-r>=getcwd()<cr><cr>
-nnoremap <leader>f :Clap files ++finder=rg --files --hidden --follow --ignore-case --glob \"!.git/\" --glob \"!node_modules/\" .<cr>
-"nnoremap <leader>F :execute("Clap files ++finder=rg --files --hidden --follow --ignore-case --glob \"!.git/\" --glob \"!node_modules/\"" . getcwd())
+nnoremap <leader>f :Clap files ++finder=fd --type f --follow --hidden --no-ignore<cr>
+nnoremap <leader>e :<c-u>Clap filer %:p:h<cr><cr>
+nnoremap <leader><leader>e :<c-u>Clap filer<cr>
 
 " Project search.
-"nnoremap <leader>s :Grepper -tool rg<cr>
-nnoremap <leader>s :Clap grep2<cr>
-"nnoremap <localleader>* :Grepper -tool rg -cword -noprompt<cr>
-nnoremap K :Clap grep2 ++query=<cword><cr>
+nnoremap <leader>s :Clap grep %:p:h<cr>
+nnoremap <leader><leader>s :Clap grep<cr>
+nnoremap K :Clap grep ++query=<cword><cr>
 
 " File explorers.
-nnoremap <leader>o <c-u>:MyToggleNERDTree<cr>
+nnoremap <leader>o :<c-u>MyToggleNERDTree<cr>
 " nnoremap <leader>e :EditVifm<cr>
-nnoremap <leader>e :Clap filer<cr>
 
 " Commands.
-nnoremap <leader>c <c-u>:Commands<cr>
+nnoremap <leader>c :<c-u>Clap command<cr>
 
-" Command history.
-nnoremap <leader>C <c-u>:History:<cr>
+" Commands.
+nnoremap <leader><leader>c :<c-u>Clap command_history<cr>
 
 " Yank history.
-nnoremap <leader>y <c-u>:Clap yanks<cr>
+nnoremap <leader>y :<c-u>Clap yanks<cr>
 
 " Search history.
-"nnoremap <leader>S <c-u>:History/<cr>
-nnoremap <leader>S <c-u>:Clap search_history<cr>
+nnoremap <localleader>/ :<c-u>Clap search_history<cr>
 
-" Help tags.
-nnoremap <leader>h <c-u>:Helptags<cr>
+" Help tags/
+nnoremap <leader>h :<c-u>Clap help_tags<cr>
 
 " Quickfix list.
-nnoremap <leader>q <c-u>:Clap quickfix<cr>
+nnoremap <leader>q :<c-u>Clap quickfix<cr>
 
 " Jump history.
-nnoremap <leader>j <c-u>:Clap jumps<cr>
+nnoremap <leader>j :<c-u>Clap jumps<cr>
 
 function! s:CustomizeYcmQuickFixWindow()
   " Show YcmCompleter results in Clap popup instead of the quickfix window.
@@ -647,7 +644,7 @@ nnoremap <leader>do :diffoff<cr>
 " nnoremap <Leader>mx <Plug>BookmarkClearAll
 " map <leader><leader>mj <Plug>BookmarkMoveDown
 " map <leader><leader>mk <Plug>BookmarkMoveUp
-nnoremap <leader>m :Marks<cr>
+nnoremap <leader>m :Clap marks<cr>
 
 " Invoke Goyu for a distraction-free writing environment.
 nnoremap <leader>w :Goyo<cr>
@@ -1204,7 +1201,7 @@ let g:asyncomplete_popup_delay = 100
 let g:webdevicons_enable_nerdtree = 1
 let g:webdevicons_conceal_nerdtree_brackets = 1
 let g:WebDevIconsUnicodeDecorateFileNodes = 1
-let g:WebDevIconsNerdTreeAfterGlyphPadding = ''
+"let g:WebDevIconsNerdTreeAfterGlyphPadding = ''
 let g:WebDevIconsOS = 'Darwin'
 
 " NERDTree.
@@ -1390,10 +1387,11 @@ let g:clap_open_action = {
   \ 'ctrl-v': 'vsplit',
 \}
 "let g:clap_disable_run_rooter = v:true
+let g:clap_provider_grep_executable = 'rg'
 let g:clap_provider_grep_delay = 100  " ms
-let g:clap_provider_grep_opts = '-H --no-heading --vimgrep --smart-case --hidden -g "!.git/" "!node_modules/"'
-let g:clap_default_external_filter = 'maple'
+let g:clap_provider_grep_opts = '-H --no-heading --vimgrep --smart-case --hidden --glob=!.git/**'
 let g:clap_insert_mode_only = v:true
+let g:clap_enable_icon = 1
 
 " Smooth scrolling.
 let g:SexyScroller_MinLines = 50
@@ -1436,7 +1434,7 @@ Plug 'jceb/vim-orgmode'
 Plug 'jparise/vim-graphql'
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
-Plug 'junegunn/vim-peekaboo'
+"Plug 'junegunn/vim-peekaboo'
 Plug 'liuchengxu/vim-clap'
 Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
 Plug 'liuchengxu/vim-which-key'
@@ -1478,7 +1476,8 @@ Plug 'sonph/onehalf', {'rtp': 'vim/'}
 Plug 'rakr/vim-one'
 Plug 'drewtempelmeyer/palenight.vim'
 Plug 'morhetz/gruvbox'
-Plug 'joeytwiddle/sexy_scroller.vim'
+"Plug 'joeytwiddle/sexy_scroller.vim'
+Plug 'knubie/vim-kitty-navigator'
 
 " Note: this needs to come last in the plugin list.
 Plug 'ryanoasis/vim-devicons'
@@ -1512,8 +1511,15 @@ call plug#end()
 "   hi CursorLineNr ctermfg=253 ctermbg=08
 "   hi User1 ctermfg=00 ctermbg=07
 " endif
-set background=dark
-let g:gruvbox_italic=1
-colorscheme gruvbox
+
 " Background transparency.
+set background=dark
 hi Normal guibg=NONE ctermbg=NONE
+
+packadd! dracula_pro
+let g:dracula_colorterm = 0
+colorscheme dracula_pro
+
+" let g:gruvbox_italic=1
+" colorscheme gruvbox
+

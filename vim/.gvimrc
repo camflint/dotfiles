@@ -1,13 +1,12 @@
 " Font.
-set guifont=PragmataProMono\ Nerd\ Font\ Mono:h18
-set macthinstrokes
+set guifont=JetBrains\ Mono:h16
 
 " Hide the GUI chrome.
 set guioptions=ac
 
 " Window dimensions.
-set lines=38
-set columns=118
+set lines=50
+set columns=140
 
 function! s:updatetitlestring() 
   let name=has('gui_macvim') ? 'MacVim' : 'Vim'
