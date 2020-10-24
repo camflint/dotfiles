@@ -501,7 +501,7 @@ nnoremap K :Clap grep ++query=<cword><cr>
 
 " File explorers.
 nnoremap <leader>o :<c-u>MyToggleNERDTree<cr>
-" nnoremap <leader>e :EditVifm<cr>
+nnoremap - :Vifm<cr>
 
 " Commands.
 nnoremap <leader>c :<c-u>Clap command<cr>
@@ -647,7 +647,7 @@ nnoremap <leader>do :diffoff<cr>
 nnoremap <leader>m :Clap marks<cr>
 
 " Invoke Goyu for a distraction-free writing environment.
-nnoremap <leader>w :Goyo<cr>
+nnoremap <leader><leader>w :Goyo<cr>
  
 " Invoke Easymotion for rapid movement.
 map <space> <Plug>(easymotion-prefix)
@@ -1327,7 +1327,8 @@ let g:vimwiki_use_mouse = 1
 let g:vimwiki_folding = 'expr'
 
 " Goyo.
-let g:goyo_width = 150
+let g:goyo_width = '60%'
+let g:goyo_height = '90%'
 function! s:goyo_enter()
   setlocal nonumber norelativenumber
   "CocCommand git.toggleGutters
@@ -1478,6 +1479,7 @@ Plug 'drewtempelmeyer/palenight.vim'
 Plug 'morhetz/gruvbox'
 "Plug 'joeytwiddle/sexy_scroller.vim'
 Plug 'knubie/vim-kitty-navigator'
+Plug 'liuchengxu/vista.vim'
 
 " Note: this needs to come last in the plugin list.
 Plug 'ryanoasis/vim-devicons'
