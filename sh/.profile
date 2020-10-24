@@ -82,7 +82,15 @@ export PATH="$HOME/.cargo/bin:$PATH"
 
 # FZF.
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --ignore-case --glob "!.git/*" "!node_modules/*"'
-export FZF_DEFAULT_OPTS='--bind=ctrl-j:down,ctrl-k:up'
+export FZF_DEFAULT_OPTS="
+--bind='ctrl-d:page-down,ctrl-u:page-up'
+--bind='ctrl-j:down,ctrl-k:up'
+--bind='ctrl-n:down,ctrl-p:up'
+--bind='alt-n:preview-down,alt-p:preview-up'
+--bind='alt-d:preview-page-down,alt-u:preview-page-up'
+--bind='?:toggle-preview'
+--bind='alt-w:toggle-preview-wrap'
+"
 
 export FZF_CTRL_T_COMMAND='"$(command which fd)" --type f --type d --type l --hidden --no-ignore --follow --color never . 2> /dev/null'
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always --line-range :500 {}' --preview-window=right:67% --height=80%"

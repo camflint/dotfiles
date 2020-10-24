@@ -99,6 +99,9 @@ compinit
 
 # Add'l completion definitions.
 compdef vman="man"
+if which kitty &> /dev/null; then
+  kitty + complete setup zsh | source /dev/stdin
+fi
 
 # Plugin zsh-syntax-highlighting must come last.
 forgit_log=fgl

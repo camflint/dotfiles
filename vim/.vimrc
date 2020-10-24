@@ -380,8 +380,8 @@ nnoremap <leader>vr :so $MYVIMRC<cr>
 nnoremap vv ^v$
 
 " Move lines up and down.
-nnoremap - ddp
-nnoremap _ ddkP
+" nnoremap - ddp
+" nnoremap _ ddkP
 
 " Command-mode history shortcuts (avoid using arrow keys).
 cnoremap <c-n> <down>
