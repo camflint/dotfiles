@@ -5,6 +5,10 @@ zmodload zsh/mathfunc
 # Determine the terminal app. We will set up differently depending on whether we are initializing a new standalone shell
 # (e.g. within Alacritty, iTerm, etc.) vs in a hosted shell (like Visual Studio Code).
 local ENABLE_TMUX=0
+local ENABLE_KITTY=0
+if [[ "$TERM" =~ "kitty" ]]; then
+   ENABLE_KITTY=1
+fi
 # [[ ! "$TERM" =~ "alacritty|iterm|kitty" ]] && \
 #   ENABLE_TMUX=1
 
@@ -29,7 +33,7 @@ local lc=$'\e[' rc=m	# Standard ANSI terminal escape values
 # for k in ${(k)color[(I)fg-*]}; do
 #   fg_dim[${k#fg-}]="$lc${color[faint]};${color[$k]}$rc"
 # done
-PS1="%B%F{blue}[%F{green}%~%F{blue}]%B%F{white}$ "
+PS1="%B%F{blue}[%F{green}%30<..<%~%(1j. %F{red}*%j%f.)%F{blue}]%F{white}%(!.#.$) "
 
 # Prefix each new prompt with a newline, except right after the shell is
 # spawned.
@@ -43,6 +47,9 @@ function precmd() {
 
 # Communicate changed directories to Kitty, so it can keep the window title in sync with the directory name.
 function synctitle() {
+  if [[ ! $ENABLE_KITTY ]]; then
+     return
+  fi
   if which kitty &> /dev/null; then
     kitty @ set-window-title $(basename $(pwd))
   fi
@@ -50,7 +57,7 @@ function synctitle() {
 function chpwd() {
   synctitle
 }
-synctitle
+#synctitle
 
 # Options.
 setopt auto_cd
@@ -144,3 +151,4 @@ if [ ! $ENABLE_TMUX ] && [ -z "$TMUX" ]; then
     $(which tmux) new-session -t "$TMUX_MAIN_SESSION_GROUP_NAME"
   fi
 fi
+[ -f "/Users/cameron/.ghcup/env" ] && source "/Users/cameron/.ghcup/env" # ghcup-env

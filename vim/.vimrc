@@ -490,7 +490,8 @@ endfunction
 nnoremap <localleader>ss <C-c>:call WinBufSwap()<cr> |" Swap this and the last window.
 
 " Fuzzy file finders.
-nnoremap <leader>f :Clap files ++finder=fd --type f --follow --hidden --no-ignore<cr>
+nnoremap <leader>f :Clap files ++finder=fd --type f --follow --hidden %:p:h<cr>
+nnoremap <leader><leader>f :Clap files ++finder=fd --type f --follow --hidden<cr>
 nnoremap <leader>e :<c-u>Clap filer %:p:h<cr><cr>
 nnoremap <leader><leader>e :<c-u>Clap filer<cr>
 
@@ -834,13 +835,13 @@ function! s:align()
 endfunction
 
 " Bookmarks .
-let g:bookmark_auto_save_file = expand('~/.local/share/vim/bookmarks/.vim-bookmarks')
+let g:bookmark_auto_save_file = expand('~/.local/share/vim/.vim-bookmarks')
 let g:bookmark_auto_close = 1
 let g:bookmark_center = 1
 let g:bookmark_disable_ctrlp = 1
 let g:bookmark_show_warning = 0
 let g:bookmark_show_toggle_warning = 0
-let g:bookmark_save_per_working_dir = 1
+"let g:bookmark_save_per_working_dir = 1
 let g:bookmark_auto_save = 1
 
 " COC.
@@ -1389,10 +1390,12 @@ let g:clap_open_action = {
 \}
 "let g:clap_disable_run_rooter = v:true
 let g:clap_provider_grep_executable = 'rg'
-let g:clap_provider_grep_delay = 100  " ms
-let g:clap_provider_grep_opts = '-H --no-heading --vimgrep --smart-case --hidden --glob=!.git/**'
+let g:clap_provider_grep_delay = 10  " ms
+let g:clap_provider_grep_opts = '-H --no-heading --vimgrep --color=never --smart-case --hidden --vimgrep -g !.git/ -g !node_modules/ -g !dist/'
 let g:clap_insert_mode_only = v:true
 let g:clap_enable_icon = 1
+"let g:clap_enable_debug = v:true
+"let g:clap_default_external_filter = 'fzf'
 
 " Smooth scrolling.
 let g:SexyScroller_MinLines = 50
@@ -1418,7 +1421,7 @@ Plug 'camflint/vim-paraglide'
 Plug 'camflint/vim-superman'
 Plug 'chrisbra/Colorizer'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'dkarter/bullets.vim'
+"Plug 'dkarter/bullets.vim' "Note: <CR> binding is conflicting with vim-clap
 Plug 'dougbeney/pickachu'
 Plug 'easymotion/vim-easymotion'
 Plug 'faceleg/delete-surrounding-function-call.vim'
@@ -1436,13 +1439,13 @@ Plug 'jparise/vim-graphql'
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
 "Plug 'junegunn/vim-peekaboo'
-Plug 'liuchengxu/vim-clap'
+"Plug 'liuchengxu/vim-clap'
 Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
 Plug 'liuchengxu/vim-which-key'
 Plug 'mattesgroeger/vim-bookmarks'
 Plug 'mhinz/vim-grepper'
 Plug 'mhinz/vim-startify'
-Plug 'ms-jpq/chadtree', { 'branch': 'chad' }
+" Plug 'ms-jpq/chadtree', { 'branch': 'chad' } "Note: getting err. on startup
 Plug 'mtth/cursorcross.vim'
 Plug 'mzlogin/vim-markdown-toc'
 Plug 'pbogut/fzf-mru.vim'
@@ -1457,7 +1460,7 @@ Plug 'sheerun/vim-polyglot'
 Plug 'tomasr/molokai'
 Plug 'tommcdo/vim-exchange'
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-endwise'
+"Plug 'tpope/vim-endwise' "Note: <CR> binding is conflicting with vim-clap
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession'

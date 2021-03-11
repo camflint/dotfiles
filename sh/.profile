@@ -81,7 +81,7 @@ export PATH="$HOME/go/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
 
 # FZF.
-export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --ignore-case --glob "!.git/*" "!node_modules/*"'
+export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --ignore-case --glob "!.git/" --glob "!node_modules/" --glob "!dist/"'
 export FZF_DEFAULT_OPTS="
 --bind='ctrl-d:page-down,ctrl-u:page-up'
 --bind='ctrl-j:down,ctrl-k:up'
