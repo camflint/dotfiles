@@ -1,0 +1,18 @@
+" Type :help nv for help.
+
+set ignorecase
+
+let mapleader=,
+
+nnoremap ; :
+nnoremap <leader>s :GotoSymbolInProject<CR>
+nnoremap <leader>b :OpenFilesLister<CR>
+nnoremap <leader>l :nohlsearch<cr>
+nnoremap <leader><leader>e :Neovintageous action=open_rc_file<CR>
+nnoremap <leader><leader>r :Neovintageous action=reload_rc_file<CR>
+
+noremap <C-i> :NextViewInStack<CR>
+noremap <C-o> :PrevViewInStack<CR>
+
+nnoremap - :Neovintageous action=toggle_side_bar<CR>
+

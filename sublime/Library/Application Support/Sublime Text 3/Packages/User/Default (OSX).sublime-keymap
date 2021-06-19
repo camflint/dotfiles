@@ -1,0 +1,35 @@
+[
+  {
+    "keys": ["-"],
+    "command": "neovintageous",
+    "args": { "action": "toggle_side_bar" },
+    "context": [ { "key": "control", "operand": "sidebar_tree" } ]
+  },
+  { "keys": ["ctrl+h"], "command": "focus_neighboring_group", "args": { "forward": "false" } },
+  { "keys": ["ctrl+j"], "command": "focus_neighboring_group", "args": { "forward": "false" } },
+  { "keys": ["ctrl+l"], "command": "focus_neighboring_group" },
+  { "keys": ["ctrl+k"], "command": "focus_neighboring_group" },
+  { "keys": ["ctrl+shift+h"], "command": "move_to_neighboring_group", "args": { "forward": "false" } },
+  { "keys": ["ctrl+shift+l"], "command": "move_to_neighboring_group" },
+  { "keys": ["ctrl+s"], "command": "new_pane", "args": { "move": false } },
+  { "keys": ["super+enter"], "command": "new_pane", "args": { "move": false } },
+  { "keys": ["ctrl+x"], "command": "close_pane" },
+  { "keys": ["ctrl+w"], "command": "delete_word", "args": { "forward": false, "sub_words": true } },
+  { "keys": ["ctrl+u"], "command": "upper_case" },
+  { "keys": ["ctrl+k"], "command": "find_under" },
+  { "keys": ["ctrl+r"], "command": "redo_or_repeat" },
+  { "keys": ["ctrl+o"], "command": "jump_back" },
+  { "keys": ["ctrl+i"], "command": "jump_forward" },
+  { "keys": ["super+]"], "command": "next_view" },
+  { "keys": ["super+["], "command": "prev_view" },
+  { "keys": ["ctrl+n"], "command": "next_field", "context":
+    [{ "key": "has_next_field", "operator": "equal", "operand": true }]
+  },
+  { "keys": ["ctrl+p"], "command": "prev_field", "context":
+    [{ "key": "has_prev_field", "operator": "equal", "operand": true }]
+  },
+  { "keys": ["ctrl+d"], "command": "scroll_lines", "args": {"amount": -50 } },
+  { "keys": ["ctrl+u"], "command": "scroll_lines", "args": {"amount": 50 } },
+  { "keys": ["ctrl+e"], "command": "scroll_lines", "args": {"amount": -1 } },
+  { "keys": ["ctrl+y"], "command": "scroll_lines", "args": {"amount": 1 } }
+]
