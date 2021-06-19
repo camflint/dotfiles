@@ -21,10 +21,14 @@
 
 [mergetool]
   keepBackup = false
+  prompt = false
 
 [mergetool.diffconflicts]
 	cmd = vim -c DiffConflicts \"$MERGED\" \"$BASE\" \"$LOCAL\" \"$REMOTE\"
   trustExitCode = true
+
+[mergetool.ksdiff]
+  cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" \"$REMOTE\"
 
 [color]
   ui = auto
@@ -64,3 +68,5 @@
 
 [interactive]
   diffFilter = delta --color-only
+[url "https://github.com/"]
+	insteadOf = ssh://git@github.com/
