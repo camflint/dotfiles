@@ -495,26 +495,28 @@ function! WinBufSwap()
 endfunction
 nnoremap <localleader>ss <C-c>:call WinBufSwap()<cr> |" Swap this and the last window.
 
-" Fuzzy file finders.
-nnoremap <leader>f :Clap files ++finder=fd --type f --follow --hidden %:p:h<cr>
-nnoremap <leader><leader>f :Clap files ++finder=fd --type f --follow --hidden<cr>
-nnoremap <leader>e :<c-u>Clap filer %:p:h<cr><cr>
-nnoremap <leader><leader>e :<c-u>Clap filer<cr>
+" Fuzzy file finder (double-tap leader for path-relative search).
+nnoremap <leader>f :Clap files ++finder=fd --type f --follow --hidden<cr>
+nnoremap <leader><leader>f :Clap files ++finder=fd --type f --follow --hidden %:p:h<cr>
 
-" Project search.
-nnoremap <leader>s :Clap grep %:p:h<cr>
-nnoremap <leader><leader>s :Clap grep<cr>
+" Ivy-like file navigator.
+nnoremap <leader>e :<c-u>Clap filer<cr>
+nnoremap <leader><leader>e :<c-u>Clap filer %:p:h<cr><cr>
+
+" Grep.
+nnoremap <leader>s :Clap grep<cr>
+nnoremap <leader><leader>s :Clap grep %:p:h<cr>
 nnoremap K :Clap grep ++query=<cword><cr>
 
-" File explorers.
+" Full-fledged file explorers.
 nnoremap <leader>o :<c-u>MyToggleNERDTree<cr>
 nnoremap - :Vifm<cr>
 
-" Commands.
-nnoremap <leader>c :<c-u>Clap command<cr>
+" Command history.
+nnoremap <leader>c :<c-u>Clap command_history<cr>
 
-" Commands.
-nnoremap <leader><leader>c :<c-u>Clap command_history<cr>
+" All commands.
+nnoremap <leader><leader>c :<c-u>Clap command<cr>
 
 " Yank history.
 nnoremap <leader>y :<c-u>Clap yanks<cr>
@@ -537,6 +539,8 @@ function! s:CustomizeYcmQuickFixWindow()
   execute ':Clap quickfix'
 endfunction
 autocmd User YcmQuickFixOpened call <SID>CustomizeYcmQuickFixWindow()
+
+let g:ycm_always_populate_location_list = 1
 
 " Intellisense (LSP) mappings.
 " function! s:setup_vim_lsp_keymaps()
@@ -1447,7 +1451,8 @@ let g:peekaboo_window = "vert bo 65new"
 "  p - open entry in a preview window
 let g:qf_mapping_ack_style=1
 
-let g:clap_layout = { 'relative': 'editor' }
+"let g:clap_layout = { 'relative': 'editor' }
+let g:clap_layout = { 'relative': 'editor', 'width': '90%', 'col': '5%', 'height': '50%', 'row': '5%' }
 let g:clap_open_action = {
   \ 'ctrl-t': 'tab split',
   \ 'ctrl-x': 'split',
@@ -1461,6 +1466,7 @@ let g:clap_insert_mode_only = v:true
 let g:clap_enable_icon = 1
 "let g:clap_enable_debug = v:true
 "let g:clap_default_external_filter = 'fzf'
+let g:clap_preview_direction = 'UD' " preview on bottom, not right
 
 " Smooth scrolling.
 let g:SexyScroller_MinLines = 50
