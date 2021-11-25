@@ -893,7 +893,6 @@ let g:coc_global_extensions = [
 \  'coc-fsharp',
 \  'coc-format-json',
 \  'coc-emoji',
-\  'coc-bookmark',
 \ ]
 
 " Use tab for trigger completion with characters ahead and navigate.

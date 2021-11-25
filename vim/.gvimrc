@@ -1,5 +1,5 @@
 " Font.
-set guifont=JetBrains\ Mono:h16
+set guifont=UbuntuMono\ Nerd\ Font:h18
 
 " Hide the GUI chrome.
 set guioptions=ac
