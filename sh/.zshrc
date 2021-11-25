@@ -47,7 +47,7 @@ function precmd() {
 
 # Communicate changed directories to Kitty, so it can keep the window title in sync with the directory name.
 function synctitle() {
-  if [[ ! $ENABLE_KITTY ]]; then
+  if [[ "$ENABLE_KITTY" != "1" ]]; then
      return
   fi
   if which kitty &> /dev/null; then
