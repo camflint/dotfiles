@@ -70,3 +70,5 @@
   diffFilter = delta --color-only
 [url "https://github.com/"]
 	insteadOf = ssh://git@github.com/
+[init]
+	defaultBranch = main
