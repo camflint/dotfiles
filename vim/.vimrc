@@ -1,12 +1,12 @@
 " Basic options -----------------------------------------------------------{{{1
 " Self-explanatory defaults.
 set encoding=utf-8
-set textwidth=120
 set autoindent
 set cursorline
 set noruler
 set showmatch
 
+" Mouse settings.
 set mouse=a
 set mousefocus
 set mousemodel=popup
@@ -20,8 +20,10 @@ set nobackup
 set backupcopy=auto
 
 " Undo persistence.
-set undofile
-set undodir^=~/.local/share/vim/undo//
+if has('persistent_undo')
+    set undofile
+    set undodir^=~/.local/share/vim/undo//
+endif
 
 " Indentation rules (defaults).
 set tabstop=2
@@ -30,11 +32,17 @@ set softtabstop=2
 set expandtab
 set autoindent
 
+" 120 chars per line.
+set textwidth=120
+if exists('&colorcolumn')
+    set colorcolumn=120
+endif
+
 " Folding rules (defaults).
 set foldmethod=indent
 set foldnestmax=10
 set foldlevel=2
-set foldlevelstart=2
+set foldlevelstart=99
 set nofoldenable
 
 " Show certain invisibles.
@@ -42,7 +50,14 @@ set list
 set listchars=tab:
 
 " Performance tweaks.
+set synmaxcol=1000    " stop highlighting for long columns (like XML files)
 set lazyredraw
+
+" Reduce timeout length by half.
+set timeoutlen=500
+
+" Silence most hit-enter prompts.
+set shortmess=aIT
 
 " Keyword completion (autocomplete).
 set complete-=i  " Don't search include files for every keyword completion.
@@ -57,7 +72,8 @@ set backspace=indent,eol,start
 set visualbell
 
 " Line numbers.
-set number relativenumber
+set number
+set relativenumber
 
 " Basic status bar visual options.
 set showmode
@@ -65,6 +81,70 @@ set showcmd
 
 " Give more space for displaying messages.
 set cmdheight=2
+
+" Make sure we can always see 3 lines of context around the cursor.
+set scrolloff=3
+
+" Allow switching away from a dirty buffer without saving.
+set hidden
+
+" More natural new split opening.
+set splitright
+set splitbelow
+
+" Search.
+set ignorecase smartcase " ignore case unless mixed case is present in search query
+set gdefault             " global substitution is default
+set incsearch            " search immediately rather than requiring <cr>
+
+" Only enable 'hlsearch' when focused on the command line.
+augroup ModalHighlightSearch
+    autocmd!
+    autocmd CmdlineEnter /,\? :set hlsearch
+    autocmd CmdlineLeave /,\? :set nohlsearch
+augroup END
+
+" Show tab suggestions in the command bar.
+set wildmenu
+set wildmode=full
+set wildcharm=<Tab>
+set wildignore+=*/node_modules/*,*.swp,*.*~
+
+" Visually indent wrapped lines, with a ↳ symbol prefixed.
+set breakindent
+set breakindentopt=shift:2
+set showbreak=↳
+
+" Keep the cursor column stable when moving around.
+set nostartofline
+
+" Don't automatically add <EOL> to the file (preserve existing).
+if exists('&fixeol')
+    set nofixeol
+endif
+
+" Smart comment formatting (when using 'gq').
+set formatoptions=croqj
+
+" Better man pages (when viewed with :Man <topic>).
+runtime ftplugin/man.vim
+set keywordprg=:Man
+
+" Allow the cursor to be positioned anywhere during visual block mode.
+set virtualedit=block
+
+" Don't double-space.
+set nojoinspaces
+
+" Use vertical panes when diffing. Try to align diff chunks left and right using
+" filler spacing.
+set diffopt=filler,vertical
+
+" Automatically reload the buffer when the filsystem changes (but not when the
+" file is deleted, so in-memory changes aren't lost).
+set autoread
+
+" Status line and tab line ------------------------------------------------{{{1
 
 " statusline.
 function! StatuslineBufferIndex()
@@ -100,83 +180,18 @@ function MyTabLine()
   let t = tabpagenr()
   let i = 1
   while i <= tabpagenr('$')
-    " let buflist = tabpagebuflist(i)
-    " let winnr = tabpagewinnr(i)
     let s .= (i == t ? '%#TabLineSel#' : '%#TabLine#')
     let s .= '%' . i . 'T'
-    " let s .= (i == t ? '%1*' : '%2*')
     let s .= ' '
     let s .= i
-    " let s .= i . ':'
-    " let s .= winnr . '/' . tabpagewinnr(i,'$')
-    " let s .= ' %*'
-    " let s .= (i == t ? '%#TabLineSel#' : '%#TabLine#')
-    " let bufnr = buflist[winnr - 1]
-    " let file = bufname(bufnr)
-    " let buftype = getbufvar(bufnr, 'buftype')
-    " if buftype == 'nofile'
-    "   if file =~ '\/.'
-    "     let file = substitute(file, '.*\/\ze.', '', '')
-    "   endif
-    " else
-    "   let file = fnamemodify(file, ':p:t')
-    " endif
-    " if file == ''
-    "   let file = '[No Name]'
-    " endif
-    " let s .= file
     let s .= '%T '
     let i = i + 1
   endwhile
   let s .= '%#TabLine#'
-  " let s .= (tabpagenr('$') > 1 ? ' %999XX ' : ' X ')
   return s
 endfunction
 set showtabline=1
 set tabline=%!MyTabLine()
-
-" Make sure we can always see 3 lines of context around the cursor.
-set scrolloff=3
-
-" Allow switching away from a dirty buffer without saving.
-set hidden
-
-" More natural split opening.
-set splitright
-set splitbelow
-
-" Search.
-set ignorecase smartcase " ignore case unless mixed case is present in search query
-set gdefault             " global substitution is default
-set incsearch
-
-" Show tab suggestions in the command bar.
-set wildmenu
-set wildmode=full
-set wildcharm=<Tab>
-set wildignore+=*/node_modules/*,*.swp,*.*~
-
-" Visually indent wrapped lines, with a ↳ symbol prefixed.
-set breakindent
-set breakindentopt=shift:2
-set showbreak=↳
-
-" Smart comment formatting (gq).
-set formatoptions=croqj
-
-" Fix: number/relativenumber in Goyo
-" augroup numbertoggle
-"   autocmd!
-"   autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
-"   autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
-" augroup END
-
-" Help window positioning.
-" <TODO>
-
-" Better man pages (when viewed with K or :Man <topic>).
-runtime ftplugin/man.vim
-set keywordprg=:Man
 
 " Tmux integration --------------------------------------------------------{{{1
 
@@ -215,67 +230,7 @@ else
   set notermguicolors
 endif
 
-" Base16 colorscheme.
-function! s:base16_customize() abort
-  if trim(execute('colorscheme')) !~ 'base16'
-    return
-  endif
-
-  " Use italic for comments.
-  hi! Comment cterm=italic gui=italic
-
-  " Lightline customizations.
-  let s:base00 = [ "#".g:base16_gui00, g:base16_cterm00 ] " black
-  let s:base01 = [ "#".g:base16_gui01, g:base16_cterm01 ]
-  let s:base02 = [ "#".g:base16_gui02, g:base16_cterm02 ]
-  let s:base03 = [ "#".g:base16_gui03, g:base16_cterm03 ]
-  let s:base04 = [ "#".g:base16_gui04, g:base16_cterm04 ]
-  let s:base05 = [ "#".g:base16_gui05, g:base16_cterm05 ]
-  let s:base06 = [ "#".g:base16_gui06, g:base16_cterm06 ]
-  let s:base07 = [ "#".g:base16_gui07, g:base16_cterm07 ] " white
-
-  let s:base08 = [ "#".g:base16_gui08, g:base16_cterm08 ] " red
-  let s:base09 = [ "#".g:base16_gui09, g:base16_cterm09 ] " orange
-  let s:base0A = [ "#".g:base16_gui0A, g:base16_cterm0A ] " yellow
-  let s:base0B = [ "#".g:base16_gui0B, g:base16_cterm0B ] " green
-  let s:base0C = [ "#".g:base16_gui0C, g:base16_cterm0C ] " teal
-  let s:base0D = [ "#".g:base16_gui0D, g:base16_cterm0D ] " blue
-  let s:base0E = [ "#".g:base16_gui0E, g:base16_cterm0E ] " pink
-  let s:base0F = [ "#".g:base16_gui0F, g:base16_cterm0F ] " brown
-
-  let s:p = {'normal': {}, 'inactive': {}, 'insert': {}, 'replace': {}, 'visual': {}, 'tabline': {}}
-
-  let s:p.normal.left     = [ [ s:base01, s:base03 ], [ s:base05, s:base02 ] ]
-  let s:p.insert.left     = [ [ s:base00, s:base0D ], [ s:base05, s:base02 ] ]
-  let s:p.visual.left     = [ [ s:base00, s:base09 ], [ s:base05, s:base02 ] ]
-  let s:p.replace.left    = [ [ s:base00, s:base08 ], [ s:base05, s:base02 ] ]
-  let s:p.inactive.left   = [ [ s:base02, s:base00 ] ]
-
-  let s:p.normal.middle   = [ [ s:base07, s:base01 ] ]
-  let s:p.inactive.middle = [ [ s:base01, s:base00 ] ]
-
-  let s:p.normal.right    = [ [ s:base01, s:base03 ], [ s:base01, s:base02 ] ]
-  let s:p.inactive.right  = [ [ s:base01, s:base00 ] ]
-
-  let s:p.normal.error    = [ [ s:base07, s:base08 ] ]
-  let s:p.normal.warning  = [ [ s:base07, s:base09 ] ]
-
-  let s:p.tabline.left    = [ [ s:base05, s:base02 ] ]
-  let s:p.tabline.middle  = [ [ s:base05, s:base01 ] ]
-  let s:p.tabline.right   = [ [ s:base05, s:base02 ] ]
-  let s:p.tabline.tabsel  = [ [ s:base01, s:base0A ] ]
-
-  let g:lightline#colorscheme#base16#palette = lightline#colorscheme#flatten(s:p)
-
-  call <SID>LightlineReload()
-endfunction
-
-" augroup on_change_colorschema
-"   autocmd!
-"   autocmd ColorScheme * call <SID>base16_customize()
-" augroup END
-
-" See the very bottom of this file for the code that actually triggers the theme.
+" NOTE: See the very bottom of this file for the code that actually triggers the theme.
 
 " Filetype customization --------------------------------------------------{{{1
 
@@ -417,13 +372,6 @@ nnoremap <localleader>l :noh<cr> \|
 \ <plug>(ExchangeClear) \|
 "\ <plug>(lsp-preview-close) \|
 \ <plug>(clever-f-reset)
-
-" Shortcut to temporarily enable 'hlsearch' only when typing the search query.
-augroup vimrc-incsearch-highlight
-    autocmd!
-    autocmd CmdlineEnter /,\? :set hlsearch
-    autocmd CmdlineLeave /,\? :set nohlsearch
-augroup END
 
 " Copy/paste shortcuts.
 " Don't move cursor after yanking. Related tip: use Ctrl+O to toggle between top and bottom of a visual selection.
@@ -855,7 +803,7 @@ let g:bookmark_show_toggle_warning = 0
 let g:bookmark_auto_save = 1
 
 " Vista.
-let g:vista_default_executive = 'coc'
+"let g:vista_default_executive = 'coc'
 
 " Clap.
 nnoremap <leader>t <c-u>:Clap tags<cr>
@@ -953,7 +901,7 @@ function! s:show_documentation()
 endfunction
 
 " Highlight symbol under cursor on CursorHold
-autocmd CursorHold * silent call CocActionAsync('highlight')
+"autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Remap for format selected region
 xmap <leader>q  <Plug>(coc-format-selected)
@@ -962,7 +910,7 @@ nmap <leader>q  <Plug>(coc-format-selected)
 augroup mygroup
   autocmd!
   " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  "autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
   " Update signature help on jump placeholder.
   "autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
@@ -1554,7 +1502,7 @@ Plug 'morhetz/gruvbox'
 Plug 'knubie/vim-kitty-navigator'
 Plug 'liuchengxu/vista.vim'
 "Plug 'ycm-core/lsp-examples', { 'do': './install.py --all', 'rtp': './lsp-examples/' }
-Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+"Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 
 " For ycm-core/lsp-examples
 "runtime './vimrc.generated'
@@ -1571,35 +1519,16 @@ call plug#end()
 
 
 " Theme activation --------------------------------------------------------{{{1
-"
-" This color scheme setup relies on a base16-shell alias having been run to modify the shell's 256-color palette. Doing
-" so should generate the following file for vim. Make sure this statement comes last, as our customization hook higher
-" in the file depends on plugins being loaded.
-" if filereadable(expand('~/.vimrc_background')) && !has('gui_running')
-"   let base16colorspace=256
-"   source ~/.vimrc_background
-" endif
-
-" if !has('gui')
-"   colorscheme tempus_summer
-
-"   hi StatusLine ctermbg=07 ctermfg=08
-"   hi StatusLineNC ctermbg=08 ctermfg=07
-"   hi TabLineFill ctermfg=07 ctermbg=08
-"   hi TabLineSel ctermfg=00 ctermbg=07
-"   hi TabLine ctermfg=07 ctermbg=00
-"   hi CursorLineNr ctermfg=253 ctermbg=08
-"   hi User1 ctermfg=00 ctermbg=07
-" endif
 
 " Background transparency.
 set background=dark
 hi Normal guibg=NONE ctermbg=NONE
 
+" Dracula pro.
 packadd! dracula_pro
 let g:dracula_colorterm = 0
 colorscheme dracula_pro
 
+" Gruvbox.
 " let g:gruvbox_italic=1
 " colorscheme gruvbox
-
