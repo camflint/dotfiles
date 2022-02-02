@@ -322,6 +322,9 @@ execute 'normal zMzvzz'
 let mapleader = '\'
 let maplocalleader = ','
 
+" Home.
+nnoremap == :Startify<cr>
+
 " Quick suspend.
 nnoremap Z :suspend<cr>
 
@@ -414,18 +417,6 @@ nnoremap <localleader>bc :Bdelete this<cr>
 nnoremap <localleader>bx :Bdelete all<cr>
 nnoremap <localleader>bi :Bdelete select<cr>
 
-" Buffer number keys.
-nmap <leader>1 <Plug>lightline#bufferline#go(1)
-nmap <leader>2 <Plug>lightline#bufferline#go(2)
-nmap <leader>3 <Plug>lightline#bufferline#go(3)
-nmap <leader>4 <Plug>lightline#bufferline#go(4)
-nmap <leader>5 <Plug>lightline#bufferline#go(5)
-nmap <leader>6 <Plug>lightline#bufferline#go(6)
-nmap <leader>7 <Plug>lightline#bufferline#go(7)
-nmap <leader>8 <Plug>lightline#bufferline#go(8)
-nmap <leader>9 <Plug>lightline#bufferline#go(9)
-nmap <leader>0 <Plug>lightline#bufferline#go(10)
-
 " Recent files.
 nnoremap <leader>r :Clap history<cr>
 
@@ -478,14 +469,14 @@ nnoremap <leader>s :Clap grep<cr>
 nnoremap <leader><leader>s :Clap grep %:p:h<cr>
 nnoremap K :Clap grep ++query=<cword><cr>
 
-" Full-fledged file explorers.
-nnoremap <leader>o :<c-u>MyToggleNERDTree<cr>
+" File explorers.
 nnoremap - :Vifm<cr>
+"nnoremap <leader>o :<c-u>MyToggleNERDTree<cr>
 
 " Command history.
 nnoremap <leader>c :<c-u>Clap command_history<cr>
 
-" All commands.
+" Command browser (all commands).
 nnoremap <leader><leader>c :<c-u>Clap command<cr>
 
 " Yank history.
@@ -634,7 +625,7 @@ nnoremap <leader><leader>w :Goyo<cr>
 map <space> <Plug>(easymotion-prefix)
 
 " Enter navmode for less-like scrolling.
-nnoremap \n :call Navmode()<cr>
+"nnoremap \n :call Navmode()<cr>
 
 " Open the quickfix window.
 nnoremap <localleader>q :copen<cr>
@@ -1481,7 +1472,6 @@ Plug 'wellle/targets.vim'
 
 " Aesthetics.
 Plug 'mhinz/vim-startify'
-Plug 'mtth/cursorcross.vim'
 
 " Design and UX.
 "Plug 'chrisbra/Colorizer'
