@@ -2,7 +2,6 @@
 " Self-explanatory defaults.
 set encoding=utf-8
 set autoindent
-set cursorline
 set noruler
 set showmatch
 
@@ -37,6 +36,11 @@ set textwidth=120
 if exists('&colorcolumn')
     set colorcolumn=120
 endif
+
+" Highlight the row and column.
+"  (managed by vim-cursorcross plugin also)
+"set cursorcolumn
+"set cursorline
 
 " Folding rules (defaults).
 set foldmethod=indent
@@ -321,10 +325,18 @@ let maplocalleader = ','
 " Quick suspend.
 nnoremap Z :suspend<cr>
 
-" Folding.
+" Saving (:update is more efficient than :write, so better for my trigger finger).
+inoremap <C-s> <C-O>:update<cr>
+nnoremap <C-s>      :update<cr>
+
+" Macros - qq to record, Q to replay.
+nnoremap Q @q
+
+" Automatically unfold to cursor when searching forward/backward.
 nnoremap n nzzzv
 nnoremap N Nzzzv
-"nnoremap <space> zA
+
+" Close all folds except under cursor.
 nnoremap <localleader>z zMzvzz
 
 " Map ':' to ';'
@@ -340,11 +352,12 @@ nnoremap <leader>vr :so $MYVIMRC<cr>
 " Select only text and not prefix/suffix whitespace (contrast with V).
 nnoremap vv ^v$
 
-" Move lines up and down.
+" Move lines up and down (disabled because conflicts with '-' to open file
+" explorer).
 " nnoremap - ddp
 " nnoremap _ ddkP
 
-" Command-mode history shortcuts (avoid using arrow keys).
+" Command-mode history shortcuts (avoids using arrow keys).
 cnoremap <c-n> <down>
 cnoremap <c-p> <up>
 
@@ -365,13 +378,23 @@ map <PageUp> <C-U>
 map <End> <C-F>
 map <Home> <C-B>
 
-" Shortcut to close all temporary windows, turn off highlighting, and otherwise reset editing state.
+" Shortcut to close the {quickfix, location} windows, plus turn off highlighting, plus reset editing states.
 nnoremap <localleader>l :noh<cr> \|
 \ :cclose<cr> \|
 \ :lclose<cr> \|
 \ <plug>(ExchangeClear) \|
 "\ <plug>(lsp-preview-close) \|
 \ <plug>(clever-f-reset)
+
+" Readline-style key bindings (from rsi.vim).
+cnoremap        <C-A> <Home>
+cnoremap        <C-B> <Left>
+cnoremap <expr> <C-D> getcmdpos()>strlen(getcmdline())?"\<Lt>C-D>":"\<Lt>Del>"
+cnoremap <expr> <C-F> getcmdpos()>strlen(getcmdline())?&cedit:"\<Lt>Right>"
+cnoremap        <M-b> <S-Left>
+cnoremap        <M-f> <S-Right>
+silent! exe "set <S-Left>=\<Esc>b"
+silent! exe "set <S-Right>=\<Esc>f"
 
 " Copy/paste shortcuts.
 " Don't move cursor after yanking. Related tip: use Ctrl+O to toggle between top and bottom of a visual selection.
@@ -404,7 +427,6 @@ nmap <leader>9 <Plug>lightline#bufferline#go(9)
 nmap <leader>0 <Plug>lightline#bufferline#go(10)
 
 " Recent files.
-"nnoremap <leader>r :FZFMru<cr>
 nnoremap <leader>r :Clap history<cr>
 
 " Git-tree files.
@@ -617,19 +639,6 @@ nnoremap \n :call Navmode()<cr>
 " Open the quickfix window.
 nnoremap <localleader>q :copen<cr>
 
-" Get hints on key sequences after a timeout, using vim-whichkey.  Needs to be kept in sync with the prefixes used in
-" above mappings.
-" nnoremap <silent> <leader> :<c-u>WhichKey '\'<cr>
-" nnoremap <silent> <localleader> :<c-u>WhichKey ','<cr>
-" nnoremap <silent> <leader>m :<c-u>WhichKey 'm'<cr>
-" nnoremap <silent> <leader>f :<c-u>WhichKey '\f'<cr>
-" nnoremap <silent> <leader>v :<c-u>WhichKey '\v'<cr>
-" nnoremap <silent> <leader>y :<c-u>WhichKey '\y'<cr>
-" nnoremap <silent> <leader>p :<c-u>WhichKey '\p'<cr>
-" nnoremap <silent> <leader>w :<c-u>WhichKey '\v'<cr>
-" nnoremap <silent> <leader>s :<c-u>WhichKey '\s'<cr>
-" nnoremap <silent> <leader>q :<c-u>WhichKey '\k'<cr>
-
 " Orgmode mappings.
 function! s:setup_org_mode_mappings()
   nmap <buffer><silent> <localleader>1 <Cmd>OrgAgendaTimeline<CR>
@@ -743,9 +752,6 @@ let g:fzf_preview_window = ''
 autocmd! FileType fzf set laststatus=0 noshowmode noruler nonumber norelativenumber
   \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler number relativenumber
 
-" Fzf-mru.
-let g:fzf_mru_no_sort = 1
-
 " Fzf/cscope integration.
 "   source: https://alex.dzyoba.com/blog/vim-revamp/
 function! Cscope(option, query)
@@ -765,19 +771,20 @@ function! Cscope(option, query)
   call fzf#run(opts)
 endfunction
 
+" Tags.
 " nnoremap <silent> <C-g> :call Cscope('3', expand('<cword>'))<CR>
-nnoremap <localleader>t :Tags<cr>
+"nnoremap <localleader>t :Tags<cr>
 
 " Pydoc.
 let g:pydoc_window_lines=0.5
 
 " Tabularize.
-" if exists(":Tabularize")
-"   nmap <teader>t= :Tabularize /=<CR>
-"   vmap <teader>t= :Tabularize /=<CR>
-"   nmap <teader>t: :Tabularize /:\zs<CR>
-"   vmap <teader>t: :Tabularize /:\zs<CR>
-" endif
+if exists(":Tabularize")
+  nmap <localleader>t= :Tabularize /=<CR>
+  vmap <localleader>t= :Tabularize /=<CR>
+  nmap <localleader>t: :Tabularize /:\zs<CR>
+  vmap <localleader>t: :Tabularize /:\zs<CR>
+endif
 
 inoremap <silent> <Bar>   <Bar><Esc>:call <SID>align()<CR>a
 
@@ -865,8 +872,8 @@ endfunction
  
 " Make <CR> auto-select the first completion item and notify coc.nvim to
 " format on enter, <cr> could be remapped by other vim plugin
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+"inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+"                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 " Use `[g` and `]g` to navigate diagnostics
 " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
@@ -1421,102 +1428,124 @@ let g:SexyScroller_MinColumns = 200
 
 " Plugin registry ---------------------------------------------------------{{{1
 
+" NOTE: I try to keep this list pretty trimmed-down to lower the disk and memory
+" footprint.
+
 " Plug. 
 "  execute :PlugInstall to install the following list for the first time.
 call plug#begin('~/.local/share/vim/plugged')
 
-" Essential plugins.
-" Plug 'prabirshrestha/async.vim'
-" Plug 'prabirshrestha/asyncomplete-lsp.vim'
-" Plug 'prabirshrestha/asyncomplete.vim'
-" Plug 'prabirshrestha/vim-lsp'
-"Plug 'mattn/vim-lsp-settings'
+" Favorite/essential plugins.
+"  clever-f   = repeat f, F, t, or T more than once
+"  commentary = advanced comment/uncomment with motions
+"  delimitmate = automatic closing of quotes/parens/brackets/etc.
+"  eunuch = vim sugar for unix shell commands
+"  far        = find and replace
+"  fzf        = fuzzy finder (cli integration)
+"  kwbd       = don't close a window on last buffer close
+"  paraglide  = better paragraph forward/backward
+"  qf         = quickfix window powertools
+"  surround   = operate on surrounding quotes/parens/brackets/etc.
+"  targets    = adds lots of text targets
+"  unimpaired = bracket aliases like ]a, ]q, ]b, etc.
+"  vifm       = file explorer (cli integration)
+"  vinegar    = better netrw
 Plug 'asheq/close-buffers.vim'
 Plug 'brooth/far.vim'
-Plug 'camflint/base16-vim'
-"Plug 'camflint/onehalf', { 'rtp': 'vim' }
 Plug 'camflint/vim-paraglide'
-Plug 'camflint/vim-superman'
-Plug 'chrisbra/Colorizer'
-Plug 'christoomey/vim-tmux-navigator'
-"Plug 'dkarter/bullets.vim' "Note: <CR> binding is conflicting with vim-clap
-Plug 'dougbeney/pickachu'
 Plug 'easymotion/vim-easymotion'
-Plug 'faceleg/delete-surrounding-function-call.vim'
-Plug 'fcpg/vim-fahrenheit'
-Plug 'fcpg/vim-navmode'
 Plug 'godlygeek/tabular'
-Plug 'hiphish/info.vim'
-Plug 'https://gitlab.com/protesilaos/tempus-themes-vim.git'
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
-Plug 'inkarkat/vim-PatternsOnText'
-Plug 'inkarkat/vim-ingo-library'
-Plug 'itchyny/calendar.vim'
-Plug 'jceb/vim-orgmode'
-Plug 'jparise/vim-graphql'
 Plug 'junegunn/fzf.vim'
-Plug 'junegunn/goyo.vim'
-"Plug 'junegunn/vim-peekaboo'
-"Plug 'liuchengxu/vim-clap'
 Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
-Plug 'liuchengxu/vim-which-key'
 Plug 'mattesgroeger/vim-bookmarks'
-Plug 'mhinz/vim-grepper'
-Plug 'mhinz/vim-startify'
-" Plug 'ms-jpq/chadtree', { 'branch': 'chad' } "Note: getting err. on startup
-Plug 'mtth/cursorcross.vim'
-Plug 'mzlogin/vim-markdown-toc'
-Plug 'pbogut/fzf-mru.vim'
-Plug 'plasticboy/vim-markdown'
-Plug 'preservim/nerdtree'
-Plug 'puremourning/vimspector', {'for': ['typescript', 'javascript']}
 Plug 'raimondi/delimitmate'
 Plug 'rgarver/kwbd.vim'
 Plug 'rhysd/clever-f.vim'
 Plug 'romainl/vim-qf'
-Plug 'sheerun/vim-polyglot'
-Plug 'tomasr/molokai'
-Plug 'tommcdo/vim-exchange'
 Plug 'tpope/vim-commentary'
-"Plug 'tpope/vim-endwise' "Note: <CR> binding is conflicting with vim-clap
 Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-rhubarb'
-Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-vinegar'
 Plug 'vifm/vifm.vim'
-Plug 'vimwiki/vimwiki'
 Plug 'wellle/targets.vim'
-Plug 'whiteinge/diffconflicts'
-Plug 'xolox/vim-misc'
-Plug 'ycm-core/YouCompleteMe', { 'do': './install.py --ts-completer' }
-Plug 'sonph/onehalf', {'rtp': 'vim/'}
-Plug 'rakr/vim-one'
-Plug 'drewtempelmeyer/palenight.vim'
-Plug 'morhetz/gruvbox'
-"Plug 'joeytwiddle/sexy_scroller.vim'
-Plug 'knubie/vim-kitty-navigator'
-Plug 'liuchengxu/vista.vim'
-"Plug 'ycm-core/lsp-examples', { 'do': './install.py --all', 'rtp': './lsp-examples/' }
-"Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 
-" For ycm-core/lsp-examples
-"runtime './vimrc.generated'
+" Themes.
+"Plug 'https://gitlab.com/protesilaos/tempus-themes-vim.git'
+"Plug 'drewtempelmeyer/palenight.vim'
+"Plug 'sonph/onehalf', {'rtp': 'vim/'}
+"Plug 'rakr/vim-one'
+"Plug 'morhetz/gruvbox'
+"Plug 'tomasr/molokai'
+
+" Aesthetics.
+Plug 'mhinz/vim-startify'
+Plug 'mtth/cursorcross.vim'
+
+" Design and UX.
+"Plug 'chrisbra/Colorizer'
+"Plug 'dougbeney/pickachu'
+
+" Productivity.
+"Plug 'itchyny/calendar.vim'
+"Plug 'jceb/vim-orgmode'
+"Plug 'mzlogin/vim-markdown-toc'
+
+" Syntax and filetypes.
+Plug 'sheerun/vim-polyglot'
+Plug 'hiphish/info.vim'
+Plug 'jparise/vim-graphql'
+Plug 'plasticboy/vim-markdown'
+Plug 'camflint/vim-superman'
+"Plug 'vimwiki/vimwiki'
+
+" Shell/environment integrations.
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'knubie/vim-kitty-navigator'
+
+" LSP and autocompletion.
+"Plug 'ycm-core/YouCompleteMe', { 'do': './install.py --ts-completer' }
+"Plug 'prabirshrestha/async.vim'
+"Plug 'prabirshrestha/asyncomplete-lsp.vim'
+"Plug 'prabirshrestha/asyncomplete.vim'
+"Plug 'prabirshrestha/vim-lsp'
+"Plug 'mattn/vim-lsp-settings'
+
+" IDE.
+"Plug 'preservim/nerdtree'
+"Plug 'puremourning/vimspector', {'for': ['typescript', 'javascript']}
+
+" Other/infrequently used.
+"  fugitive = git client
+"  grepper = binary-agnostic :Grepper command
+"  obsession = session management
+"  rhubarb = github extras like :GBrowse
+"  patternsontext = advanced substitution commands
+"  diffconflicts = convert file with conflict markers into 2-way diff
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-obsession'
+Plug 'tpope/vim-rhubarb'
+Plug 'tpope/vim-speeddating'
+Plug 'inkarkat/vim-PatternsOnText'
+Plug 'inkarkat/vim-ingo-library'
+Plug 'whiteinge/diffconflicts'
+"Plug 'fcpg/vim-navmode'
+"Plug 'junegunn/goyo.vim'
+"Plug 'junegunn/vim-peekaboo'
+"Plug 'mhinz/vim-grepper'
 
 " Note: this needs to come last in the plugin list.
 Plug 'ryanoasis/vim-devicons'
 
-" nvim-only plugins.
+" Neovim-only plugins.
 if has('nvim')
-  Plug 'shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
+  "Plug 'shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
+  "Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
+  "Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 endif
 
 call plug#end()
-
 
 " Theme activation --------------------------------------------------------{{{1
 
