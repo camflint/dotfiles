@@ -45,10 +45,10 @@ fi
     ln -s "/Volumes/GoogleDrive/My Drive/Bridge" "$HOME/gdrive"
 
 # symlink: Notes.
-[ ! -L "$HOME/notes_convoy" ] &&\
-  ln -s "$HOME/gdrive_convoy/notes" "$HOME/notes_convoy"
-[ ! -L "$HOME/notes" ] &&\
-  ln -s "$HOME/gdrive/notes" "$HOME/notes"
+#[ ! -L "$HOME/notes_convoy" ] &&\
+#  ln -s "$HOME/gdrive_convoy/notes" "$HOME/notes_convoy"
+#[ ! -L "$HOME/notes" ] &&\
+#  ln -s "$HOME/gdrive/notes" "$HOME/notes"
 
 # GNU tools.
 GNU_PATH=/usr/local/opt/coreutils/libexec/gnubin
