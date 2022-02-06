@@ -86,6 +86,8 @@ set showcmd
 " Give more space for displaying messages.
 set cmdheight=2
 
+" Scroll N lines at a time rather than default, which is half-window.
+set scroll=5
 " Make sure we can always see 3 lines of context around the cursor.
 set scrolloff=3
 
@@ -240,12 +242,64 @@ endif
 
 function! s:setup_code_general()
   " YouCompleteMe mappings.
-  nnoremap <buffer> gd :YcmCompleter GoToDefinition<cr>
-  nnoremap <buffer> gc :YcmCompleter GoToDeclaration<cr>
-  nnoremap <buffer> gi :YcmCompleter GoToImplementation<cr>
-  nnoremap <buffer> gt :YcmCompleter GoToType<cr>
-  nnoremap <buffer> gr :YcmCompleter GoToReferences<cr>
-  nnoremap <buffer> gh :YcmCompleter GetDoc<cr>
+  " nnoremap <buffer> gd :YcmCompleter GoToDefinition<cr>
+  " nnoremap <buffer> gc :YcmCompleter GoToDeclaration<cr>
+  " nnoremap <buffer> gi :YcmCompleter GoToImplementation<cr>
+  " nnoremap <buffer> gt :YcmCompleter GoToType<cr>
+  " nnoremap <buffer> gr :YcmCompleter GoToReferences<cr>
+  " nnoremap <buffer> gh :YcmCompleter GetDoc<cr>
+
+  " vim-lsp mappings.
+  nmap <buffer> gd <plug>(lsp-definition)
+  nmap <buffer> gp <plug>(lsp-peek-definition)
+  nmap <buffer> gc <plug>(lsp-declaration)
+  nmap <buffer> gi <plug>(lsp-implementation)
+  nmap <buffer> gr <plug>(lsp-references)
+  nmap <buffer> gn <plug>(lsp-rename)
+  nmap <buffer> gh <plug>(lsp-hover)
+  nmap <buffer> gs <plug>(lsp-signature-help)
+  nmap <buffer> <localleader>o <plug>(lsp-document-symbol)
+  nmap <buffer> <localleader>O <plug>(lsp-workspace-symbol)
+  nmap <buffer> <localleader>q <plug>(lsp-document-diagnostics)
+  nmap <buffer> ]e <plug>(lsp-next-error)
+  nmap <buffer> [e <plug>(lsp-previous-error)
+  nmap <buffer> ]w <plug>(lsp-next-warning)
+  nmap <buffer> [w <plug>(lsp-previous-warning)
+  nmap <buffer> <localleader>a <plug>(lsp-code-action)
+  map <buffer> <localleader>gq <plug>(lsp-document-range-format)
+
+  " vim-lsp settings.
+  setlocal omnifunc=lsp#complete
+  setlocal signcolumn=yes
+  setlocal completeopt+=preview
+  if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
+
+  let g:lsp_format_sync_timeout = 500
+
+  augroup lsp_close_popup
+    autocmd!
+    autocmd CompleteDone * if pumvisible() == 0 | pclose | endif
+  augroup END
+  
+  inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : lsp#complete()
+  inoremap <expr> <cr>  pumvisible() ? "\<C-y>" : "\<cr>"
+  inoremap <expr> <C-y> pumvisible() ? asyncomplete#close_popup() : "\<C-y>"
+  inoremap <expr> <C-e> pumvisible() ? asyncomplete#cancel_popup() : "\<C-e>"
+
+  function! s:check_back_space() abort
+      let col = col('.') - 1
+      return !col || getline('.')[col - 1]  =~ '\s'
+  endfunction
+
+  inoremap <silent><expr> <TAB>
+    \ pumvisible() ? "\<C-n>" :
+    \ <SID>check_back_space() ? "\<TAB>" :
+    \ asyncomplete#force_refresh()
+
+  if has("gui_running")
+    inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+    inoremap <expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+  endif
 endfunction
 
 " Filetype: javascript
@@ -297,6 +351,12 @@ function! s:setup_filetype_help()
   " Don't show hidden chars, since helpfiles contain a lot of tabs.
   setlocal nolist
 endfunction
+
+" Activate base coding keyboard shortcuts whenever LSP activates on a buffer. 
+augroup lsp_install
+    au!
+    autocmd User lsp_buffer_enabled call <SID>setup_code_general()
+augroup END
 
 augroup setup_filetypes
   autocmd!
@@ -512,49 +572,7 @@ let g:ycm_always_populate_location_list = 1
 "   "   \ foldtext=lsp#ui#vim#folding#foldtext()
 
 "   setlocal omnifunc=lsp#complete
-"   setlocal completeopt+=preview
-
-"   augroup lsp_close_popup
-"     autocmd!
-"     autocmd CompleteDone * if pumvisible() == 0 | pclose | endif
-"   augroup END
   
-"   "inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : lsp#complete()
-"   inoremap <expr> <cr>  pumvisible() ? "\<C-y>" : "\<cr>"
-"   inoremap <expr> <C-y> pumvisible() ? asyncomplete#close_popup() : "\<C-y>"
-"   inoremap <expr> <C-e> pumvisible() ? asyncomplete#cancel_popup() : "\<C-e>"
-
-"   function! s:check_back_space() abort
-"       let col = col('.') - 1
-"       return !col || getline('.')[col - 1]  =~ '\s'
-"   endfunction
-"   inoremap <silent><expr> <TAB>
-"     \ pumvisible() ? "\<C-n>" :
-"     \ <SID>check_back_space() ? "\<TAB>" :
-"     \ asyncomplete#force_refresh()
-
-"   if has("gui_running")
-"     inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-"     inoremap <expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-"   endif
-  
-"   nmap <buffer> gd <plug>(lsp-definition)
-"   nmap <buffer> gp <plug>(lsp-peek-definition)
-"   nmap <buffer> gc <plug>(lsp-declaration)
-"   nmap <buffer> gi <plug>(lsp-implementation)
-"   nmap <buffer> gr <plug>(lsp-references)
-"   nmap <buffer> gn <plug>(lsp-rename)
-"   nmap <buffer> gh <plug>(lsp-hover)
-"   nmap <buffer> gs <plug>(lsp-signature-help)
-"   nmap <buffer> <localleader>o <plug>(lsp-document-symbol)
-"   nmap <buffer> <localleader>O <plug>(lsp-workspace-symbol)
-"   nmap <buffer> <localleader>q <plug>(lsp-document-diagnostics)
-"   nmap <buffer> ]e <plug>(lsp-next-error)
-"   nmap <buffer> [e <plug>(lsp-previous-error)
-"   nmap <buffer> ]w <plug>(lsp-next-warning)
-"   nmap <buffer> [w <plug>(lsp-previous-warning)
-"   nmap <buffer> <localleader>a <plug>(lsp-code-action)
-"   map <buffer> <localleader>gf <plug>(lsp-document-range-format)
 " endfunction
 " augroup myvimlsp
 "   autocmd!
@@ -800,149 +818,11 @@ let g:bookmark_show_toggle_warning = 0
 "let g:bookmark_save_per_working_dir = 1
 let g:bookmark_auto_save = 1
 
-" Vista.
-"let g:vista_default_executive = 'coc'
-
 " Clap.
 nnoremap <leader>t <c-u>:Clap tags<cr>
 
-" COC.
-
-" COC plugins.
-let g:coc_global_extensions = [
-\  'coc-explorer',
-\  'coc-git',
-\  'coc-gitignore',
-\  'coc-yaml',
-\  'coc-tsserver',
-\  'coc-sql',
-\  'coc-python',
-\  'coc-prettier',
-\  'coc-markdownlint',
-\  'coc-lua',
-\  'coc-json',
-\  'coc-jest',
-\  'coc-html',
-\  'coc-docker',
-\  'coc-xml',
-\  'coc-webpack',
-\  'coc-ultisnips',
-\  'coc-toml',
-\  'coc-yank',
-\  'coc-tag',
-\  'coc-swagger',
-\  'coc-sh',
-\  'coc-scssmodules',
-\  'coc-rls',
-\  'coc-omnisharp',
-\  'coc-omni',
-\  'coc-fsharp',
-\  'coc-format-json',
-\  'coc-emoji',
-\ ]
-
-" Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <TAB>
-       \ pumvisible() ? "\<C-n>" :
-       \ <SID>check_back_space() ? "\<TAB>" :
-       \ coc#refresh()
-"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
- " Use <c-space> to trigger completion.
- if has('nvim')
-   inoremap <silent><expr> <c-space> coc#refresh()
- else
-   inoremap <silent><expr> <c-@> coc#refresh()
- endif
- 
-" Make <CR> auto-select the first completion item and notify coc.nvim to
-" format on enter, <cr> could be remapped by other vim plugin
-"inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-"                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-
-" Use `[g` and `]g` to navigate diagnostics
-" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-" Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gt <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
-
-" Applying codeAction to the selected region.
-" Example: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-" Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  elseif (coc#rpc#ready())
-    call CocActionAsync('doHover')
-  else
-    execute '!' . &keywordprg . " " . expand('<cword>')
-  endif
-endfunction
-
-" Highlight symbol under cursor on CursorHold
-"autocmd CursorHold * silent call CocActionAsync('highlight')
-
-" Remap for format selected region
-xmap <leader>q  <Plug>(coc-format-selected)
-nmap <leader>q  <Plug>(coc-format-selected)
- 
-augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  "autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder.
-  "autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
-
-
-" Use `:Format` to format current buffer
-command! -nargs=0 Format :call CocAction('format')
-
-" Map function and class text objects
-" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
-xmap if <Plug>(coc-funcobj-i)
-omap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap af <Plug>(coc-funcobj-a)
-xmap ic <Plug>(coc-classobj-i)
-omap ic <Plug>(coc-classobj-i)
-xmap ac <Plug>(coc-classobj-a)
-omap ac <Plug>(coc-classobj-a)
-
-" Remap <C-f> and <C-b> for scroll float windows/popups.
-" Note coc#float#scroll works on neovim >= 0.4.3 or vim >= 8.2.0750
-nnoremap <nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-nnoremap <nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-inoremap <nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
-inoremap <nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
-
-" Add `:Format` command to format current buffer.
-command! -nargs=0 Format :call CocAction('format')
-
-" Add `:Fold` command to fold current buffer.
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-
-" Add `:OR` command for organize imports of the current buffer.
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+" Use K to search the word under cursor (TODO)
+"nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 " C/C++.
 set path=.,**
@@ -1259,27 +1139,6 @@ augroup nerdtree_setup
   autocmd BufEnter * call s:handle_close_with_single_buffer_remaining()
 augroup END
 
-" COC extension - explorer.
-" nnoremap \n :CocCommand explorer --toggle<cr>
-" function! s:coc_explorer_on_vim_enter()
-"   " Hook to open and reveal explorer automatically.
-"   if (argc() == 0)
-"     execute 'CocCommand explorer --reveal ' . getcwd()
-"   endif
-" endfunction
-" function! s:coc_explorer_on_buffer_unload()
-"   " Hook to quit if explorer is last buffer.
-"   if ((winnr('$') == 1) && exists('b:coc_explorer_inited'))
-"     normal quit
-"     return
-"   endif
-" endfunction
-" augroup cocexplorer
-"     autocmd!
-    "autocmd VimEnter * call s:coc_explorer_on_vim_enter()
-    "autocmd BufUnload * call s:coc_explorer_on_buffer_unload()
-" augroup END
-
 " Startify.
 function! s:SortByChangedTickDesc(buf1, buf2)
   return -1 * 
@@ -1346,12 +1205,10 @@ let g:goyo_width = '60%'
 let g:goyo_height = '90%'
 function! s:goyo_enter()
   setlocal nonumber norelativenumber
-  "CocCommand git.toggleGutters
 endfunction
 
 function! s:goyo_leave()
   setlocal number relativenumber
-  "CocCommand git.toggleGutters
 endfunction
 
 augroup setup_goyo
@@ -1446,6 +1303,7 @@ Plug 'brooth/far.vim'
 Plug 'camflint/vim-paraglide'
 Plug 'easymotion/vim-easymotion'
 Plug 'godlygeek/tabular'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
 Plug 'mattesgroeger/vim-bookmarks'
@@ -1497,10 +1355,10 @@ Plug 'knubie/vim-kitty-navigator'
 " LSP and autocompletion.
 "Plug 'ycm-core/YouCompleteMe', { 'do': './install.py --ts-completer' }
 "Plug 'prabirshrestha/async.vim'
-"Plug 'prabirshrestha/asyncomplete-lsp.vim'
-"Plug 'prabirshrestha/asyncomplete.vim'
-"Plug 'prabirshrestha/vim-lsp'
-"Plug 'mattn/vim-lsp-settings'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'mattn/vim-lsp-settings'
 
 " IDE.
 "Plug 'preservim/nerdtree'
@@ -1527,13 +1385,6 @@ Plug 'whiteinge/diffconflicts'
 
 " Note: this needs to come last in the plugin list.
 Plug 'ryanoasis/vim-devicons'
-
-" Neovim-only plugins.
-if has('nvim')
-  "Plug 'shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
-  "Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
-  "Plug 'neoclide/coc.nvim', { 'branch': 'release' }
-endif
 
 call plug#end()
 
