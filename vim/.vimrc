@@ -271,35 +271,40 @@ function! s:setup_code_general()
   " vim-lsp settings.
   setlocal omnifunc=lsp#complete
   setlocal signcolumn=yes
-  setlocal completeopt+=preview
+
   if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
 
   let g:lsp_format_sync_timeout = 500
+  let g:lsp_fold_enabled = 0
 
+  " Close the preview window when completion is done.
   augroup lsp_close_popup
     autocmd!
     autocmd CompleteDone * if pumvisible() == 0 | pclose | endif
   augroup END
   
-  inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : lsp#complete()
-  inoremap <expr> <cr>  pumvisible() ? "\<C-y>" : "\<cr>"
-  inoremap <expr> <C-y> pumvisible() ? asyncomplete#close_popup() : "\<C-y>"
   inoremap <expr> <C-e> pumvisible() ? asyncomplete#cancel_popup() : "\<C-e>"
+  
+  " Enable autocomplete preview.
+  setlocal completeopt=menuone,noinsert,noselect,preview
+
+  " Tabbing between autocomplete menu items.
+  inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+  inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+  inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
+  imap <c-space> <Plug>(asyncomplete_force_refresh)
 
   function! s:check_back_space() abort
       let col = col('.') - 1
       return !col || getline('.')[col - 1]  =~ '\s'
   endfunction
 
-  inoremap <silent><expr> <TAB>
-    \ pumvisible() ? "\<C-n>" :
-    \ <SID>check_back_space() ? "\<TAB>" :
-    \ asyncomplete#force_refresh()
-
-  if has("gui_running")
-    inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-    inoremap <expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-  endif
+  " Uncomment this if g:asyncomplete_auto_popup = 0
+  " inoremap <silent><expr> <TAB>
+  "   \ pumvisible() ? "\<C-n>" :
+  "   \ <SID>check_back_space() ? "\<TAB>" :
+  "   \ asyncomplete#force_refresh()
+  " inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 endfunction
 
 " Filetype: javascript
@@ -1075,8 +1080,9 @@ let g:lightline#bufferline#number_map = {
 " Kwbd - a better 'bd': close buffer without closing window.
 cabbrev bd <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'Kwbd' : 'bd')<cr>
 
-" Autocomplete (various).
-let g:asyncomplete_auto_popup = 0
+" Autocomplete (for vim-lsp, etc.).
+let g:asyncomplete_auto_popup = 1
+let g:asyncomplete_auto_completeopt = 0
 let g:asyncomplete_popup_delay = 100
 
 " vim-lsp & vim-lsp-settings.
@@ -1354,7 +1360,7 @@ Plug 'knubie/vim-kitty-navigator'
 
 " LSP and autocompletion.
 "Plug 'ycm-core/YouCompleteMe', { 'do': './install.py --ts-completer' }
-"Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/vim-lsp'
