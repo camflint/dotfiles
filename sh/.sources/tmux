@@ -66,5 +66,5 @@ function tx-update-main-pane-dims() {
   tmux select-layout
 }
 
-alias ts='~/.scripts/tx-switch-session.sh'
-alias tw='~/.scripts/tx-switch-window.sh'
+# alias ts='~/.scripts/tx-switch-session.sh'
+# alias tw='~/.scripts/tx-switch-window.sh'
