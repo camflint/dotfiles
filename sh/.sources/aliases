@@ -30,7 +30,7 @@ alias gds='git diff --staged'
 alias gdt='git difftool'
 alias gf='git fetch'
 alias gg='git grep -n -i'
-alias gl='git l'
+alias gl='git l -n 8'
 alias glm='git lm'
 alias gls='git ls-files --exclude-standard'
 alias gmb='git merge-base'
@@ -74,6 +74,7 @@ alias mochag='mocha -g'
 alias mochaf='mocha -f'
 alias isodate='date +%Y-%m-%dT%H:%M:%S%z'
 alias isodateutc='date -u +"%Y-%m-%dT%H:%M:%SZ"'
+alias beep='say -v "Veena" "done" && osascript -e "display notification \"All done\" with title \"Done\""'
 
 # Nativefier
 #  Other options to specify:
