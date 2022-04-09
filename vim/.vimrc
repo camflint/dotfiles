@@ -87,7 +87,7 @@ set showcmd
 set cmdheight=2
 
 " Scroll N lines at a time rather than default, which is half-window.
-set scroll=5
+set scroll=10
 " Make sure we can always see 3 lines of context around the cursor.
 set scrolloff=3
 
@@ -289,10 +289,10 @@ function! s:setup_code_general()
   setlocal completeopt=menuone,noinsert,noselect,preview
 
   " Tabbing between autocomplete menu items.
-  inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-  inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-  inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
-  imap <c-space> <Plug>(asyncomplete_force_refresh)
+  " inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+  " inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+  " inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
+  " imap <c-space> <Plug>(asyncomplete_force_refresh)
 
   function! s:check_back_space() abort
       let col = col('.') - 1
@@ -746,21 +746,21 @@ elseif !empty(glob('/usr/share/doc/fzf'))
   source /usr/share/doc/fzf/examples/fzf.vim
 endif
 let g:fzf_history_dir = expand('~/.local/share/fzf-vim-history')
-let g:fzf_colors =
-\ { 'fg':      ['fg', 'Normal'],
-  \ 'bg':      ['bg', 'WildMenu'],
-  \ 'hl':      ['bg', 'Warning'],
-  \ 'fg+':     ['fg', 'Normal'],
-  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-  \ 'hl+':     ['bg', 'Warning'],
-  \ 'info':    ['fg', 'PreProc'],
-  \ 'border':  ['fg', 'WildMenu'],
-  \ 'prompt':  ['fg', 'Conditional'],
-  \ 'pointer': ['fg', 'Exception'],
-  \ 'marker':  ['fg', 'Keyword'],
-  \ 'spinner': ['fg', 'Label'],
-  \ 'header':  ['bg', 'WildMenu'],
-  \ 'gutter':  ['bg', 'WildMenu'] }
+" let g:fzf_colors =
+" \ { 'fg':      ['fg', 'Normal'],
+"   \ 'bg':      ['bg', 'WildMenu'],
+"   \ 'hl':      ['bg', 'Warning'],
+"   \ 'fg+':     ['fg', 'Normal'],
+"   \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+"   \ 'hl+':     ['bg', 'Warning'],
+"   \ 'info':    ['fg', 'PreProc'],
+"   \ 'border':  ['fg', 'WildMenu'],
+"   \ 'prompt':  ['fg', 'Conditional'],
+"   \ 'pointer': ['fg', 'Exception'],
+"   \ 'marker':  ['fg', 'Keyword'],
+"   \ 'spinner': ['fg', 'Label'],
+"   \ 'header':  ['bg', 'WildMenu'],
+"   \ 'gutter':  ['bg', 'WildMenu'] }
 let g:fzf_preview_window = ''
 
 autocmd! FileType fzf set laststatus=0 noshowmode noruler nonumber norelativenumber
@@ -825,6 +825,22 @@ let g:bookmark_auto_save = 1
 
 " Clap.
 nnoremap <leader>t <c-u>:Clap tags<cr>
+
+let g:clap_layout = { 'relative': 'editor', 'width': '90%', 'col': '5%', 'height': '50%', 'row': '5%' }
+let g:clap_open_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit',
+\}
+"let g:clap_disable_run_rooter = v:true
+let g:clap_provider_grep_executable = 'rg'
+let g:clap_provider_grep_delay = 10  " ms
+let g:clap_provider_grep_opts = '-H --no-heading --vimgrep --color=never --smart-case --hidden --vimgrep -g !.git/ -g !node_modules/ -g !dist/'
+let g:clap_insert_mode_only = v:true
+let g:clap_enable_icon = 1
+"let g:clap_enable_debug = v:true
+"let g:clap_default_external_filter = 'fzf'
+let g:clap_preview_direction = 'UD' " preview on bottom, not right
 
 " Use K to search the word under cursor (TODO)
 "nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -1259,23 +1275,6 @@ let g:peekaboo_window = "vert bo 65new"
 "  p - open entry in a preview window
 let g:qf_mapping_ack_style=1
 
-"let g:clap_layout = { 'relative': 'editor' }
-let g:clap_layout = { 'relative': 'editor', 'width': '90%', 'col': '5%', 'height': '50%', 'row': '5%' }
-let g:clap_open_action = {
-  \ 'ctrl-t': 'tab split',
-  \ 'ctrl-x': 'split',
-  \ 'ctrl-v': 'vsplit',
-\}
-"let g:clap_disable_run_rooter = v:true
-let g:clap_provider_grep_executable = 'rg'
-let g:clap_provider_grep_delay = 10  " ms
-let g:clap_provider_grep_opts = '-H --no-heading --vimgrep --color=never --smart-case --hidden --vimgrep -g !.git/ -g !node_modules/ -g !dist/'
-let g:clap_insert_mode_only = v:true
-let g:clap_enable_icon = 1
-"let g:clap_enable_debug = v:true
-"let g:clap_default_external_filter = 'fzf'
-let g:clap_preview_direction = 'UD' " preview on bottom, not right
-
 " Smooth scrolling.
 let g:SexyScroller_MinLines = 50
 let g:SexyScroller_MinColumns = 200
@@ -1333,12 +1332,17 @@ Plug 'wellle/targets.vim'
 "Plug 'rakr/vim-one'
 "Plug 'morhetz/gruvbox'
 "Plug 'tomasr/molokai'
+Plug 'humanoid-colors/vim-humanoid-colorscheme'
+Plug 'nice/sweater'
+Plug 'zanglg/nova.vim'
+Plug 'NLKNguyen/papercolor-theme'
+Plug 'wimstefan/vim-artesanal'
+Plug 'morhetz/gruvbox'
+Plug 'junegunn/seoul256.vim'
 
 " Aesthetics.
 Plug 'mhinz/vim-startify'
-
-" Design and UX.
-"Plug 'chrisbra/Colorizer'
+Plug 'ap/vim-css-color'
 "Plug 'dougbeney/pickachu'
 
 " Productivity.
@@ -1360,11 +1364,11 @@ Plug 'knubie/vim-kitty-navigator'
 
 " LSP and autocompletion.
 "Plug 'ycm-core/YouCompleteMe', { 'do': './install.py --ts-completer' }
-Plug 'prabirshrestha/async.vim'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/vim-lsp'
-Plug 'mattn/vim-lsp-settings'
+" Plug 'prabirshrestha/async.vim'
+" Plug 'prabirshrestha/asyncomplete-lsp.vim'
+" Plug 'prabirshrestha/asyncomplete.vim'
+" Plug 'prabirshrestha/vim-lsp'
+" Plug 'mattn/vim-lsp-settings'
 
 " IDE.
 "Plug 'preservim/nerdtree'
@@ -1384,6 +1388,8 @@ Plug 'tpope/vim-speeddating'
 Plug 'inkarkat/vim-PatternsOnText'
 Plug 'inkarkat/vim-ingo-library'
 Plug 'whiteinge/diffconflicts'
+Plug 'rhysd/conflict-marker.vim'
+
 "Plug 'fcpg/vim-navmode'
 "Plug 'junegunn/goyo.vim'
 "Plug 'junegunn/vim-peekaboo'
@@ -1397,14 +1403,53 @@ call plug#end()
 " Theme activation --------------------------------------------------------{{{1
 
 " Background transparency.
-set background=dark
-hi Normal guibg=NONE ctermbg=NONE
+"hi Normal guibg=NONE ctermbg=NONE
 
 " Dracula pro.
-packadd! dracula_pro
-let g:dracula_colorterm = 0
-colorscheme dracula_pro
+" packadd! dracula_pro
+" let g:dracula_colorterm = 0
+" colorscheme dracula_pro
 
 " Gruvbox.
+" let g:gruvbox_bold=1
 " let g:gruvbox_italic=1
+" let g:gruvbox_underline=1
+" let g:gruvbox_contrast_light = 'hard'
 " colorscheme gruvbox
+
+" Other.
+"colorscheme humanoid
+"colorscheme sweater
+"colorscheme nova
+"colorscheme papercolor
+"colorscheme artesanal
+
+" Seoul 256.
+let g:seoul256_srgb = 1
+colorscheme seoul256
+
+set background=dark
+
+" Theme fixups for Clap.
+hi default link ClapCurrentSelection PmenuSel
+hi default link ClapCurrentSelectionSign PmenuSel
+hi default link ClapDefaultCurrentSelection PmenuSel
+hi default link ClapDefaultPreview Normal
+hi default link ClapDefaultSelected Normal
+hi default link ClapDefaultShadow Normal
+hi default link ClapDisplay Pmenu
+hi default link ClapFile Pmenu
+hi default link ClapPreview Visual
+hi default link ClapInput Pmenu
+hi default link ClapFuzzyMatches1 Normal
+hi default link ClapFuzzyMatches10 Normal
+hi default link ClapFuzzyMatches11 Normal
+hi default link ClapFuzzyMatches12 Normal
+hi default link ClapFuzzyMatches2 Normal
+hi default link ClapFuzzyMatches3 Normal
+hi default link ClapFuzzyMatches4 Normal
+hi default link ClapFuzzyMatches5 Normal
+hi default link ClapFuzzyMatches6 Normal
+hi default link ClapFuzzyMatches7 Normal
+hi default link ClapFuzzyMatches8 Normal
+hi default link ClapFuzzyMatches9 Normal

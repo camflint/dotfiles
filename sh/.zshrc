@@ -33,7 +33,7 @@ local lc=$'\e[' rc=m	# Standard ANSI terminal escape values
 # for k in ${(k)color[(I)fg-*]}; do
 #   fg_dim[${k#fg-}]="$lc${color[faint]};${color[$k]}$rc"
 # done
-PS1="%B%F{blue}[%F{green}%30<..<%~%(1j. %F{red}*%j%f.)%F{blue}]%F{white}%(!.#.$) "
+PS1="[%30<..<%~%(1j. *%j%f.)]%(!.#.$) "
 
 # Prefix each new prompt with a newline, except right after the shell is
 # spawned.
