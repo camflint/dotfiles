@@ -357,6 +357,20 @@ function! s:setup_filetype_help()
   setlocal nolist
 endfunction
 
+function! s:setup_filetype_python()
+  let g:ycm_python_interpreter_path = trim(system('pyenv which python3'))
+  let g:ycm_autoclose_preview_window_after_completion=1
+
+  nmap <localleader>p <Plug>(YCMFindSymbolInWorkspace)
+  nmap <localleader><localleader>p <Plug>(YCMFindSymbolInDocument)
+  nmap gd :YcmCompleter GoToDefinitionElseDeclaration<CR>
+
+  " NOTE: make sure you have autopep8 installed for best results.
+  "  $ pip install --upgrade autopep8
+  autocmd BufWrite * :Autoformat
+  call <SID>setup_code_general()
+endfunction
+
 " Activate base coding keyboard shortcuts whenever LSP activates on a buffer. 
 augroup lsp_install
     au!
@@ -372,6 +386,7 @@ augroup setup_filetypes
   autocmd FileType typescript            :call <SID>setup_filetype_typescript()
   autocmd FileType vim,vifm              :call <SID>setup_filetype_vim()
   autocmd FileType help                  :call <SID>setup_filetype_help()
+  autocmd FileType python                :call <SID>setup_filetype_python()
 augroup END
 
 " Always re-apply filetype settings when .vimrc is sourced (because sourcing
@@ -1363,7 +1378,8 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'knubie/vim-kitty-navigator'
 
 " LSP and autocompletion.
-"Plug 'ycm-core/YouCompleteMe', { 'do': './install.py --ts-completer' }
+Plug 'ycm-core/YouCompleteMe', { 'do': './install.py --ts-completer --cs-completer --go-completer' }
+Plug 'Chiel92/vim-autoformat'
 " Plug 'prabirshrestha/async.vim'
 " Plug 'prabirshrestha/asyncomplete-lsp.vim'
 " Plug 'prabirshrestha/asyncomplete.vim'
