@@ -21,7 +21,8 @@ bindkey '^N' down-history
 bindkey '^?' backward-delete-char
 bindkey '^h' backward-delete-char
 bindkey '^w' backward-kill-word
-bindkey '^r' history-incremental-search-backward
+# (Disabled for Mcfly) 
+#bindkey '^r' history-incremental-search-backward
 
 # Disable XON/XOFF to let through <C-S> key events.
 bindkey -r '\C-s'
@@ -96,6 +97,10 @@ zinit light zsh-users/zsh-autosuggestions
 zinit light wfxr/formarks
 #zinit ice wait'' atinit'zpcompinit' silent; zinit light zdharma/fast-syntax-highlighting
 #zinit light zdharma/fast-syntax-highlighting
+
+# Mcfly (Zsh History).
+zinit ice lucid wait"0a" from"gh-r" as"program" atload'eval "$(mcfly init zsh)"' 
+zinit light cantino/mcfly
 
 # Tab key accepts typeahead suggestions.
 #bindkey '\t' autosuggest-accept
