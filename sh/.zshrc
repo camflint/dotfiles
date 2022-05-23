@@ -100,7 +100,7 @@ zinit light wfxr/formarks
 
 # Mcfly (Zsh History).
 export MCFLY_KEY_SCHEME=vim
-export MCFLY_RESULTS=7
+export MCFLY_RESULTS=15
 export MCFLY_INTERFACE_VIEW=BOTTOM
 export MCFLY_DISABLE_MENU=TRUE
 export MCFLY_HISTORY_LIMIT=10000
