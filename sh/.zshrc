@@ -99,6 +99,11 @@ zinit light wfxr/formarks
 #zinit light zdharma/fast-syntax-highlighting
 
 # Mcfly (Zsh History).
+export MCFLY_KEY_SCHEME=vim
+export MCFLY_RESULTS=7
+export MCFLY_INTERFACE_VIEW=BOTTOM
+export MCFLY_DISABLE_MENU=TRUE
+export MCFLY_HISTORY_LIMIT=10000
 zinit ice lucid wait"0a" from"gh-r" as"program" atload'eval "$(mcfly init zsh)"' 
 zinit light cantino/mcfly
 
