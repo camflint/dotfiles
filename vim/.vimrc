@@ -49,7 +49,7 @@ set foldlevel=2
 set foldlevelstart=99
 set nofoldenable
 
-" Show certain invisibles.
+" Show certain invisibles (like tabs).
 set list
 set listchars=tab:
 

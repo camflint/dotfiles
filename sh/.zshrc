@@ -15,26 +15,21 @@ fi
 # Source common configuration.
 source $HOME/.profile
 
-# Keybindings.
-bindkey '^P' up-history
-bindkey '^N' down-history
-bindkey '^?' backward-delete-char
-bindkey '^h' backward-delete-char
-bindkey '^w' backward-kill-word
-# (Disabled for Mcfly) 
-#bindkey '^r' history-incremental-search-backward
+# Options.
+setopt auto_cd
+setopt extended_glob
+setopt bash_rematch
+setopt prompt_subst
 
-# Disable XON/XOFF to let through <C-S> key events.
-bindkey -r '\C-s'
-
-# Colored prompt.
+# Prompt.
 autoload -U colors && colors
 local lc=$'\e[' rc=m	# Standard ANSI terminal escape values
 # typeset -AHg fg_dim
 # for k in ${(k)color[(I)fg-*]}; do
 #   fg_dim[${k#fg-}]="$lc${color[faint]};${color[$k]}$rc"
 # done
-PS1="[%30<..<%~%(1j. *%j%f.)]%(!.#.$) "
+#PS1="[%30<..<%~%(1j. *%j%f.)]%(!.#.$) "
+export PS1=$'%{\x1b[34m%}\U250C\U2500%{\x1b[0m%} %{\x1b[1;38;2;227;135;255m%}%c%{\x1b[0m%}$(git_info)\n%{\x1b[34m%}\U2514%{\x1b[0m%} %{\x1b[1;31m%}\U2615%{\x1b[0m%} '
 
 # Prefix each new prompt with a newline, except right after the shell is
 # spawned.
@@ -60,11 +55,7 @@ function chpwd() {
 }
 #synctitle
 
-# Options.
-setopt auto_cd
-setopt extended_glob
-
-# Variables.
+# History.
 HISTSIZE=1000
 SAVEHIST=1000
 HISTFILE=~/.history
@@ -74,6 +65,14 @@ bindkey -v
 export KEYTIMEOUT=1
 
 # Keybindings.
+
+bindkey '^P' up-history
+bindkey '^N' down-history
+bindkey '^?' backward-delete-char
+bindkey '^h' backward-delete-char
+bindkey '^w' backward-kill-word
+# (Disabled for Mcfly) 
+#bindkey '^r' history-incremental-search-backward
 bindkey -v '^?' backward-delete-char
 bindkey -a -s "gd" "igd\n"
 bindkey -a -s "gf" "igf\n"
@@ -82,6 +81,9 @@ bindkey -a -s "fv" "ifv\n"
 bindkey -a -s "fs" "ifs "
 bindkey -a -s "hs" "ihs\n"
 bindkey -a -s "ts" "its\n"
+
+# Disable XON/XOFF to let through <C-S> key events.
+bindkey -r '\C-s'
 
 # zinit!
 source $HOME/.zinit/bin/zinit.zsh
