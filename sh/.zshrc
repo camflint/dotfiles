@@ -1,5 +1,7 @@
-# Uncomment me and run 'zprof' in a new interactive shell to profile startup.
+# Profiling (for debugging startup performance issues).
+# Uncomment me, then spawn a new shell, then run 'zprof'.
 #zmodload zsh/zprof
+
 zmodload zsh/mathfunc
 
 # Determine the terminal app. We will set up differently depending on whether we are initializing a new standalone shell
@@ -97,8 +99,8 @@ export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#352f49,bg=#919ab9'
 
 zinit light zsh-users/zsh-autosuggestions
 zinit light wfxr/formarks
-#zinit ice wait'' atinit'zpcompinit' silent; zinit light zdharma/fast-syntax-highlighting
-#zinit light zdharma/fast-syntax-highlighting
+#zinit ice wait'' atinit'zpcompinit' silent; zinit light zdharma-continuum/fast-syntax-highlighting
+#zinit light zdharma-continuum/fast-syntax-highlighting
 
 # Mcfly (Zsh History).
 export MCFLY_KEY_SCHEME=vim
