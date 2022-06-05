@@ -1294,6 +1294,12 @@ let g:qf_mapping_ack_style=1
 let g:SexyScroller_MinLines = 50
 let g:SexyScroller_MinColumns = 200
 
+" Autosave.
+let g:autosave_extensions = '.backup'
+let g:autosave_backup = '~/.local/share/nvim/autosave'
+let g:autosave_max_copies = 10
+let g:autosave_timer = 60*1000 " every 1 min
+
 " Plugin registry ---------------------------------------------------------{{{1
 
 " NOTE: I try to keep this list pretty trimmed-down to lower the disk and memory
@@ -1321,6 +1327,7 @@ call plug#begin('~/.local/share/vim/plugged')
 Plug 'asheq/close-buffers.vim'
 Plug 'brooth/far.vim'
 Plug 'camflint/vim-paraglide'
+Plug 'camflint/vim-autosave'
 Plug 'easymotion/vim-easymotion'
 Plug 'godlygeek/tabular'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
