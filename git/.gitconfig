@@ -58,9 +58,14 @@
 
 [core]
 	pager = delta
+	excludesfile = /Users/cameron/.gitignore_global
 
+[include]
+    path = /Users/cameron/code/oss/delta/themes.gitconfig
+    
 [delta]
-  syntax-theme = gruvbox
+  light = true
+  features = github
   line-numbers = true
   side-by-side = true
   ; line-numbers-left-format = ""
@@ -68,7 +73,9 @@
 
 [interactive]
   diffFilter = delta --color-only
+  
 [url "https://github.com/"]
 	insteadOf = ssh://git@github.com/
+	
 [init]
 	defaultBranch = main
