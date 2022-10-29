@@ -88,7 +88,7 @@ bindkey -a -s "ts" "its\n"
 bindkey -r '\C-s'
 
 # zinit!
-source $HOME/.zinit/bin/zinit.zsh
+source $HOME/.local/share/zinit/zinit.git/zinit.zsh
 
 # Load plugins here....
 
@@ -166,3 +166,13 @@ if [ ! $ENABLE_TMUX ] && [ -z "$TMUX" ]; then
   fi
 fi
 [ -f "/Users/cameron/.ghcup/env" ] && source "/Users/cameron/.ghcup/env" # ghcup-env
+
+# Load a few important annexes, without Turbo
+# (this is currently required for annexes)
+zinit light-mode for \
+    zdharma-continuum/zinit-annex-as-monitor \
+    zdharma-continuum/zinit-annex-bin-gem-node \
+    zdharma-continuum/zinit-annex-patch-dl \
+    zdharma-continuum/zinit-annex-rust
+
+### End of Zinit's installer chunk
