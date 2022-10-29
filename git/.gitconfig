@@ -48,7 +48,7 @@
   func = blue bold
   
 [credential]
-	helper = store
+	helper = osxkeychain
 
 [filter "lfs"]
 	clean = git-lfs clean -- %f
