@@ -66,6 +66,7 @@ TEXINFO_PATH=/usr/local/opt/texinfo/bin
 
 # Homebrew.
 export PATH=/usr/local/bin:/usr/local/sbin:$PATH
+[[ -d "/opt/homebrew/bin" ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # Python.
 alias python="python3"
@@ -78,6 +79,12 @@ fi
 if command -v pyenv-virtualenv-init 1> /dev/null 2>&1; then
   eval "$(pyenv virtualenv-init -)"
 fi
+
+# Ruby
+if which rbenv > /dev/null; then
+  eval "$(rbenv init -)"
+fi
+#export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
 
 # Golang.
 export PATH="$HOME/go/bin:$PATH"
@@ -113,6 +120,9 @@ export FZF_ALT_C_OPTS="--preview 'tree -a -C -L 1 {} | head -100' --preview-wind
 
 # Node.js, npm, nvm, etc.
 export PATH="./node_modules/.bin:$PATH"
+
+# sqlite3
+export PATH="/opt/homebrew/opt/sqlite/bin:$PATH"
 
 # External sources.
 for name in ".sources" ".sources_local"; do
