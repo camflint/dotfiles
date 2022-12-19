@@ -98,7 +98,7 @@ export PATH="/usr/local/lib/ruby/gems/3.0.0/bin:$PATH"
 export PATH="/usr/local/flutter/bin:$PATH"
 
 # Bat.
-export BAT_THEME=ansi
+export BAT_THEME=OneHalfDark
 
 # FZF.
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --ignore-case --glob "!.git/" --glob "!node_modules/" --glob "!dist/"'
