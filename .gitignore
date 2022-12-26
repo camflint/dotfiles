@@ -8,6 +8,7 @@ Session.vim
 .DS_Store
 
 vim/.vim/.netrwhist
+vim/.vim/undodir
 tmux/.tmux/plugins
 local/.local/share/tridactyl
 local/.local/share/vim/bookmarks
