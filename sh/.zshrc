@@ -83,6 +83,7 @@ bindkey -a -s "fv" "ifv\n"
 bindkey -a -s "fs" "ifs "
 bindkey -a -s "hs" "ihs\n"
 bindkey -a -s "ts" "its\n"
+bindkey -a -s '=' "ifg\n" # press the '=' key in vim to suspend, hit '=' again to restore
 
 # Disable XON/XOFF to let through <C-S> key events.
 bindkey -r '\C-s'
@@ -108,8 +109,8 @@ export MCFLY_RESULTS=15
 export MCFLY_INTERFACE_VIEW=BOTTOM
 export MCFLY_DISABLE_MENU=TRUE
 export MCFLY_HISTORY_LIMIT=10000
-zinit ice lucid wait"0a" from"gh-r" as"program" atload'eval "$(mcfly init zsh)"' 
-zinit light cantino/mcfly
+# zinit ice lucid wait"0a" from"gh-r" as"program" atload'eval "$(mcfly init zsh)"' 
+# zinit light cantino/mcfly
 
 # Tab key accepts typeahead suggestions.
 #bindkey '\t' autosuggest-accept

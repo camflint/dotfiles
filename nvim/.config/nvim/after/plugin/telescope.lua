@@ -61,7 +61,7 @@ vim.keymap.set('n', '<leader>f', function() builtin.find_files(
     )
 end, {})
 vim.keymap.set('n', '<leader>r', function() telescope.extensions.frecency.frecency(theme) end, {})
-vim.keymap.set('n', '<leader>s', function() builtin.live_grep(theme) end, {})
+vim.keymap.set('n', '<leader>g', function() builtin.live_grep(theme) end, {})
 vim.keymap.set('n', '<leader>b', function() builtin.buffers(
         vim.tbl_extend('force', theme, {
             sort_lastused = true,
@@ -71,7 +71,7 @@ end, {})
 vim.keymap.set('n', '<leader>q', function() builtin.quickfix(theme) end, {})
 vim.keymap.set('n', '<leader>m', function() builtin.marks(theme) end, {})
 vim.keymap.set('n', '<C-p>', function() builtin.git_files(theme) end, {})
-vim.keymap.set('n', '<C-o>', function() builtin.lsp_workspace_symbols(theme) end, {})
+vim.keymap.set('n', '<M-o>', function() builtin.lsp_workspace_symbols(theme) end, {})
 vim.keymap.set('n', 'K', function() builtin.grep_string(theme) end, {})
 --vim.keymap.set('n', '<leader>m', builtin.man_pages, {})
 

@@ -61,7 +61,7 @@ lsp.on_attach(function(client, bufnr)
   --vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
   vim.keymap.set('n', '[e', vim.diagnostic.goto_next, opts)
   vim.keymap.set('n', ']e', vim.diagnostic.goto_prev, opts)
-  vim.keymap.set('i', '<C-h>', vim.lsp.buf.signature_help, opts)
+  vim.keymap.set('i', '<F1>', vim.lsp.buf.signature_help, opts)
 end)
 
 lsp.nvim_workspace()

@@ -2,7 +2,7 @@ vim.g.mapleader = '\\'
 vim.g.maplocalleader = ','
 
 -- Suspending vim.
-vim.keymap.set('n', 'Z', function()
+local function doSuspend()
     -- If vim-autosave is installed, invoke it.
     vim.cmd([[
         if exists(':AutoSaveNow')
@@ -10,7 +10,9 @@ vim.keymap.set('n', 'Z', function()
         endif
     ]])
     vim.cmd.suspend()
-end)
+end
+vim.keymap.set('n', 'Z', doSuspend);
+vim.keymap.set('n', '=', doSuspend);
 
 -- Lazy command line.
 vim.keymap.set('n', ';', ':')
@@ -62,11 +64,12 @@ end)
 -- Buffer management...
 
 -- Window and split management...
-vim.keymap.set('n', '<localleader>s-', '<C-w>s<C-w>j')       -- split horiz
-vim.keymap.set('n', '<localleader>s<pipe>', '<C-w>v<C-w>l')  -- split vert
-vim.keymap.set('n', '<localleader>sx', '<C-w>q')             -- close this window
-vim.keymap.set('n', '<localleader>so', '<C-w>o')             -- close others
-vim.keymap.set('n', '<localleader>sr', '<C-w>r')             -- rotate windows
+vim.keymap.set('n', '<localleader>s-', '<C-w>s<C-w>j')  -- split horiz
+vim.keymap.set('n', '<localleader>s\\', '<C-w>v<C-w>l') -- split vert
+vim.keymap.set('n', '<localleader>s|', '<C-w>v<C-w>l')  -- split vert
+vim.keymap.set('n', '<localleader>sx', '<C-w>q')        -- close this window
+vim.keymap.set('n', '<localleader>so', '<C-w>o')        -- close others
+vim.keymap.set('n', '<localleader>sr', '<C-w>r')        -- rotate windows
 vim.keymap.set('n', '<localleader>s=', [[:set equalalways<cr> \| <C-w>= \| :set noequalalways<cr>]]) -- distribute window sizes
 
 -- Quickfix.
