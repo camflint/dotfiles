@@ -158,22 +158,6 @@ function make_project() {
   fi
 }
 
-function up() {
-  # Start most frequently-used projects first, to control the session ID sequence.
-  # This makes switching between them easier.
-  make_project shipotle basic bg
-  make_project nacho basic bg
-  make_project dotfiles basic bg
-  make_project caflint-scripts basic bg
-  make_project notes basic bg
-  make_project scratch basic bg
-
-  # Now open a project for every repo.
-  for path in (fd --type d --max-depth 1 --absolute-path -g '*' "$HOME/code/convoyinc"); do
-    make_project "$path" basic bg
-  done
-}
-
 alias ide=ide1
 alias ide1=layout_ide1
 alias ide2=layout_ide2
