@@ -3,7 +3,8 @@ export EDITOR=vim
 export GREP=rg
 export FIND=fd
 
-export PATH="$HOME/.local/share/vim/plugged/vim-superman/bin:$PATH"
+export CODE_ROOT="$HOME/code"
+export MY_CODE_ROOT="$CODE_ROOT/camflint"
 
 # Locale.
 export LC_ALL=en_US.UTF-8

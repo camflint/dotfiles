@@ -1,0 +1,10 @@
+# vim: ft=sh
+
+function cdc {
+    local dir
+    dir=$(ls -1 --color=never -D $MY_CODE_ROOT | fzf)
+    if [ $? -ne 0 ]; then echo 'Canceled'; return $?; fi
+    dir="$MY_CODE_ROOT/$dir"
+    if [ ! -d $dir ]; then echo 'Directory not found'; return 1; fi
+    pushd $dir > /dev/null
+}
