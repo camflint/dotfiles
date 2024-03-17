@@ -76,6 +76,15 @@ alias isodate='date +%Y-%m-%dT%H:%M:%S%z'
 alias isodateutc='date -u +"%Y-%m-%dT%H:%M:%SZ"'
 alias beep='say -v "Veena" "done" && osascript -e "display notification \"All done\" with title \"Done\""'
 
+# Python.
+alias ptpython="ptpython --config-dir='${HOME}/.config/ptpython'"
+
+# Perl.
+alias iperl='rlwrap -A -S "perl> " perl -wnE '\''say eval()//$@'\'
+
+# Scala.
+alias sccli='scala-cli'
+
 # Nativefier
 #  Other options to specify:
 #   --name <name>
@@ -85,7 +94,6 @@ alias beep='say -v "Veena" "done" && osascript -e "display notification \"All do
 alias nativefier='nativefier --fast-quit --hide-window-frame --single-instance'
 
 # Misc.
-alias ptpython="ptpython --config-dir='${HOME}/.config/ptpython'"
 alias rec='asciinema rec'
 
 viminfo () { vim -R -M -c "Info $1 $2" +only }

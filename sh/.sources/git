@@ -79,6 +79,5 @@ git_info() {
   fi
 }
 
-
 alias fgs=fzfgitstatus
 alias fgl=fzfgitlog

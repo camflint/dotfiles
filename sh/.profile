@@ -129,6 +129,11 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 # sqlite3
 export PATH="/opt/homebrew/opt/sqlite/bin:$PATH"
 
+# Perl.
+if [[ -e "$HOME/perl5/perlbrew/etc/bashrc" ]]; then
+    . "$HOME/perl5/perlbrew/etc/bashrc"
+fi
+
 # External sources.
 for name in ".sources" ".sources_local"; do
   if [[ -d "$HOME/$name" ]]; then
