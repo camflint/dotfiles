@@ -1385,7 +1385,9 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'knubie/vim-kitty-navigator'
 
 " LSP and autocompletion.
-Plug 'ycm-core/YouCompleteMe', { 'do': './install.py --ts-completer --cs-completer --go-completer' }
+if !has('nvim')
+    Plug 'ycm-core/YouCompleteMe', { 'do': 'python3.9 ./install.py --ts-completer --cs-completer --go-completer' }
+endif
 Plug 'Chiel92/vim-autoformat'
 " Plug 'prabirshrestha/async.vim'
 " Plug 'prabirshrestha/asyncomplete-lsp.vim'
