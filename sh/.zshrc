@@ -73,6 +73,7 @@ bindkey '^N' down-history
 bindkey '^?' backward-delete-char
 bindkey '^h' backward-delete-char
 bindkey '^w' backward-kill-word
+bindkey -s '^r' "cdc\n"
 # (Disabled for Mcfly) 
 #bindkey '^r' history-incremental-search-backward
 bindkey -v '^?' backward-delete-char
