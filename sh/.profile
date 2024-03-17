@@ -122,6 +122,10 @@ export FZF_ALT_C_OPTS="--preview 'tree -a -C -L 1 {} | head -100' --preview-wind
 # Node.js, npm, nvm, etc.
 export PATH="./node_modules/.bin:$PATH"
 
+# Bun.
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
 # sqlite3
 export PATH="/opt/homebrew/opt/sqlite/bin:$PATH"
 
