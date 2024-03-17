@@ -146,6 +146,9 @@ setopt IGNORE_EOF  # disable default CTRL+D behavior
 bindkey '^f' fzf-file-widget
 bindkey '^d' fzf-cd-widget
 
+# OPAM (the OCaml package manager).
+[[ ! -r /Users/cameron/.opam/opam-init/init.zsh ]] || source /Users/cameron/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
+
 # Run a command and then enter interactive mode, e.g.
 #   RUN=ls zsh
 if [[ -v RUN ]]; then
