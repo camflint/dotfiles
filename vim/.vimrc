@@ -139,7 +139,9 @@ if has('persistent_undo')
   set undofile
 
   " Save undofiles to XDG_DATA_HOME instead of cwd.
-  set undodir^=~/.local/share/vim/undo//
+  "  Ensure the directory exists and is not readable to other users.
+  set undodir=~/.local/share/vim/undo//
+  call mkdir(&undodir, 'p', '0o700')
 endif
 
 " Backup and restore ------------------------------------------------------{{{1
@@ -147,8 +149,10 @@ endif
 " Disable backups when overwriting files.
 set nobackup
 
-" Save swapfiles to XDG_DATA_HOME instead of cwd.
-set directory^=~/.local/share/vim/backup//
+" Save swapfiles only to XDG_DATA_HOME instead of cwd.
+"  Ensure the directory exists and is not readable to other users.
+set directory=~/.local/share/vim/backup//
+call mkdir(&directory, 'p', '0o700')
 
 " Rename-and-write instead of copy-and-write to preserve links when possible.
 set backupcopy=auto
@@ -180,7 +184,7 @@ set wildoptions=pum
 set wildignore+=*/node_modules/*,*.swp,*.*~
 
 " Don't autoselect the first option (list first, then select full match).
-set wildmode=list,full
+"set wildmode=list,full
 
 " Insert-mode completion --------------------------------------------------{{{1
 
